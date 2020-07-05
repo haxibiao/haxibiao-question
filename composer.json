@@ -1,0 +1,32 @@
+{
+    "name": "haxibiao/question",
+    "description": "哈希表答题系统",
+    "type": "project",
+    "license": "MIT",
+    "authors": [{
+        "name": "zzm",
+        "email": "zhangzhiming@haxifang.com"
+    }],
+    "require": {},
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Haxibiao\\Question\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "classmap": [
+            "tests/"
+        ]
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Haxibiao\\Question\\QuestionServiceProvider"
+            ],
+            "aliases": {
+                "Task": "Haxibiao\\Question\\Question"
+            }
+        }
+    }
+}
