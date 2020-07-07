@@ -3,7 +3,6 @@
 namespace Haxibiao\Task\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Str;
 
 class InstallCommand extends Command
 {
@@ -60,6 +59,7 @@ class InstallCommand extends Command
             copy($this->resolveStubPath($key), app_path($value));
         }
     }
+
 
     protected function stubPath()
     {
