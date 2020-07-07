@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Observers;
+namespace Haxibiao\Question\Observers;
 
-use App\Category;
+use Haxibiao\Question\Category;
 
 class CategoryObserver
 {

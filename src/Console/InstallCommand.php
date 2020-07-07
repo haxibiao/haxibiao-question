@@ -73,7 +73,9 @@ class InstallCommand extends Command
             '/stubs/Tag.stub' => 'Tag.php',
             '/stubs/Taggable.stub' => 'Taggable.php',
             '/stubs/UserAction.stub' => 'UserAction.php',
-            '/stubs/WrongAnswer.stub' => 'WrongAnswer.php'
+            '/stubs/WrongAnswer.stub' => 'WrongAnswer.php',
+            '/stubs/Audit.stub' => 'Audit.php',
+            '/stubs/Curation.stub' => 'Curation.php',
         ];
     }
 }

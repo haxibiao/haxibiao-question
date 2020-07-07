@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Observers;
+namespace Haxibiao\Question\Observers;
 
 use App\Exceptions\UserException;
-use App\Question;
+use Haxibiao\Question\Question;
 
 class QuestionObserver
 {

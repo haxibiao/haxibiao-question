@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Observers;
+namespace Haxibiao\Question\Observers;
 
-use App\Answer;
+use Haxibiao\Question\Answer;
 
 class AnswerObserver
 {

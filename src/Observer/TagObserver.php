@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Observers;
+namespace Haxibiao\Question\Observers;
 
-use App\Tag;
+use Haxibiao\Question\Tag;
 
 class TagObserver
 {
