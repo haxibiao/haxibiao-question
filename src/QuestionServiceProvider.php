@@ -27,15 +27,11 @@ class QuestionServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([
-            __DIR__ . '/Console/stubs/QuestionServiceProvider.stub' => app_path('Providers/QuestionServiceProvider.php'),
-        ], 'question-provider');
+        // $this->publishes([
+        //     __DIR__ . '/Console/stubs/QuestionServiceProvider.stub' => app_path('Providers/QuestionServiceProvider.php'),
+        // ], 'question-provider');
 
         if ($this->app->runningInConsole()) {
-
-            $this->publishes([
-                __DIR__ . '/../config/question.php' => config_path('question.php'),
-            ], 'question-config');
 
             $this->publishes([
                 __DIR__ . '/../database/factories' => database_path('./factories'),
@@ -67,15 +63,5 @@ class QuestionServiceProvider extends ServiceProvider
         ] as $abstract => $instance) {
             $this->app->instance($abstract, $instance);
         }
-    }
-
-    /**
-     * Get the services provided by the provider.
-     *
-     * @return array
-     */
-    public function provides()
-    {
-        return [DZTasksSeeder::class];
     }
 }

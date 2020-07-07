@@ -25,12 +25,12 @@ class Tag extends Model
 
     public function categories()
     {
-        return $this->morphedByMany('App\Category', 'taggable')->whereStatus(Category::PUBLISH);
+        return $this->morphedByMany(Category::class, 'taggable')->whereStatus(Category::PUBLISH);
     }
 
     public function tags(): MorphToMany
     {
-        return $this->morphedByMany('App\Tag', 'taggable');
+        return $this->morphedByMany(Tag::class, 'taggable');
     }
 
     public function user()
@@ -50,7 +50,7 @@ class Tag extends Model
 
     public function feedbacks()
     {
-        return $this->morphedByMany('App\Feedback', 'taggable');
+        return $this->morphedByMany(Feedback::class, 'taggable');
     }
 
     public static function tagJson()

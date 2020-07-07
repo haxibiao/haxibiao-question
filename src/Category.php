@@ -79,12 +79,12 @@ class Category extends Model
 
     public function parent()
     {
-        return $this->belongsTo(\App\Category::class, 'parent_id');
+        return $this->belongsTo(Category::class, 'parent_id');
     }
 
     public function children(): HasMany
     {
-        return $this->hasMany(\App\Category::class, 'parent_id');
+        return $this->hasMany(Category::class, 'parent_id');
     }
 
     public function publishedChildren()
@@ -94,12 +94,12 @@ class Category extends Model
 
     public function user()
     {
-        return $this->belongsTo(\App\User::class, 'user_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     public function users()
     {
-        return $this->belongsToMany(\App\User::class)->withPivot(['max_review_id', 'min_review_id', 'correct_count']);
+        return $this->belongsToMany(User::class)->withPivot(['max_review_id', 'min_review_id', 'correct_count']);
     }
 
     public function containedVideoPosts()
@@ -109,7 +109,7 @@ class Category extends Model
 
     public function questions()
     {
-        return $this->hasMany(\App\Question::class);
+        return $this->hasMany(Question::class);
     }
 
     //nova

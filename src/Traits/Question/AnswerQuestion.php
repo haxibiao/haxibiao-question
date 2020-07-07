@@ -3,12 +3,12 @@
 namespace Haxibiao\Question\Traits;
 
 use App\Gold;
+use App\Snapshot;
 use App\User;
 
 use Haxibiao\Question\Answer;
 use Haxibiao\Question\CategoryUser;
 use Haxibiao\Question\Question;
-use Haxibiao\Question\Snapshot;
 use Haxibiao\Question\WrongAnswer;
 
 trait AnswerQuestion

@@ -4,6 +4,7 @@
 namespace Haxibiao\Question;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class UserAction extends Model
 {
@@ -21,9 +22,9 @@ class UserAction extends Model
     //浏览统计上限
     const MAX_VISITED_NUMBER_COUNT = 10;
 
-    public function user()
+    public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\User::class);
+        return $this->belongsTo(User::class);
     }
 
     /**

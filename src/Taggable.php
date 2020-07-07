@@ -19,7 +19,7 @@ class Taggable extends Pivot
 
     public function tag()
     {
-        return $this->belongsTo(\App\Tag::class, 'tag_id');
+        return $this->belongsTo(Tag::class, 'tag_id');
     }
 
     public function scopeOfType($query, $type)

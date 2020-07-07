@@ -29,12 +29,12 @@ class CategoryUser extends Pivot
 
     public function user()
     {
-        return $this->belongsTo(\App\User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function category()
     {
-        return $this->belongsTo(\App\Category::class);
+        return $this->belongsTo(Category::class);
     }
 
     //methods
@@ -65,7 +65,7 @@ class CategoryUser extends Pivot
         }
         $ranks = $this->category->ranks ?? [0];
 
-        $ranks = $canReview ? $ranks : array_diff($ranks, [\App\Question::REVIEW_RANK]); //不能审题的看不到权重11的rank
+        $ranks = $canReview ? $ranks : array_diff($ranks, [Question::REVIEW_RANK]); //不能审题的看不到权重11的rank
         if (count($ranks)) {
             return max($ranks);
         }

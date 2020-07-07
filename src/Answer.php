@@ -26,11 +26,11 @@ class Answer extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(\App\User::class);
+        return $this->belongsTo(User::class);
     }
 
     public function question(): BelongsTo
     {
-        return $this->belongsTo(\App\Question::class);
+        return $this->belongsTo(Question::class);
     }
 }
