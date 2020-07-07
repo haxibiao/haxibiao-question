@@ -11,7 +11,7 @@ class CategoryTest extends GraphQLTestCase
      */
     public function testCategoriesQuery()
     {
-        $query = file_get_contents(__DIR__ . '/gqls/category/CategoriesQuery.gql');
+        $query = file_get_contents(__DIR__ . '/gql/category/CategoriesQuery.gql');
 
         $variables = [
             'keyword' => '初中',
@@ -23,7 +23,7 @@ class CategoryTest extends GraphQLTestCase
 
     public function testCategoryQuery()
     {
-        $query = file_get_contents(__DIR__ . '/gqls/category/CategoryQuery.gql');
+        $query = file_get_contents(__DIR__ . '/gql/category/CategoryQuery.gql');
         $this->runGQL($query, [
             'id' => Category::first()->id,
         ]);
