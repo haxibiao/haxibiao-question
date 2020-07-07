@@ -45,11 +45,7 @@ class InstallCommand extends Command
 
 
         $this->info("复制 stubs ...");
-        copy($this->resolveStubPath('/stubs/Task.stub'), app_path('Task.php'));
-        copy($this->resolveStubPath('/stubs/Assignment.stub'), app_path('Assignment.php'));
-        copy($this->resolveStubPath('/stubs/Nova/Task.stub'), app_path('Nova/Task.php'));
-        copy($this->resolveStubPath('/stubs/Nova/Filters/Task/TaskType.stub'), app_path('Nova/Filters/Task/TaskType.php'));
-        copy($this->resolveStubPath('/stubs/Nova/Filters/Task/TaskStatus.stub'), app_path('Nova/Filters/Task/TaskStatus.php'));
+        $this->installStub();
     }
 
     protected function resolveStubPath($stub)
@@ -59,5 +55,25 @@ class InstallCommand extends Command
 
     protected function installStub()
     {
+        $stubPath =  $this->stubPath();
+        foreach ($stubPath as $key => $value) {
+            copy($this->resolveStubPath($key), app_path($value));
+        }
+    }
+
+    protected function stubPath()
+    {
+        return [
+            '/stubs/Answer.stub' =>  'Answer.php',
+            '/stubs/Question.stub' => 'Question.php',
+            '/stubs/Category.stub' => 'Category.php',
+            '/stubs/CategoryUser.stub' => 'CategoryUser.php',
+            '/stubs/Explanation.stub' => 'Explanation.php',
+            '/stubs/QuestionRecommend.stub' => 'QuestionRecommend.php',
+            '/stubs/Tag.stub' => 'Tag.php',
+            '/stubs/Taggable.stub' => 'Taggable.php',
+            '/stubs/UserAction.stub' => 'UserAction.php',
+            '/stubs/WrongAnswer.stub' => 'WrongAnswer.php'
+        ];
     }
 }
