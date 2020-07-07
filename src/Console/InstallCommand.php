@@ -1,6 +1,6 @@
 <?php
 
-namespace Haxibiao\Task\Console;
+namespace Haxibiao\Question\Console;
 
 use Illuminate\Console\Command;
 
@@ -45,6 +45,9 @@ class InstallCommand extends Command
 
         $this->info("复制 stubs ...");
         $this->installStub();
+        $this->comment('迁移数据库变化...');
+        $this->call('migrate');
+        $this->comment('question模块安装完成');
     }
 
     protected function resolveStubPath($stub)

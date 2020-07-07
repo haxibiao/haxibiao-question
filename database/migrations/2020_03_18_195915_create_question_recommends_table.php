@@ -13,6 +13,10 @@ class CreateQuestionRecommendsTable extends Migration
      */
     public function up()
     {
+
+        if (Schema::hasTable('question_recommends')) {
+            return;
+        }
         Schema::create('question_recommends', function (Blueprint $table) {
             $table->id();
             $table->unsignedInteger('question_id')->comment('题目id');

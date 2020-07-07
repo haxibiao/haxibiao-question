@@ -1,6 +1,6 @@
 <?php
 
-namespace Haxibiao\Task\Console;
+namespace Haxibiao\Question\Console;
 
 use Illuminate\Console\Command;
 

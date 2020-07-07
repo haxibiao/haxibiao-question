@@ -1,8 +1,8 @@
 <?php
 
-namespace Haxibiao\Question;
+namespace App;
 
-use  Haxibiao\Question\Audit as BaseAudit
+use  Haxibiao\Question\Audit as BaseAudit;
 
 class Audit extends BaseAudit
 {

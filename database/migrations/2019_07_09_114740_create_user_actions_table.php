@@ -6,13 +6,16 @@ use Illuminate\Database\Migrations\Migration;
 
 class CreateUserActionsTable extends Migration
 {
-   /**
+    /**
      * Run the migrations.
      *
      * @return void
      */
     public function up()
     {
+        if (Schema::hasTable('user_actions')) {
+            return;
+        }
         Schema::create('user_actions', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id')->unique();

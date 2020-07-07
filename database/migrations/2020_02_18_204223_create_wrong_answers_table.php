@@ -13,6 +13,9 @@ class CreateWrongAnswersTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('wrong_answers')) {
+            return;
+        }
         Schema::create('wrong_answers', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id')->unique()->comment('用户ID');

@@ -1,8 +1,8 @@
 <?php
 
-namespace Haxibiao\Question;
+namespace App;
 
-use  Haxibiao\Question\Category as BaseCategory
+use  Haxibiao\Question\Category as BaseCategory;
 
 class Category extends BaseCategory
 {

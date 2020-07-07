@@ -1,8 +1,8 @@
 <?php
 
-namespace Haxibiao\Question;
+namespace App;
 
-use  Haxibiao\Question\QuestionRecommend as BaseQuestionRecommend
+use  Haxibiao\Question\QuestionRecommend as BaseQuestionRecommend;
 
 class QuestionRecommend extends BaseQuestionRecommend
 {

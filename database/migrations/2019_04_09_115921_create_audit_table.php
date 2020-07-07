@@ -13,6 +13,9 @@ class CreateAuditTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('audit')) {
+            return;
+        }
         Schema::create('audit', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id');

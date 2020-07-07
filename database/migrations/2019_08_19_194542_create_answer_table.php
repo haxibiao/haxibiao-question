@@ -13,6 +13,9 @@ class CreateAnswerTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('answer')) {
+            return;
+        }
         Schema::create('answer', function (Blueprint $table) {
             $table->increments('id');
             //关联users表

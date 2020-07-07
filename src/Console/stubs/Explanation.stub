@@ -1,8 +1,8 @@
 <?php
 
-namespace Haxibiao\Question;
+namespace App;
 
-use  Haxibiao\Question\Explanation as BaseExplanation
+use  Haxibiao\Question\Explanation as BaseExplanation;
 
 class Explanation extends BaseExplanation
 {

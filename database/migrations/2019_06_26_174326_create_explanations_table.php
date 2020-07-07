@@ -13,6 +13,9 @@ class CreateExplanationsTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('explanations')) {
+            return;
+        }
         Schema::create('explanations', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id')->index();

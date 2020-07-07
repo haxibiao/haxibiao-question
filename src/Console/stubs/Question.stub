@@ -1,8 +1,8 @@
 <?php
 
-namespace Haxibiao\Question;
+namespace App;
 
-use  Haxibiao\Question\Question as BaseQuestion
+use  Haxibiao\Question\Question as BaseQuestion;
 
 class Question extends BaseQuestion
 {

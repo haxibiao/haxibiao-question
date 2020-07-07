@@ -13,6 +13,9 @@ class CreateTaggablesTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('taggables')) {
+            return;
+        }
         Schema::create('taggables', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('tag_id')->index()->comment('标签ID');

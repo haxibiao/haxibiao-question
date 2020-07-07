@@ -1,8 +1,8 @@
 <?php
 
-namespace Haxibiao\Question;
+namespace App;
 
-use  Haxibiao\Question\Answer as BaseAnswer
+use  Haxibiao\Question\Answer as BaseAnswer;
 
 class Answer extends BaseAnswer
 {
