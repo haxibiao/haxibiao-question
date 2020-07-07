@@ -1,15 +1,16 @@
 <?php
 
-namespace App\Nova\Filters\Category;
+namespace Haxibiao\Question\Nova\Filter\Category;
 
+use Haxibiao\Question\Category;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
-use App\Category;
+
 
 class CategoryAnswersCountOrder extends Filter
 {
     public $name = '回答数排序';
-    
+
     /**
      * Apply the filter to the given query.
      *
@@ -20,7 +21,7 @@ class CategoryAnswersCountOrder extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->orderBy('answers_count',$value);
+        return $query->orderBy('answers_count', $value);
     }
 
     /**

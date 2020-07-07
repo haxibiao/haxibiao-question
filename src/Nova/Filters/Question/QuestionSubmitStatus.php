@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Nova\Filters\Question;
+namespace Haxibiao\Question\Nova\Filter\Question;
 
-use App\Question;
+use Haxibiao\Question\Question;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\BooleanFilter;
 
@@ -38,6 +38,6 @@ class QuestionSubmitStatus extends BooleanFilter
      */
     public function options(Request $request)
     {
-        return array_flip(\App\Question::getSubmitStatus());
+        return array_flip(Question::getSubmitStatus());
     }
 }

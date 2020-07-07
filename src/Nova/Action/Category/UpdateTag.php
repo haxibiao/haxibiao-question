@@ -1,10 +1,9 @@
 <?php
 
-namespace App\Nova\Actions\Category;
+namespace Haxibiao\Question\Nova\Actions\Category;
 
-use App\Category;
-use App\Tag;
-use App\Taggable;
+use Haxibiao\Question\Tag;
+use Haxibiao\Question\Taggable;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
@@ -36,7 +35,7 @@ class UpdateTag extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         $ids = $models->pluck('id')->toArray();
-        foreach ($ids as $id){
+        foreach ($ids as $id) {
             Taggable::firstOrCreate([
                 'tag_id' => $fields->tag_id,
                 'taggable_id' => $id,

@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Nova;
+namespace Haxibiao\Question\Nova;
 
-use App\Nova\Actions\Tag\UpdateParentTag;
+use Haxibiao\Question\Tag as QuestionTag;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\MorphToMany;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Resource;
 
 class Tag extends Resource
 {
@@ -17,7 +18,7 @@ class Tag extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Tag';
+    public static $model = 'Haxibiao\Question\Tag';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -78,7 +79,7 @@ class Tag extends Resource
             Text::make('名称', 'name'),
             Text::make('统计数', 'count')->exceptOnForms(),
             Text::make('排名', 'rank'),
-            Select::make('状态', 'status')->options($this::getStatuses())->displayUsingLabels(),
+            Select::make('状态', 'status')->options(QuestionTag::getStatuses())->displayUsingLabels(),
             BelongsTo::make('父标签', 'tag', Tag::class)->nullable()->exceptOnForms(),
             Text::make('备注', 'remark')->exceptOnForms(),
             BelongsTo::make('用户', 'user', Tag::class)->exceptOnForms(),
@@ -128,7 +129,7 @@ class Tag extends Resource
     public function actions(Request $request)
     {
         return [
-            new UpdateParentTag,
+            new \Haxibiao\Question\Nova\Actions\Tag\UpdateParentTag,
         ];
     }
 }

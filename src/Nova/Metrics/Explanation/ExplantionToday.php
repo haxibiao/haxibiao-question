@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Nova\Metrics\Explanation;
+namespace Haxibiao\Question\Nova\Metrics\Explanation;
 
-use App\Explanation;
+use Haxibiao\Question\Explanation;
 use Illuminate\Http\Request;
 use Laravel\Nova\Metrics\Partition;
 
@@ -40,7 +40,6 @@ class ExplantionToday extends Partition
             }
 
             $result[$key] = $explanationGroup->count;
-
         }
 
         return $this->result($result);

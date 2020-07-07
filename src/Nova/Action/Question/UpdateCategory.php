@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Nova\Actions\Question;
+namespace Haxibiao\Question\Nova\Actions\Question;
 
-use App\Category;
-use App\Question;
+use Haxibiao\Question\Category;
+use Haxibiao\Question\Question;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -36,11 +36,10 @@ class UpdateCategory extends Action
         $ids = $models->pluck('id')->toArray();
 
         $result   = Question::whereIn('id', $ids)->update(['category_id' => $fields->category_id]);
-        $category = \App\Category::findOrFail($fields->category_id);
+        $category = Category::findOrFail($fields->category_id);
         $category->updateRanks();
 
         return Action::message('分类修改成功(' . $result . ')');
-
     }
 
     /**

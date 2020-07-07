@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova\Filters\Category;
+namespace Haxibiao\Question\Nova\Filter\Category;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
@@ -8,7 +8,7 @@ use App\Category;
 
 class CategoryQuestionsCountOrder extends Filter
 {
-    public $name ='题目数量排序';
+    public $name = '题目数量排序';
 
     /**
      * Apply the filter to the given query.
@@ -20,7 +20,7 @@ class CategoryQuestionsCountOrder extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        return $query->orderBy('questions_count',$value);
+        return $query->orderBy('questions_count', $value);
     }
 
     /**
@@ -31,6 +31,6 @@ class CategoryQuestionsCountOrder extends Filter
      */
     public function options(Request $request)
     {
-         return Category::getOrders();
+        return Category::getOrders();
     }
 }

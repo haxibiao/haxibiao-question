@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Nova\Filters\Question;
+namespace Haxibiao\Question\Nova\Filter\Question;
 
-use App\Question;
+use Haxibiao\Question\Question;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\BooleanFilter;
 

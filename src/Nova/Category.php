@@ -1,9 +1,10 @@
 <?php
 
-namespace App\Nova;
+namespace Haxibiao\Question\Nova;
 
-use App\Nova\Actions\Category\UpdateTag;
-use App\Nova\Filters\Category\CategoryTagFilter;
+use Haxibiao\Question\Category as QuestionCategory;
+use Haxibiao\Question\Question;
+use Haxibiao\Question\Tag;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
@@ -14,6 +15,7 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Resource;
 
 class Category extends Resource
 {
@@ -22,7 +24,7 @@ class Category extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Category';
+    public static $model = 'Haxibiao\Question\Category';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -71,9 +73,11 @@ class Category extends Resource
             ID::make()->sortable(),
             Text::make('名称', 'name')->hideFromIndex(),
             Text::make('名称', function () {
-                return sprintf('<a href="%s" class="no-underline dim text-primary font-bold"> %s </a>',
+                return sprintf(
+                    '<a href="%s" class="no-underline dim text-primary font-bold"> %s </a>',
                     nova_resource_uri($this),
-                    str_limit($this->name, 10));
+                    str_limit($this->name, 10)
+                );
             })->onlyOnIndex()->asHtml(),
             Textarea::make('描述', 'description'),
             Textarea::make('tips', 'tips'),
@@ -82,11 +86,11 @@ class Category extends Resource
             })->thumbnail(function () {
                 return $this->icon_url;
             })->hideWhenCreating(),
-            BelongsTo::make('上级分类', 'parent', Category::class)->exceptOnForms(),
+            BelongsTo::make('上级分类', 'parent', QuestionCategory::class)->exceptOnForms(),
             MorphToMany::make('标签', 'tags', Tag::class)->exceptOnForms(),
             Number::make('上级分类ID', 'parent_id')->onlyOnForms(),
-            Select::make('状态', 'status')->options($this::getStatuses())->displayUsingLabels(),
-            Select::make('允许出题', 'allow_submit')->options($this::getAllowSubmits())->displayUsingLabels(),
+            Select::make('状态', 'status')->options(QuestionCategory::getStatuses())->displayUsingLabels(),
+            Select::make('允许出题', 'allow_submit')->options(QuestionCategory::getAllowSubmits())->displayUsingLabels(),
             Select::make('官方', 'is_official')->options([
                 '0' => '否',
                 '1' => '是',
@@ -97,7 +101,7 @@ class Category extends Resource
             Text::make('答题数', function () {
                 return $this->answers_count;
             }),
-//            Text::make('可审题人数', function () {
+            //            Text::make('可审题人数', function () {
             //                return $this->can_review_count;
             //            }),
             Number::make('出题最小答对数', 'min_answer_correct')->hideFromIndex(),
@@ -127,11 +131,11 @@ class Category extends Resource
     public function filters(Request $request)
     {
         return [
-            new CategoryTagFilter,
-            new \App\Nova\Filters\Category\CategoryQuestionsCountOrder,
-            new \App\Nova\Filters\Category\CategoryAnswersCountOrder,
-            new \App\Nova\Filters\Category\CategoryStatusFilter,
-            new \App\Nova\Filters\Category\CategorySubmitFilter,
+            new \Haxibiao\Question\Nova\Filter\Category\CategoryTagFilter,
+            new \Haxibiao\Question\Nova\Filter\Category\CategoryQuestionsCountOrder,
+            new \Haxibiao\Question\Nova\Filter\Category\CategoryAnswersCountOrder,
+            new \Haxibiao\Question\Nova\Filter\Category\CategoryStatusFilter,
+            new \Haxibiao\Question\Nova\Filter\Category\CategorySubmitFilter,
         ];
     }
 
@@ -155,7 +159,7 @@ class Category extends Resource
     public function actions(Request $request)
     {
         return [
-            new UpdateTag,
+            new \Haxibiao\Question\Nova\Actions\Category\UpdateTag,
         ];
     }
 }

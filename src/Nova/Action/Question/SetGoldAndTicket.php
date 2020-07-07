@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Nova\Actions\Question;
+namespace Haxibiao\Question\Nova\Actions\Question;
 
-use App\Question;
-use DB;
+use Haxibiao\Question\Question;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 use Laravel\Nova\Actions\Action;
 use Laravel\Nova\Fields\ActionFields;
 use Laravel\Nova\Fields\Number;
@@ -58,7 +58,6 @@ class SetGoldAndTicket extends Action
                 }
                 return Action::message('操作成功,影响题目:' . $rows . '条');
             }
-
         }
     }
 

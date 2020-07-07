@@ -3,9 +3,9 @@
 namespace Haxibiao\Question\Traits;
 
 use App\Exceptions\UserException;
-use App\Explanation;
 use App\Image;
 use App\User;
+use Haxibiao\Question\Explanation;
 
 trait ExplanationRepo
 {
@@ -31,7 +31,7 @@ trait ExplanationRepo
         //     throw new UserException('含有非法关键词,请重新检查内容!');
         // }
 
-        $explanation = (new Explanation)->fill($inputs);
+        $explanation = (new Explanation())->fill($inputs);
 
 
         //视频检测

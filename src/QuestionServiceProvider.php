@@ -6,6 +6,17 @@ use Illuminate\Support\ServiceProvider;
 
 class QuestionServiceProvider extends ServiceProvider
 {
+
+    /**
+     * The event listener mappings for the application.
+     *
+     * @var array
+     */
+    protected $listen = [
+        'App\Events\PublishQuestion' => [
+            'App\Listeners\RewardUser'
+        ]
+    ];
     /**
      * Register services.
      *

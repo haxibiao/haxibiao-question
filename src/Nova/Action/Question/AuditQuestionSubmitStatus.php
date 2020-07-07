@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Nova\Actions\Question;
+namespace Haxibiao\Question\Nova\Actions\Question;
 
-use App\Events\PublishQuestion;
+
 use App\Exceptions\UserException;
-use App\Question;
+use Haxibiao\Question\Events\PublishQuestion;
+use Haxibiao\Question\Question;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -61,10 +62,10 @@ class AuditQuestionSubmitStatus extends Action
                 if ($statusOfAgree > 0) {
                     $isFirstApprove = $model->submit == \App\Question::REVIEW_SUBMIT;
                     $model->update([
-                        'submit'      => \App\Question::SUBMITTED_SUBMIT,
+                        'submit'      => Question::SUBMITTED_SUBMIT,
                         'remark'      => $remark,
                         'rank'        => $fields->rank ?? $model->getDefaultRank(),
-                        'review_id'   => \App\Question::max('review_id') + 1,
+                        'review_id'   => Question::max('review_id') + 1,
                         'reviewed_at' => now(),
                     ]);
                     $model->timestamps = true;

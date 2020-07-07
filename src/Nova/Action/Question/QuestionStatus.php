@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Nova\Actions\Question;
+namespace Haxibiao\Question\Nova\Actions\Question;
 
-use App\Question;
+use Haxibiao\Question\Question;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;

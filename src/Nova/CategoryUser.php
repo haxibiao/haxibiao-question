@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova;
+namespace Haxibiao\Question\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -9,6 +9,7 @@ use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Resource;
 
 class CategoryUser extends Resource
 {
@@ -17,7 +18,7 @@ class CategoryUser extends Resource
      *
      * @var string
      */
-    public static $model = 'App\CategoryUser';
+    public static $model = 'Haxibiao\Question\CategoryUser';
 
     /**
      * The single value that should be used to represent the resource when being displayed.

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Nova\Filters\Category;
+namespace Haxibiao\Question\Nova\Filter\Category;
 
-use App\Tag;
-use App\Taggable;
+use Haxibiao\Question\Tag;
+use Haxibiao\Question\Taggable;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
 
@@ -21,7 +21,7 @@ class CategoryTagFilter extends Filter
      */
     public function apply(Request $request, $query, $value)
     {
-        $cIds = Taggable::where('tag_id',$value)->where('taggable_type','categories')->get()->pluck('taggable_id');
+        $cIds = Taggable::where('tag_id', $value)->where('taggable_type', 'categories')->get()->pluck('taggable_id');
         return $query->whereIn('id', $cIds);
     }
 

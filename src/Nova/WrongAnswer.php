@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova;
+namespace Haxibiao\Question\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -8,6 +8,7 @@ use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
+use Laravel\Nova\Resource;
 
 class WrongAnswer extends Resource
 {
@@ -16,7 +17,7 @@ class WrongAnswer extends Resource
      *
      * @var string
      */
-    public static $model = 'App\WrongAnswer';
+    public static $model = 'Haxibiao\Question\WrongAnswer';
 
     /**
      * The single value that should be used to represent the resource when being displayed.

@@ -1,13 +1,16 @@
 <?php
 
-namespace App\Nova;
+namespace Haxibiao\Question\Nova;
 
+//FIXME:Halimtuhu??? 是外部包吗
 use Halimtuhu\ArrayImages\ArrayImages;
+use Haxibiao\Media\Video;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Textarea;
+use Laravel\Nova\Resource;
 
 class Explanation extends Resource
 {
@@ -16,7 +19,7 @@ class Explanation extends Resource
      *
      * @var string
      */
-    public static $model = 'App\Explanation';
+    public static $model = 'Haxibiao\Question\Explanation';
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -86,7 +89,7 @@ class Explanation extends Resource
     public function filters(Request $request)
     {
         return [
-            new Filters\Explanation\ExplanationTypeFilter,
+            new \Haxibiao\Question\Nova\Filter\Explanation\ExplanationTypeFilter,
         ];
     }
 

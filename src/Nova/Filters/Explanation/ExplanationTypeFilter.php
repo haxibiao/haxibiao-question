@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Nova\Filters\Explanation;
+namespace Haxibiao\Question\Nova\Filter\Explanation;
 
-use App\Explanation;
+use Haxibiao\Question\Explanation;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
 

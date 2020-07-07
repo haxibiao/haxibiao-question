@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Nova\Filters\Category;
+namespace Haxibiao\Question\Nova\Filter\Category;
 
-use App\Category;
+use Haxibiao\Question\Category;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\Filter;
 

@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Nova\Actions\Tag;
+namespace Haxibiao\Question\Nova\Actions\Tag;
 
-use App\Tag;
-use App\Taggable;
+use Haxibiao\Question\Tag;
+use Haxibiao\Question\Taggable;
 use Illuminate\Bus\Queueable;
 use Laravel\Nova\Actions\Action;
 use Illuminate\Support\Collection;
@@ -35,7 +35,7 @@ class UpdateParentTag extends Action
     public function handle(ActionFields $fields, Collection $models)
     {
         $ids = $models->pluck('id')->toArray();
-        foreach ($ids as $id){
+        foreach ($ids as $id) {
             $tag = Tag::find($id);
             $tag->tag_id = $fields->tag_id;
             $tag->save();

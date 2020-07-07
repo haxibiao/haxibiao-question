@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova\Metrics\Question;
+namespace Haxibiao\Question\Nova\Metrics\Question;
 
 use App\Report;
 use Illuminate\Http\Request;

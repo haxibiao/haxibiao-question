@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Nova\Metrics\Question;
+namespace Haxibiao\Question\Nova\Metrics\Question;
 
-use App\Question;
+use Haxibiao\Question\Question;
 use Illuminate\Http\Request;
 use Laravel\Nova\Metrics\Partition;
 

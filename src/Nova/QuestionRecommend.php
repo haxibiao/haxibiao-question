@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Nova;
+namespace Haxibiao\Question\Nova;
 
-use App\Nova\Filters\RecommendQuestion\RecommendQuestionCategoryFilter;
+use Haxibiao\Question\Nova\Filter\RecommendQuestion\RecommendQuestionCategoryFilter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Resource;
 
 class QuestionRecommend extends Resource
 {
@@ -17,7 +18,7 @@ class QuestionRecommend extends Resource
      *
      * @var string
      */
-    public static $model = 'App\QuestionRecommend';
+    public static $model = 'Haxibiao\Question\QuestionRecommend';
 
     public static $category = "题库管理";
 

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Nova\Actions\Question;
+namespace Haxibiao\Question\Nova\Actions\Question;
 
+use Haxibiao\Question\Question;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -36,10 +37,10 @@ class QuestionRank extends Action
                 //调整权重必须刷新 review_id 避免新区间大部分用户已排重这个 review_id
                 if ($fields->rank > $model->rank) {
                     //提升,就到最前排
-                    $model->review_id = \App\Question::max('review_id') + 1;
+                    $model->review_id = Question::max('review_id') + 1;
                 } else if ($fields->rank < $model->rank) {
                     //降低就到最后排
-                    $model->review_id = \App\Question::min('review_id') - 1;
+                    $model->review_id = Question::min('review_id') - 1;
                 }
                 $model->rank = $fields->rank;
                 $model->save();
@@ -50,7 +51,6 @@ class QuestionRank extends Action
             if (isset($lastmodel)) {
                 $lastmodel->category->updateRanks();
             }
-
         } catch (\Exception $e) {
             \DB::rollBack();
             return Action::danger('修改失败!' . $e->getMessage());

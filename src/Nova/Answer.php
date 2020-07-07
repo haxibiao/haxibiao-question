@@ -1,19 +1,21 @@
 <?php
 
-namespace App\Nova;
+namespace Haxibiao\Question\Nova;
 
+use Haxibiao\Question\Question;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\DateTime;
 use Laravel\Nova\Fields\ID;
 use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Resource;
 
 class Answer extends Resource
 {
     // public static $displayInNavigation = false;
 
-    public static $model = 'App\Answer';
+    public static $model = 'Haxibiao\Question\Answer';
 
     public static $title = 'id';
 

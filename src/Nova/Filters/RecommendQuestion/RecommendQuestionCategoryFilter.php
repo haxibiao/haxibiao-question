@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Nova\Filters\RecommendQuestion;
+namespace Haxibiao\Question\Nova\Filter\RecommendQuestion;
 
-use App\Category;
-use App\Question;
+use Haxibiao\Question\Category;
+use Haxibiao\Question\Question;
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\BooleanFilter;
 use Laravel\Nova\Filters\Filter;
@@ -30,7 +30,6 @@ class RecommendQuestionCategoryFilter extends BooleanFilter
             $questionIds = Question::select('id')->whereIn('category_id', $value)->get()->pluck('id')->toArray();
             $query->whereIn('question_id', $questionIds)->latest('id')->take(1000);
         }
-
     }
 
     /**

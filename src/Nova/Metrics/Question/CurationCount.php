@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Nova\Metrics\Question;
+namespace Haxibiao\Question\Nova\Metrics\Question;
 
+use Haxibiao\Question\Curation;
 use Illuminate\Http\Request;
 use Laravel\Nova\Metrics\Value;
-use App\Curation;
 
 class CurationCount extends Value
 {

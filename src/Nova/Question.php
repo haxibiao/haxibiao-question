@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Nova;
+namespace Haxibiao\Question\Nova;
 
-use App\Scopes\QuestionFormScope;
+
+use Haxibiao\Question\Audit;
+use Haxibiao\Question\Question as QuestionQuestion;
 use Illuminate\Http\Request;
-use Inspheric\Fields\Url;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\Code;
 use Laravel\Nova\Fields\DateTime;
@@ -16,10 +17,11 @@ use Laravel\Nova\Fields\Number;
 use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Resource;
 
 class Question extends Resource
 {
-    public static $model = 'App\Question';
+    public static $model = 'Haxibiao\Question\Question';
     public static $title = 'description';
 
     public static $search = [
@@ -28,7 +30,8 @@ class Question extends Resource
 
     public static function indexQuery(NovaRequest $request, $query)
     {
-        return $query->withoutGlobalScope(QuestionFormScope::class);
+        //FIXME:没有QuestionFormScope
+        // return $query->withoutGlobalScope(QuestionFormScope::class);
     }
 
     public static $category = "题库管理";
@@ -53,9 +56,11 @@ class Question extends Resource
             ID::make()->sortable(),
             Text::make('审核id', 'review_id')->onlyOnDetail(),
             Text::make('描述', function () {
-                return sprintf('<a href="%s" class="no-underline dim text-primary font-bold"> %s </a>',
+                return sprintf(
+                    '<a href="%s" class="no-underline dim text-primary font-bold"> %s </a>',
                     nova_resource_uri($this),
-                    str_limit($this->description, 50));
+                    str_limit($this->description, 50)
+                );
             })->onlyOnIndex()->asHtml(),
             Text::make('描述', 'description')->rules('required', 'max:1000')->hideFromIndex(),
             Code::make('选项', 'selections')->json(JSON_PRETTY_PRINT + JSON_UNESCAPED_UNICODE)->rules('required', 'max:4000'),
@@ -72,7 +77,7 @@ class Question extends Resource
             //关联关系
             // BelongsTo::make('分类', 'category', Category::class)->nullable(),
 
-            Select::make('类型', 'type')->options($this::getTypes())->displayUsingLabels(),
+            Select::make('类型', 'type')->options(QuestionQuestion::getTypes())->displayUsingLabels(),
             // Select::make('题目形式', 'form')->options($this::getForms())->displayUsingLabels(),
 
             Number::make('对', 'correct_count')->sortable()->min(0)->exceptOnForms(),
@@ -80,7 +85,7 @@ class Question extends Resource
             BelongsTo::make('用户', 'user', User::class)->nullable()->exceptOnForms(),
             BelongsTo::make('视频', 'video', Video::class)->nullable()->hideFromIndex(),
             BelongsTo::make('音频', 'audio', Audio::class)->hideFromIndex(),
-            Select::make('审核', 'submit')->options(\App\Question::getSubmitStatus())->hideFromIndex(),
+            Select::make('审核', 'submit')->options(QuestionQuestion::getSubmitStatus())->hideFromIndex(),
 
             DateTime::make('时间', 'created_at')->hideFromIndex()->exceptOnForms(),
             Text::make('权', 'rank')->sortable()->help('权重1-4'),
@@ -96,8 +101,11 @@ class Question extends Resource
                 }
                 $url = $this->video->url;
 
-                return sprintf('<a href="%s" class="no-underline dim text-primary font-bold" target="_blank"> %s </a>',
-                    $url, '点此播放');
+                return sprintf(
+                    '<a href="%s" class="no-underline dim text-primary font-bold" target="_blank"> %s </a>',
+                    $url,
+                    '点此播放'
+                );
             })->hideFromIndex()->asHtml(),
             HasMany::make('审题', 'audits', Audit::class)->hideFromIndex(),
             MorphMany::make('点赞', 'likes', Like::class),
@@ -116,16 +124,16 @@ class Question extends Resource
     public function cards(Request $request)
     {
         return [
-            new \App\Nova\Metrics\Question\ReportQuestionsPerDay,
-            new \App\Nova\Metrics\Question\AuditQuestionPerDay,
-            new \App\Nova\Metrics\Question\RefusedQuestionsPerDay,
-            new \App\Nova\Metrics\Curation\CurationPerDay,
-            new \App\Nova\Metrics\Question\QuestionPerDay,
-            new \App\Nova\Metrics\Question\AuditQuestionPerDay,
-            new \App\Nova\Metrics\Question\RefusedQuestionsPerDay,
-            new \App\Nova\Metrics\Question\ReportQuestionsPerDay,
-            new \App\Nova\Metrics\Explanation\ExplantionToday,
-            new \App\Nova\Metrics\Question\NewQuestionTypeToday,
+            new \Haxibiao\Question\Nova\Metrics\Question\ReportQuestionsPerDay,
+            new \Haxibiao\Question\Nova\Metrics\Question\AuditQuestionPerDay,
+            new \Haxibiao\Question\Nova\Metrics\Question\RefusedQuestionsPerDay,
+            new \Haxibiao\Question\Nova\Metrics\Curation\CurationPerDay,
+            new \Haxibiao\Question\Nova\Metrics\Question\QuestionPerDay,
+            new \Haxibiao\Question\Nova\Metrics\Question\AuditQuestionPerDay,
+            new \Haxibiao\Question\Nova\Metrics\Question\RefusedQuestionsPerDay,
+            new \Haxibiao\Question\Nova\Metrics\Question\ReportQuestionsPerDay,
+            new \Haxibiao\Question\Nova\Metrics\Explanation\ExplantionToday,
+            new \Haxibiao\Question\Nova\Metrics\Question\NewQuestionTypeToday,
         ];
     }
 
@@ -138,9 +146,9 @@ class Question extends Resource
     public function filters(Request $request)
     {
         return [
-            new \App\Nova\Filters\Question\QuestionSubmitStatus,
-            new \App\Nova\Filters\Question\QuestionTypeFilter,
-            new \App\Nova\Filters\Question\QuestionExplanationFilter,
+            new \Haxibiao\Question\Nova\Filter\Question\QuestionSubmitStatus,
+            new \Haxibiao\Question\Nova\Filter\Question\QuestionTypeFilter,
+            new \Haxibiao\Question\Nova\Filter\Question\QuestionExplanationFilter,
         ];
     }
 
@@ -164,11 +172,11 @@ class Question extends Resource
     public function actions(Request $request)
     {
         return [
-            new \App\Nova\Actions\Question\AuditQuestionSubmitStatus,
-            new \App\Nova\Actions\Question\UpdateCategory,
-            new \App\Nova\Actions\Question\QuestionRank,
-            new \App\Nova\Actions\Question\SetGoldAndTicket,
-            new \App\Nova\Actions\Question\RecommendQuestion,
+            new \Haxibiao\Question\Nova\Actions\Question\AuditQuestionSubmitStatus,
+            new \Haxibiao\Question\Nova\Actions\Question\UpdateCategory,
+            new \Haxibiao\Question\Nova\Actions\Question\QuestionRank,
+            new \Haxibiao\Question\Nova\Actions\Question\SetGoldAndTicket,
+            new \Haxibiao\Question\Nova\Actions\Question\RecommendQuestion,
         ];
     }
 }
