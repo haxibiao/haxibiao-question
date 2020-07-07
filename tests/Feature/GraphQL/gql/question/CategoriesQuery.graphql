@@ -1,0 +1,22 @@
+#专题分类
+query CategoriesQuery($count: Int, $page: Int) {
+    categories(count: $count, page: $page) {
+        data{
+            id
+            name
+            description
+            icon
+            count
+            parent_id
+            status
+            is_official
+            user_id
+            created_at
+            children {
+                id
+                name
+                icon
+            }
+        }
+    }
+}

@@ -1,0 +1,4 @@
+# 发布题目(精力不足出题后暂存的或者撤回的)
+mutation publishQuestion($id: Int!) {
+    publishQuestion(id: $id)
+}

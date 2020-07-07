@@ -1,0 +1,6 @@
+# 考试提交答案
+mutation TestAnswersMutation($answers: [AnswerDataInputType]) {
+    testAnswers(answers: $answers) {
+        id
+    }
+}

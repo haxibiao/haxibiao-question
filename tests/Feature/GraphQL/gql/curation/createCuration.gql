@@ -1,0 +1,9 @@
+mutation CreateCurationsMutation(
+    $question_id: Int!
+    $type: Int
+    $content: String
+) {
+    CreateCuration(question_id: $question_id, type: $type, content: $content) {
+        id
+    }
+}

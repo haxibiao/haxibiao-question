@@ -1,0 +1,52 @@
+#首页题库顶部分类
+query TagQuery($id: Int!, $tagsPage: Int, $categoriesPage: Int) {
+    tag(id: $id) {
+        id
+        name
+        tags(page: $tagsPage) {
+            paginatorInfo {
+                hasMorePages
+                currentPage
+            }
+            data {
+                id
+                name
+                categories {
+                    data {
+                        id
+                        icon
+                        name
+                        description
+                        is_official
+                        questions_count
+                        answers_count
+                    }
+                }
+            }
+        }
+        categories(page: $categoriesPage) {
+            paginatorInfo {
+                hasMorePages
+                currentPage
+            }
+            data {
+                id
+                icon
+                name
+                description
+                is_official
+                questions_count
+                answers_count
+                children {
+                    id
+                    icon
+                    name
+                    description
+                    is_official
+                    questions_count
+                    answers_count
+                }
+            }
+        }
+    }
+}

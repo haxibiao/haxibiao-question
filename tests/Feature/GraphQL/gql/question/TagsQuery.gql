@@ -1,0 +1,9 @@
+# 新首页
+query TagsQuery {
+    tags(filter: HOMEPAGE) {
+        data {
+            id
+            name
+        }
+    }
+}

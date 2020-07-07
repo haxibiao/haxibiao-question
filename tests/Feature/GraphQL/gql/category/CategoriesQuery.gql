@@ -1,0 +1,26 @@
+#题库列表
+query CategoriesQuery($page: Int) {
+    categories(page: $page) {
+        paginatorInfo {
+            currentPage
+            hasMorePages
+        }
+        data {
+            id
+            name
+            description
+            icon
+            count
+            parent_id
+            status
+            is_official
+            user_id
+            created_at
+            children {
+                id
+                name
+                icon
+            }
+        }
+    }
+}

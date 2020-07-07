@@ -1,0 +1,15 @@
+#最近答题的题库
+query CategoriesLatestQuery($top: Int) {
+    categoriesLatest(top: $top) {
+        id
+        name
+        description
+        icon
+        count
+        parent_id
+        status
+        is_official
+        user_id
+        created_at
+    }
+}

@@ -1,0 +1,12 @@
+#错题记录
+query WrongAnswersQuery($limit: Int) {
+    wrongAnswers(limit: $limit) {
+        answer
+        question {
+            id
+            description
+            wrong_count
+            count
+        }
+    }
+}

@@ -1,0 +1,9 @@
+# 可出题的题库（支持搜索）
+query CategoriesCanSubmit($count: Int, $page: Int, $keyword: String) {
+    categoriesCanSubmit(count: $count, page: $page ,keyword: $keyword) {
+        data{
+            id
+            name
+        }
+    }
+}

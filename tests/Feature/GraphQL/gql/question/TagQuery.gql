@@ -1,0 +1,46 @@
+query TagQuery($id: Int!, $tagsPage: Int, $categoriespage: Int, $count: Int) {
+    tag(id: $id) {
+        id
+        name
+        tags(page: $tagsPage, count: $count) {
+            data {
+                id
+                name
+                tips
+                categories {
+                    data {
+                        id
+                        icon
+                        name
+                        description
+                        is_official
+                        questions_count
+                        answers_count
+                        tips
+                    }
+                }
+            }
+        }
+        categories(page: $categoriespage, count: $count) {
+            data {
+                id
+                icon
+                name
+                description
+                is_official
+                questions_count
+                answers_count
+                tips
+                children {
+                    id
+                    icon
+                    name
+                    description
+                    is_official
+                    questions_count
+                    answers_count
+                }
+            }
+        }
+    }
+}

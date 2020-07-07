@@ -1,0 +1,26 @@
+#可出题的题库
+query CanSubmitCategoriesQuery($keyword: String) {
+    categoriesCanSubmit(keyword: $keyword) {
+        paginatorInfo {
+            hasMorePages
+            currentPage
+        }
+        data {
+            id
+            name
+            description
+            icon
+            count
+            parent_id
+            status
+            is_official
+            user_id
+            created_at
+            children {
+                id
+                name
+                icon
+            }
+        }
+    }
+}

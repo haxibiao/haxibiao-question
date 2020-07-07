@@ -1,0 +1,4 @@
+#答题
+mutation QuestionAnswerMutation($id: Int!, $answer: String!) {
+    answerQuestion(id: $id, answer: $answer)
+}

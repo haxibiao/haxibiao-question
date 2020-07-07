@@ -1,0 +1,11 @@
+# 考试领取奖励
+mutation TestAnswerRewardMutation(
+    $answers: [AnswerDataInputType]
+    $isWatchedAd: Boolean
+) {
+    testAnswerReward(answers: $answers, is_watched_ad: $isWatchedAd) {
+        gold
+        ticket
+        contribute
+    }
+}

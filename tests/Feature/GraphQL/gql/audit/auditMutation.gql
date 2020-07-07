@@ -1,0 +1,11 @@
+#审题
+mutation auditMutation($question_id: Int!, $status: Boolean) {
+    audit(question_id: $question_id, status: $status) {
+        id
+        status
+        question {
+            id
+            description
+        }
+    }
+}

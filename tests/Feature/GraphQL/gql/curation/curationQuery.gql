@@ -1,0 +1,15 @@
+query curationQuery($page: Int) {
+    curations(page: $page) {
+        data {
+            id
+            created_at
+            type
+            question {
+                id
+                description
+            }
+            remark
+            gold_awarded
+        }
+    }
+}

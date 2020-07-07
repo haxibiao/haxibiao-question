@@ -1,0 +1,20 @@
+mutation CreateQuestionMutation ($data: CreateQuestion!){
+    createQuestion(input: $data) {
+        id
+        description
+        answer
+        selection_array{
+            Text
+            Value
+        }
+        video {
+            id
+            url
+            height
+            width
+            path
+            rotate
+            duration
+        }
+    }
+}

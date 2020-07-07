@@ -75,4 +75,14 @@ class QuestionServiceProvider extends ServiceProvider
             $this->app->instance($abstract, $instance);
         }
     }
+
+    public function bindModelObserve()
+    {
+        \Haxibiao\Question\Answer::observe(\Haxibiao\Question\Observers\AnswerObserver::class);
+        \Haxibiao\Question\Question::observe(\Haxibiao\Question\Observers\QuestionObserver::class);
+        \Haxibiao\Question\Tag::observe(\Haxibiao\Question\Observers\TagObserver::class);
+
+        //Category FIXME:兼容 content包 需要费点心思
+        \Haxibiao\Question\Category::observe(\Haxibiao\Question\Observers\CategoryObserver::class);
+    }
 }

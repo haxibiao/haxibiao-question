@@ -1,0 +1,19 @@
+# 搜索题库
+query SearchCategoriesQuery($keyword: String!, $page: Int) {
+    categoriesSearch(keyword: $keyword, page: $page) {
+        paginatorInfo {
+            hasMorePages
+            currentPage
+        }
+        data {
+            id
+            name
+            icon
+            description
+            is_official
+            questions_count
+            answers_count
+            user_can_submit
+        }
+    }
+}
