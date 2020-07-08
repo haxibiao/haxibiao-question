@@ -2,10 +2,15 @@
 
 namespace Haxibiao\Question;
 
+use App\Audio;
 use App\Comment;
 use App\Exceptions\UserException;
+use App\Like;
 use App\Model;
+use App\Report;
 use App\User;
+use Haxibiao\Media\Image;
+use Haxibiao\Media\Video;
 use Haxibiao\Question\Traits\AnswerQuestion;
 use Haxibiao\Question\Traits\CreateQuestion;
 use Haxibiao\Question\Traits\QuestionAttrs;

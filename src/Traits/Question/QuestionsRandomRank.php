@@ -21,7 +21,7 @@ trait QuestionsRandomRank
      * 全新的随机rank的体验
      * @param $limit 决定一次取多少个题目
      */
-    public static function getQuestions($user, $category_id, $limit = 10, $not_in_ranks = [])
+    public static function  getQuestions($user, $category_id, $limit = 10, $not_in_ranks = [])
     {
         //FOR DEBUG ...
         if (empty($category_id)) {
@@ -189,8 +189,9 @@ trait QuestionsRandomRank
         //预加载前端定义字段关联关系
         $questions->load(['user', 'user.profile', 'explanation', 'user.role', 'audits' => function ($query) {
             $query->take(10);
-        }, 'audits.user', 'explanation.images', 'video', 'explanation.video', 'image', 'audio']);
+        }, 'audits.user', 'explanation.images', 'video', 'explanation.video', 'image']);
 
+        //FIXME:预加载字段有一个 audio 应该是需要把音频表加进来
         //预加喜欢状态
         $questions = Question::loadFavoriteStatus($user, $questions);
         //预加载点赞状态
