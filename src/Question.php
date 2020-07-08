@@ -5,8 +5,7 @@ namespace Haxibiao\Question;
 use App\Comment;
 use App\Exceptions\UserException;
 use App\Model;
-
-
+use App\User;
 use Haxibiao\Question\Traits\AnswerQuestion;
 use Haxibiao\Question\Traits\CreateQuestion;
 use Haxibiao\Question\Traits\QuestionAttrs;
