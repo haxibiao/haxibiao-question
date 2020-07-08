@@ -2,6 +2,8 @@
 
 namespace Haxibiao\Question;
 
+use Haxibiao\Media\Image;
+use Haxibiao\Media\Video;
 use Haxibiao\Question\Traits\ExplanationAttrs;
 use Haxibiao\Question\Traits\ExplanationRepo;
 use Haxibiao\Question\Traits\ExplanationResolvers;
