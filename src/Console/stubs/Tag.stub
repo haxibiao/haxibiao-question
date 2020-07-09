@@ -6,8 +6,4 @@ use  Haxibiao\Question\Tag as BaseTag;
 
 class Tag extends BaseTag
 {
-    public function tags()
-    {
-        return $this->morphedByMany(App\Tag::class, 'taggable');
-    }
 }

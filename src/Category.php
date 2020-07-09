@@ -47,6 +47,24 @@ class Category extends Model
     const PRIVACY = 0; //隐藏
     const DELETED = -1; //删除
 
+
+
+    public function parent()
+    {
+        return $this->belongsTo(App\Category::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(App\Category::class, 'parent_id');
+    }
+
+    public function publishedChildren()
+    {
+        return $this->children()->whereStatus(self::PUBLISH);
+    }
+
+
     public function tags()
     {
         return $this->morphToMany(Tag::class, 'taggable');

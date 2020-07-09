@@ -26,6 +26,11 @@ class Tag extends Model
     const ENABLE_STATUS  = 1;
     const DELETED_STATUS = -1;
 
+    public function tags()
+    {
+        return $this->morphedByMany(App\Tag::class, 'taggable');
+    }
+
     public function categories()
     {
         return $this->morphedByMany(Category::class, 'taggable')->whereStatus(Category::PUBLISH);
