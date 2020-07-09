@@ -2,7 +2,7 @@
 
 namespace Haxibiao\Question\Traits;
 
-use App\Question;
+use Haxibiao\Question\Question;
 use Illuminate\Support\Arr;
 
 trait QuestionResolvers

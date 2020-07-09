@@ -70,9 +70,9 @@ trait QuestionsRollRank
         $qb = $qb->where('user_id', '<>', $user->id);
 
         $seeNewQuestions = false;
-        if ($canReview && $currentRank == \App\Question::REVIEW_RANK) {
+        if ($canReview && $currentRank == Question::REVIEW_RANK) {
             $seeNewQuestions = true;
-            $qb              = $qb->whereRank(\App\Question::REVIEW_RANK)->inReview();
+            $qb              = $qb->whereRank(Question::REVIEW_RANK)->inReview();
         } else {
             $qb = $qb->whereRank($currentRank)->publish();
         }

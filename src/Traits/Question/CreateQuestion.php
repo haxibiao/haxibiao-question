@@ -3,7 +3,6 @@
 namespace Haxibiao\Question\Traits;
 
 use App\Exceptions\UserException;
-use App\Image;
 use App\Report;
 use App\User;
 use App\Video;
