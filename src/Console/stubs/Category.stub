@@ -7,4 +7,18 @@ use  Haxibiao\Question\Category as BaseCategory;
 class Category extends BaseCategory
 {
     
+      public function parent()
+    {
+        return $this->belongsTo('App\Category', 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany('App\Category', 'parent_id');
+    }
+
+    public function publishedChildren()
+    {
+        return $this->children()->whereStatus(self::PUBLISH);
+    }
 }

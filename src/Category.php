@@ -79,20 +79,6 @@ class Category extends Model
             ->withTimestamps();
     }
 
-    public function parent()
-    {
-        return $this->belongsTo(Category::class, 'parent_id');
-    }
-
-    public function children(): HasMany
-    {
-        return $this->hasMany(Category::class, 'parent_id');
-    }
-
-    public function publishedChildren()
-    {
-        return $this->children()->whereStatus(self::PUBLISH);
-    }
 
     public function user()
     {

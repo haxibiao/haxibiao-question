@@ -31,10 +31,6 @@ class Tag extends Model
         return $this->morphedByMany(Category::class, 'taggable')->whereStatus(Category::PUBLISH);
     }
 
-    public function tags(): MorphToMany
-    {
-        return $this->morphedByMany(Tag::class, 'taggable');
-    }
 
     public function user()
     {
