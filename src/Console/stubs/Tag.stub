@@ -8,6 +8,6 @@ class Tag extends BaseTag
 {
     public function tags()
     {
-        return $this->morphedByMany('App\Tag', 'taggable');
+        return $this->morphedByMany(App\Tag::class, 'taggable');
     }
 }
