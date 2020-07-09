@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Question;
 
+use App\User;
 use Haxibiao\Question\Question;
 use Haxibiao\Question\Traits\AuditRepo;
 use Haxibiao\Question\Traits\AuditResolvers;

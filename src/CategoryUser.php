@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Question;
 
+use App\User;
 use Haxibiao\Base\Traits\ModelHelpers;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 

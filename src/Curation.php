@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Question;
 
+use App\User;
 use App\UserProfile;
 use Haxibiao\Question\Traits\CurationRepo;
 use Haxibiao\Question\Traits\CurationResolvers;
