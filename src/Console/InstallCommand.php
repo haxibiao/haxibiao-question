@@ -80,6 +80,7 @@ class InstallCommand extends Command
             '/stubs/Audit.stub' => 'Audit.php',
             '/stubs/Curation.stub' => 'Curation.php',
             '/stubs/Audio.stub' => 'Audio.php',
+            '/stubs/QuestionCommented.stub' => 'Notifications/QuestionCommented.php',
         ];
     }
 }
