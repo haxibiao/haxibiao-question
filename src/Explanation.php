@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Question;
 
+use App\User;
 use Haxibiao\Media\Image;
 use Haxibiao\Media\Video;
 use Haxibiao\Question\Traits\ExplanationAttrs;
