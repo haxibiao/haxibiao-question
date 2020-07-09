@@ -21,6 +21,7 @@ trait QuestionFacade
             $recommendId = Cache::store('database')->get($cacheKey);
             $qb          = $qb->where('id', '>', $recommendId);
         }
+
         $recommends = $qb->take($limit)->get();
         $lastItem   = $recommends->last();
 

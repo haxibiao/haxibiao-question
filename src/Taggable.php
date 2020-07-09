@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Question;
 
+use App\Tag;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class Taggable extends Pivot

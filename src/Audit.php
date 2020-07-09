@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Question;
 
+use App\Question as AppQuestion;
 use App\User;
 use Haxibiao\Question\Question;
 use Haxibiao\Question\Traits\AuditRepo;
@@ -31,7 +32,7 @@ class Audit extends Pivot
 
     public function question(): BelongsTo
     {
-        return $this->belongsTo(Question::class);
+        return $this->belongsTo(AppQuestion::class);
     }
 
     public static function getStatuses()

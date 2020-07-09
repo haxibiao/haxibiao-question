@@ -2,9 +2,13 @@
 
 namespace Haxibiao\Question;
 
+use App\Answer;
 use App\Audio;
+use App\Audit;
+use App\Category;
 use App\Comment;
 use App\Exceptions\UserException;
+use App\Explanation;
 use App\Like;
 use App\Model;
 use App\Report;

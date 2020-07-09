@@ -2,6 +2,8 @@
 
 namespace Haxibiao\Question;
 
+use App\Category;
+use App\Taggable;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;

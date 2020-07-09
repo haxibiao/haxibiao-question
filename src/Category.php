@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Question;
 
+use App\Tag;
 use App\User;
 use Haxibiao\Question\Traits\CategoryAttrs;
 use Haxibiao\Question\Traits\CategoryRepo;
