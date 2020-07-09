@@ -9,7 +9,7 @@ trait CategoryResolvers
     //题库列表
     public function resolveCategories($root, $args, $context, $info)
     {
-        app_track_event('首页', '题库列表');
+        //app_track_event('首页', '题库列表');
         $keyword = data_get($args, 'key_word');
         $qb      = Category::published()->latest('rank');
         if (!empty($keyword)) {
