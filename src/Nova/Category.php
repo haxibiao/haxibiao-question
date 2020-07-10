@@ -86,7 +86,7 @@ class Category extends Resource
             })->thumbnail(function () {
                 return $this->icon_url;
             })->hideWhenCreating(),
-            BelongsTo::make('上级分类', 'parent', QuestionCategory::class)->exceptOnForms(),
+            BelongsTo::make('上级分类', 'parent', 'App\Nova\Category')->exceptOnForms(),
             MorphToMany::make('标签', 'tags', Tag::class)->exceptOnForms(),
             Number::make('上级分类ID', 'parent_id')->onlyOnForms(),
             Select::make('状态', 'status')->options(QuestionCategory::getStatuses())->displayUsingLabels(),
@@ -106,8 +106,8 @@ class Category extends Resource
             //            }),
             Number::make('出题最小答对数', 'min_answer_correct')->hideFromIndex(),
             Number::make('排名', 'rank')->help('数字越大,排名越靠前(建议范围0-999)')->withMeta(['value' => $rank]),
-            BelongsTo::make('用户', 'user', User::class)->exceptOnForms(),
-            HasMany::make('题目列表', 'questions', Question::class)->singularLabel('题目'),
+            BelongsTo::make('用户', 'user', 'App\Nova\User')->exceptOnForms(),
+            HasMany::make('题目列表', 'questions', 'App\Nova\Question')->singularLabel('题目'),
         ];
     }
 

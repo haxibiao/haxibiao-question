@@ -43,8 +43,8 @@ class Answer extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('用户', 'user', User::class),
-            BelongsTo::make('题目', 'question', Question::class),
+            BelongsTo::make('用户', 'user', 'App\Nova\User'),
+            BelongsTo::make('题目', 'question', 'App\Nova\Question'),
             Number::make('回答数', 'answered_count')->min(0),
             Number::make('正确数', 'correct_count')->min(0),
             Number::make('错误数', 'wrong_count')->min(0),

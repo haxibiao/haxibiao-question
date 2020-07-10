@@ -60,8 +60,8 @@ class Audit extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('用户', 'user', User::class)->exceptOnForms(),
-            BelongsTo::make('题目', 'question', Question::class)->exceptOnForms(),
+            BelongsTo::make('用户', 'user', 'App\Nova\User')->exceptOnForms(),
+            BelongsTo::make('题目', 'question', 'App\Nova\Question')->exceptOnForms(),
             Select::make('状态', 'status')->options(QuestionAudit::getStatuses())->displayUsingLabels()->exceptOnForms(),
             DateTime::make('投票时间', 'created_at')->exceptOnForms(),
 

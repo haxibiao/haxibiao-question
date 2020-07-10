@@ -65,7 +65,7 @@ class Audio extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('用户', 'user', User::class)->exceptOnForms(),
+            BelongsTo::make('用户', 'user', 'App\Nova\User')->exceptOnForms(),
             Text::make('音频名称', 'name')->exceptOnForms(),
             Number::make('时长', 'duration')->exceptOnForms(),
             Url::make('播放地址', 'url')->label('点击查看')->clickableOnIndex(),

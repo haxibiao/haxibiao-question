@@ -60,7 +60,7 @@ class QuestionRecommend extends Resource
         return  [
             ID::make()->sortable(),
             Number::make('权重', 'rank')->sortable(),
-            BelongsTo::make('题目', 'question', Question::class),
+            BelongsTo::make('题目', 'question', 'App\Nova\Question'),
         ];
         //推荐题目没有关联分类
         // if (!empty($cateogory)) {

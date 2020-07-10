@@ -2,9 +2,7 @@
 
 namespace App\Nova;
 
-//FIXME:Halimtuhu??? 是外部包吗
 use Halimtuhu\ArrayImages\ArrayImages;
-use Haxibiao\Media\Video;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\ID;
@@ -62,7 +60,7 @@ class Explanation extends Resource
                 return $this->description;
             }),
             Textarea::make('内容', 'content')->onlyOnDetail(),
-            BelongsTo::make('视频', 'video', Video::class)->exceptOnForms(),
+            BelongsTo::make('视频', 'video', 'App\Nova\Video')->exceptOnForms(),
             ArrayImages::make('图片', function () {
                 return $this->image_array;
             })->exceptOnForms(),

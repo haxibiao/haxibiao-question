@@ -82,9 +82,9 @@ class Question extends Resource
 
             Number::make('对', 'correct_count')->sortable()->min(0)->exceptOnForms(),
             Number::make('错', 'wrong_count')->sortable()->min(0)->exceptOnForms(),
-            BelongsTo::make('用户', 'user', User::class)->nullable()->exceptOnForms(),
-            BelongsTo::make('视频', 'video', Video::class)->nullable()->hideFromIndex(),
-            BelongsTo::make('音频', 'audio', Audio::class)->hideFromIndex(),
+            BelongsTo::make('用户', 'user', 'App\Nova\User')->nullable()->exceptOnForms(),
+            BelongsTo::make('视频', 'video', 'App\Nova\Video')->nullable()->hideFromIndex(),
+            BelongsTo::make('音频', 'audio', 'App\Nova\Audio')->hideFromIndex(),
             Select::make('审核', 'submit')->options(QuestionQuestion::getSubmitStatus())->hideFromIndex(),
 
             DateTime::make('时间', 'created_at')->hideFromIndex()->exceptOnForms(),
@@ -94,7 +94,7 @@ class Question extends Resource
             Number::make('反对', 'declined_count')->min(0)->exceptOnForms()->sortable()->hideFromIndex(),
             Text::make('赞', 'count_likes')->exceptOnForms()->sortable(),
             Text::make('评', 'count_comments')->exceptOnForms()->sortable(),
-            MorphMany::make('评论', 'comments', Comment::class),
+            MorphMany::make('评论', 'comments', 'App\Nova\Comment'),
             Text::make('视频播放地址', function () {
                 if (empty($this->video)) {
                     return null;

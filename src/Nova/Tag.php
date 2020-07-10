@@ -80,10 +80,10 @@ class Tag extends Resource
             Text::make('统计数', 'count')->exceptOnForms(),
             Text::make('排名', 'rank'),
             Select::make('状态', 'status')->options(QuestionTag::getStatuses())->displayUsingLabels(),
-            BelongsTo::make('父标签', 'tag', Tag::class)->nullable()->exceptOnForms(),
+            BelongsTo::make('父标签', 'tag', 'App\Nova\Tag')->nullable()->exceptOnForms(),
             Text::make('备注', 'remark')->exceptOnForms(),
-            BelongsTo::make('用户', 'user', Tag::class)->exceptOnForms(),
-            MorphToMany::make('反馈', 'feedbacks', Feedback::class),
+            BelongsTo::make('用户', 'user', 'App\Nova\Tag')->exceptOnForms(),
+            MorphToMany::make('反馈', 'feedbacks', 'App\Nova\Feedback'),
         ];
     }
 

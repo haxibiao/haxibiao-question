@@ -85,7 +85,7 @@ class Curation extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('用户', 'user', User::class)->exceptOnForms(),
+            BelongsTo::make('用户', 'user', 'App\Nova\User')->exceptOnForms(),
             Text::make('题目', 'question.description')->displayUsing(function ($value) {
                 return sprintf(
                     '<a href="%s" class="no-underline dim"> %s </a>',

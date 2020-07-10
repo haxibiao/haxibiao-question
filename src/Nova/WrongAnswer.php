@@ -59,7 +59,7 @@ class WrongAnswer extends Resource
     {
         return [
             ID::make()->sortable(),
-            BelongsTo::make('用户', 'user', User::class)->exceptOnForms(),
+            BelongsTo::make('用户', 'user', 'App\Nova\User')->exceptOnForms(),
             Code::make('错题记录', 'data')->json(JSON_PRETTY_PRINT + JSON_UNESCAPED_UNICODE)->exceptOnForms()->hideFromIndex(),
             Number::make('数量', 'count')->exceptOnForms(),
             DateTime::make('创建时间', 'created_at')->exceptOnForms(),

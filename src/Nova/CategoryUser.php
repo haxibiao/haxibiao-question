@@ -81,8 +81,8 @@ class CategoryUser extends Resource
             Code::make('rank_ranges')->json()->onlyOnDetail(),
             DateTime::make('创建时间', 'created_at')->onlyOnDetail(),
             DateTime::make('更新时间', 'updated_at')->onlyOnDetail(),
-            BelongsTo::make('分类', 'category', Category::class)->exceptOnForms(),
-            BelongsTo::make('用户', 'user', User::class)->exceptOnForms(),
+            BelongsTo::make('分类', 'category', 'App\Nova\Category')->exceptOnForms(),
+            BelongsTo::make('用户', 'user', 'App\Nova\User')->exceptOnForms(),
         ];
     }
 
