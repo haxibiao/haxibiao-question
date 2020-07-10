@@ -189,9 +189,8 @@ trait QuestionsRandomRank
         //预加载前端定义字段关联关系
         $questions->load(['user', 'user.profile', 'explanation', 'user.role', 'audits' => function ($query) {
             $query->take(10);
-        }, 'audits.user', 'explanation.images', 'video', 'explanation.video', 'image']);
+        }, 'audits.user', 'explanation.images', 'video', 'explanation.video', 'image', 'audio']);
 
-        //FIXME:预加载字段有一个 audio 应该是需要把音频表加进来
         //预加喜欢状态
         $questions = Question::loadFavoriteStatus($user, $questions);
         //预加载点赞状态
