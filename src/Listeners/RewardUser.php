@@ -31,6 +31,8 @@ class RewardUser
      */
     public function handle(PublishQuestion $event)
     {
+
+        info("进来了 baby");
         $question = $event->question;
         $user     = $question->user;
         if (!is_null($user) && !$question->is_rewarded) {
