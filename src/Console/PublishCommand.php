@@ -39,10 +39,10 @@ class PublishCommand extends Command
             '--force' => $this->option('force'),
         ]);
 
-        $this->call('vendor:publish', [
-            '--tag'   => 'question-tests',
-            '--force' => $this->option('force'),
-        ]);
+        // $this->call('vendor:publish', [
+        //     '--tag'   => 'question-tests',
+        //     '--force' => $this->option('force'),
+        // ]);
 
         $this->call('vendor:publish', [
             '--tag'   => 'question-nova-filters',

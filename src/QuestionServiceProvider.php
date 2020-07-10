@@ -69,7 +69,7 @@ class QuestionServiceProvider extends ServiceProvider
 
 
             $this->publishes([
-                __DIR__ . '/../' => base_path('graphql'),
+                __DIR__ . '/../graphql' => base_path('graphql'),
             ], 'question-graphql');
 
             //注册 migrations paths
