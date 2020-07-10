@@ -11,7 +11,8 @@
     "minimum-stability": "dev",
     "autoload": {
         "psr-4": {
-            "Haxibiao\\Question\\": "src/"
+            "Haxibiao\\Question\\": "src/",
+            "App\\": "src"
         }
     },
     "autoload-dev": {

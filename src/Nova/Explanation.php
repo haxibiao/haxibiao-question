@@ -1,6 +1,6 @@
 <?php
 
-namespace Haxibiao\Question\Nova;
+namespace App\Nova;
 
 //FIXME:Halimtuhu??? 是外部包吗
 use Halimtuhu\ArrayImages\ArrayImages;

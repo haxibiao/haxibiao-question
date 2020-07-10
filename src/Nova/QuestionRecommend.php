@@ -1,6 +1,6 @@
 <?php
 
-namespace Haxibiao\Question\Nova;
+namespace App\Nova;
 
 use Haxibiao\Question\Nova\Filters\RecommendQuestion\RecommendQuestionCategoryFilter;
 use Illuminate\Http\Request;

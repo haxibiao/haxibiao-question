@@ -1,6 +1,6 @@
 <?php
 
-namespace Haxibiao\Question\Nova;
+namespace App\Nova;
 
 use App\User;
 use Illuminate\Http\Request;

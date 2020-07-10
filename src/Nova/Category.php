@@ -1,6 +1,6 @@
 <?php
 
-namespace Haxibiao\Question\Nova;
+namespace App\Nova;
 
 use Haxibiao\Question\Category as QuestionCategory;
 use Haxibiao\Question\Question;
