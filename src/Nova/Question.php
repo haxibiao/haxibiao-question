@@ -107,11 +107,11 @@ class Question extends Resource
                     '点此播放'
                 );
             })->hideFromIndex()->asHtml(),
-            HasMany::make('审题', 'audits', Audit::class)->hideFromIndex(),
-            MorphMany::make('点赞', 'likes', Like::class),
-            MorphMany::make('举报', 'reports', Report::class),
+            HasMany::make('审题', 'audits', 'App\Nova\Audit')->hideFromIndex(),
+            MorphMany::make('点赞', 'likes', 'App\Nova\Like'),
+            MorphMany::make('举报', 'reports', 'App\Nova\Report'),
             // HasMany::make('答题记录', 'answer_logs', Answer::class)->hideFromIndex(),
-            BelongsTo::make('解析', 'explanation', Explanation::class)->hideFromIndex(),
+            BelongsTo::make('解析', 'explanation', 'App\Nova\Explanation')->hideFromIndex(),
         ];
     }
 
