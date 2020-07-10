@@ -14,6 +14,8 @@ class AnswerObserver
      */
     public function created(Answer $answer)
     {
+
+        info(1);
         //FIXME:如果没有任务模块不需要这句代码
         // $user = $answer->user;
         // $user->reviewTasksByClass(get_class($answer));

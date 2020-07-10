@@ -1,6 +1,6 @@
 <?php
 
-namespace Haxibiao\Question\Nova\Filter\Question;
+namespace Haxibiao\Question\Nova\Filters\Question;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Filters\BooleanFilter;

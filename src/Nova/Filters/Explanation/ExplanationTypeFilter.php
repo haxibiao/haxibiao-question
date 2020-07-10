@@ -1,6 +1,6 @@
 <?php
 
-namespace Haxibiao\Question\Nova\Filter\Explanation;
+namespace Haxibiao\Question\Nova\Filters\Explanation;
 
 use Haxibiao\Question\Explanation;
 use Illuminate\Http\Request;

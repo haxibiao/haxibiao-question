@@ -88,7 +88,7 @@ class Audit extends Resource
     public function filters(Request $request)
     {
         return [
-            new \Haxibiao\Question\Nova\Filter\Audit\AuditStatusFilter,
+            new \Haxibiao\Question\Nova\Filters\Audit\AuditStatusFilter,
         ];
     }
 

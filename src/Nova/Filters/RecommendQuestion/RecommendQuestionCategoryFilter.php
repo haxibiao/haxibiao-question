@@ -1,6 +1,6 @@
 <?php
 
-namespace Haxibiao\Question\Nova\Filter\RecommendQuestion;
+namespace Haxibiao\Question\Nova\Filters\RecommendQuestion;
 
 use Haxibiao\Question\Category;
 use Haxibiao\Question\Question;

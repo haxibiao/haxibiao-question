@@ -134,7 +134,7 @@ class Curation extends Resource
     public function filters(Request $request)
     {
         return [
-            new \Haxibiao\Question\Nova\Filter\Curation\CurationStatusFilter,
+            new \Haxibiao\Question\Nova\Filters\Curation\CurationStatusFilter,
         ];
     }
 

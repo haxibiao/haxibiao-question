@@ -146,9 +146,9 @@ class Question extends Resource
     public function filters(Request $request)
     {
         return [
-            new \Haxibiao\Question\Nova\Filter\Question\QuestionSubmitStatus,
-            new \Haxibiao\Question\Nova\Filter\Question\QuestionTypeFilter,
-            new \Haxibiao\Question\Nova\Filter\Question\QuestionExplanationFilter,
+            new \Haxibiao\Question\Nova\Filters\Question\QuestionSubmitStatus,
+            new \Haxibiao\Question\Nova\Filters\Question\QuestionTypeFilter,
+            new \Haxibiao\Question\Nova\Filters\Question\QuestionExplanationFilter,
         ];
     }
 

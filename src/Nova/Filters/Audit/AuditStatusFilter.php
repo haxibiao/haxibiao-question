@@ -1,6 +1,6 @@
 <?php
 
-namespace Haxibiao\Question\Nova\Filter\Audit;
+namespace Haxibiao\Question\Nova\Filters\Audit;
 
 use Haxibiao\Question\Audit;
 use Illuminate\Http\Request;

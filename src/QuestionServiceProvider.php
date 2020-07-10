@@ -48,8 +48,28 @@ class QuestionServiceProvider extends ServiceProvider
                 __DIR__ . '/../database/factories' => database_path('./factories'),
             ], 'question-db');
 
+            //nova actions
             $this->publishes([
-                __DIR__ . '/../graphql' => base_path('graphql'),
+                __DIR__ . '/Nova/Action/*' => app_path('Nova/Action/'),
+            ], 'question-nova-actions');
+
+            //nova filters
+            $this->publishes([
+                __DIR__ . '/Nova/Filters/*' => app_path('Nova/Filters/'),
+            ], 'question-nova-filters');
+
+            $this->publishes([
+                __DIR__ . '/Nova/Metrics/*' => app_path('Nova/Metrics/'),
+            ], 'question-nova-metrics');
+
+            //nova
+            $this->publishes([
+                __DIR__ . '/Nova' => app_path('Nova/'),
+            ], 'question-nova');
+
+
+            $this->publishes([
+                __DIR__ . '/../' => base_path('graphql'),
             ], 'question-graphql');
 
             //注册 migrations paths

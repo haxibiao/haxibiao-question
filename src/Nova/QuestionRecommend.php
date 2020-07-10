@@ -2,7 +2,7 @@
 
 namespace Haxibiao\Question\Nova;
 
-use Haxibiao\Question\Nova\Filter\RecommendQuestion\RecommendQuestionCategoryFilter;
+use Haxibiao\Question\Nova\Filters\RecommendQuestion\RecommendQuestionCategoryFilter;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Laravel\Nova\Fields\BelongsTo;

@@ -1,6 +1,6 @@
 <?php
 
-namespace Haxibiao\Question\Nova\Filter\Curation;
+namespace Haxibiao\Question\Nova\Filters\Curation;
 
 use Haxibiao\Question\Curation;
 use Illuminate\Http\Request;

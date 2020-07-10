@@ -390,7 +390,7 @@ class Question extends Model
             $newRank = 9;
             $newGold = 9;
         }
-        // 正确率40 % ~70 % ， 保持默认权重，智慧点8
+        // 正确率20 % ~40 % ， 权重9，智慧点9
         if ($correctRate >= 40 && $correctRate < 70) {
             $this->gold = 8;
             // 有点赞或有评论，或有解释的 提升到权重10最前位置

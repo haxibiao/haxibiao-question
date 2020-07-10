@@ -89,7 +89,7 @@ class Explanation extends Resource
     public function filters(Request $request)
     {
         return [
-            new \Haxibiao\Question\Nova\Filter\Explanation\ExplanationTypeFilter,
+            new \Haxibiao\Question\Nova\Filters\Explanation\ExplanationTypeFilter,
         ];
     }
 

@@ -131,11 +131,11 @@ class Category extends Resource
     public function filters(Request $request)
     {
         return [
-            new \Haxibiao\Question\Nova\Filter\Category\CategoryTagFilter,
-            new \Haxibiao\Question\Nova\Filter\Category\CategoryQuestionsCountOrder,
-            new \Haxibiao\Question\Nova\Filter\Category\CategoryAnswersCountOrder,
-            new \Haxibiao\Question\Nova\Filter\Category\CategoryStatusFilter,
-            new \Haxibiao\Question\Nova\Filter\Category\CategorySubmitFilter,
+            new \Haxibiao\Question\Nova\Filters\Category\CategoryTagFilter,
+            new \Haxibiao\Question\Nova\Filters\Category\CategoryQuestionsCountOrder,
+            new \Haxibiao\Question\Nova\Filters\Category\CategoryAnswersCountOrder,
+            new \Haxibiao\Question\Nova\Filters\Category\CategoryStatusFilter,
+            new \Haxibiao\Question\Nova\Filters\Category\CategorySubmitFilter,
         ];
     }
 

@@ -43,5 +43,25 @@ class PublishCommand extends Command
             '--tag'   => 'question-tests',
             '--force' => $this->option('force'),
         ]);
+
+        $this->call('vendor:publish', [
+            '--tag'   => 'question-nova-filters',
+            '--force' => $this->option('force'),
+        ]);
+
+        $this->call('vendor:publish', [
+            '--tag'   => 'question-nova-actions',
+            '--force' => $this->option('force'),
+        ]);
+
+        $this->call('vendor:publish', [
+            '--tag'   => 'question-nova-metrics',
+            '--force' => $this->option('force'),
+        ]);
+
+        $this->call('vendor:publish', [
+            '--tag'   => 'question-nova',
+            '--force' => $this->option('force'),
+        ]);
     }
 }
