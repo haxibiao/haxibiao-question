@@ -2,6 +2,8 @@
 
 namespace Haxibiao\Question;
 
+use Haxibiao\Question\Listeners\RewardUser;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
 class QuestionServiceProvider extends ServiceProvider
@@ -13,8 +15,8 @@ class QuestionServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'App\Events\PublishQuestion' => [
-            'App\Listeners\RewardUser'
+        'Haxibiao\Question\Events\PublishQuestion' => [
+            'Haxibiao\Question\Listeners\RewardUser'
         ]
     ];
     /**
@@ -74,6 +76,10 @@ class QuestionServiceProvider extends ServiceProvider
 
             //注册 migrations paths
             $this->loadMigrationsFrom($this->app->make('path.haxibiao-task.migrations'));
+
+            //注册监听器
+
+            $this->registerEvent();
         }
     }
 
@@ -104,5 +110,14 @@ class QuestionServiceProvider extends ServiceProvider
 
         //Category FIXME:兼容 content包 需要费点心思
         \Haxibiao\Question\Category::observe(\Haxibiao\Question\Observers\CategoryObserver::class);
+    }
+
+    public function  registerEvent()
+    {
+        foreach ($this->listen as $event => $listeners) {
+            foreach ($listeners as $listener) {
+                Event::listen($event, $listener);
+            }
+        }
     }
 }
