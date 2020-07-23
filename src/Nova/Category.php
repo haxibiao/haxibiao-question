@@ -4,7 +4,6 @@ namespace App\Nova;
 
 use Haxibiao\Question\Category as QuestionCategory;
 use Haxibiao\Question\Question;
-use Haxibiao\Question\Tag;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
 use Laravel\Nova\Fields\HasMany;
