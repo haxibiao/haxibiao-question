@@ -51,12 +51,12 @@ class Category extends Model
 
     public function parent()
     {
-        return $this->belongsTo(App\Category::class, 'parent_id');
+        return $this->belongsTo(\App\Category::class, 'parent_id');
     }
 
     public function children()
     {
-        return $this->hasMany(App\Category::class, 'parent_id');
+        return $this->hasMany(\App\Category::class, 'parent_id');
     }
 
     public function publishedChildren()
