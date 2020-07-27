@@ -61,9 +61,9 @@ class CreateQuestionsTable extends Migration
             $table->unsignedTinyInteger('form')->default(0)->comment('答题形式 0 选择题 1 普通动态, 2问答题');
             $table->boolean('is_resolved')->nullable()->index()->comment('付费问答是否被解决');
 
-            $table->index(['category_id', 'user_id', 'status', 'rank']); //for where
+            $table->index(['category_id', 'user_id', 'rank']); //for where
             $table->index(['rank', 'review_id']); // for order by
-            $table->index(['category_id', 'user_id', 'status', 'rank', 'review_id']);
+            $table->index(['category_id', 'user_id', 'rank', 'review_id']);
             $table->index('audio_id');
             $table->timestamps();
             $table->index('created_at');
