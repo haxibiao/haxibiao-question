@@ -60,4 +60,11 @@ trait CategoryResolvers
     {
         return Category::recommendCategories($args['offset'], $args['limit']);
     }
+
+    //工厂用查询题库
+    public function getByType($rootValue, array $args, $context, $resolveInfo)
+    {
+        $category = self::where("type", $args['type'])->where("status", 1)->orderBy("order", "desc");
+        return $category;
+    }
 }
