@@ -84,6 +84,9 @@ class Question extends Model
 
     protected $appends = ['base64Code'];
 
+    //工厂用每天最大答题数
+    const MAX_ANSWER = 50;
+
     const MAX_ANSWERS_COUNT = 3;
 
     const DEFAULT_GOLD   = 6;
