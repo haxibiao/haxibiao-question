@@ -34,6 +34,8 @@ trait QuestionResolvers
 
     public function resolveAnswerQuestion($root, $args, $context, $info)
     {
+        \App\Task::refreshTask(getUser(), "爱上答题"); //工厂用答题任务激励，刷新进度
+
         $index  = 5; //多选
         $answer = $args['answer'] ?? 'A';
         $answer = strtolower($answer);
