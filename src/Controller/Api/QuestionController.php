@@ -17,7 +17,7 @@ class QuestionController extends Controller
         $categoryId = $request->get('category_id');
         $user       = auth()->user();
         if (empty($categoryId)) {
-            return failed_response(500, '参数错误,分类不存在');
+            return failed_response('参数错误,分类不存在');
         }
 
         return Question::getQuestions($user, $categoryId, 10);
@@ -28,7 +28,7 @@ class QuestionController extends Controller
         $question = Question::with(['user', 'video'])->publish()->find($id);
 
         if (is_null($question)) {
-            return failed_response(500, '题目不存在');
+            return failed_response('题目不存在');
         }
 
         return $question;
@@ -78,25 +78,25 @@ class QuestionController extends Controller
         $videoId    = $request->get('video_id');
 
         if (empty($questionId) || empty($videoId)) {
-            return failed_response(500, '导入失败,参数不完整!');
+            return failed_response('导入失败,参数不完整!');
         }
 
         $question = Question::find($questionId);
 
         if (is_null($question)) {
-            return failed_response(500, '导入失败,题目不存在!');
+            return failed_response('导入失败,题目不存在!');
         }
 
         $question->video_id = $videoId;
         $question->type     = Question::VIDEO_TYPE;
 
         if (is_null($question->video)) {
-            return failed_response(500, '导入失败,视频不存在!');
+            return failed_response('导入失败,视频不存在!');
         }
 
         $question->save();
 
-        return successful_response(200, $question);
+        return successful_response($question, 200);
     }
 
     public function importExplanationVideo(Request $request)
@@ -105,25 +105,25 @@ class QuestionController extends Controller
         $videoId       = $request->get('video_id');
 
         if (empty($explanationId) || empty($videoId)) {
-            return failed_response(500, '导入失败,参数不完整!');
+            return failed_response('导入失败,参数不完整!');
         }
 
         $explanation = Explanation::find($explanationId);
 
         if (is_null($explanation)) {
-            return failed_response(500, '导入失败,解析不存在!');
+            return failed_response('导入失败,解析不存在!');
         }
 
         $explanation->video_id = $videoId;
         $explanation->setDefaultType();
 
         if (is_null($explanation->video)) {
-            return failed_response(500, '导入失败,视频不存在!');
+            return failed_response('导入失败,视频不存在!');
         }
 
         $explanation->save();
 
-        return successful_response(200, $explanation);
+        return successful_response($explanation, 200);
     }
 
     public function getExplantion(Request $request)
@@ -131,12 +131,12 @@ class QuestionController extends Controller
         $videoId = $request->get('video_id');
 
         if (empty($videoId)) {
-            return failed_response(500, '参数错误!');
+            return failed_response('参数错误!');
         }
 
         $explanation = Explanation::where('video_id', $videoId)->first();
 
-        return successful_response(200, $explanation);
+        return successful_response($explanation,200);
     }
 
     public function more(Request $request)

@@ -1,4 +1,12 @@
 <?php
+/*
+ * @Author: your name
+ * @Date: 2020-12-08 09:25:38
+ * @LastEditTime: 2020-12-08 11:10:08
+ * @LastEditors: your name
+ * @Description: In User Settings Edit
+ * @FilePath: /neihan.sites/packages/haxibiao/question/src/Controller/Api/AnswerController.php
+ */
 
 namespace Haxibiao\Question\Controllers\Api;
 
@@ -13,15 +21,15 @@ class AnswerController extends Controller
     {
         $inputs = $request->input();
         if (!isset($inputs['question_id']) || !isset($inputs['answer'])) {
-            return failed_response(500, '参数错误!');
+            return failed_response('参数错误!');
         }
 
         $question = Question::find($inputs['question_id']);
         if (empty($question)) {
-            return failed_response(500, '题目不存在!');
+            return failed_response('题目不存在!');
         }
         $user = auth()->user();
 
-        return successful_response(200, Question::answerQuestion($user, $question, $inputs['answer']));
+        return successful_response(Question::answerQuestion($user, $question, $inputs['answer']),200);
     }
 }
