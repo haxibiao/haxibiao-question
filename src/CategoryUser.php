@@ -4,7 +4,7 @@ namespace Haxibiao\Question;
 
 use App\Category;
 use App\User;
-use Haxibiao\Base\Traits\ModelHelpers;
+use Haxibiao\Breeze\Traits\ModelHelpers;
 use Illuminate\Database\Eloquent\Relations\Pivot;
 
 class CategoryUser extends Pivot

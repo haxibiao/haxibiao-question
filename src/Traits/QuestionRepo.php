@@ -5,7 +5,7 @@ namespace Haxibiao\Question\Traits;
 use App\Contribute;
 use App\Image;
 use App\Report;
-use Haxibiao\Base\UserProfile;
+use Haxibiao\Breeze\UserProfile;
 use Haxibiao\Question\Question;
 
 trait QuestionRepo
