@@ -2,10 +2,9 @@
 
 namespace Haxibiao\Question;
 
-use App\Model;
 use App\Question;
 use App\User;
-
+use Haxibiao\Breeze\Model;
 use Haxibiao\Question\Traits\AnswerFacade;
 use Haxibiao\Question\Traits\AnswerResolvers;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;

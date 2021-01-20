@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Notifications;
+namespace Haxibiao\Breeze\Notifications;
 
 use Haxibiao\Question\Notifications\QuestionCommented as BaseQuestionCommented;
 
