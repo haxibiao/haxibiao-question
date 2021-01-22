@@ -12,7 +12,7 @@ class InstallCommand extends Command
      *
      * @var string
      */
-    protected $signature = 'question:install';
+    protected $signature = 'question:install {--force}';
 
     /**
      * The console command description.
@@ -38,49 +38,16 @@ class InstallCommand extends Command
      */
     public function handle()
     {
+        $force = $this->option('force');
 
         $this->info('发布 资源文件 ...');
-        $this->callSilent('question:publish', ['--force' => true]);
-
+        $this->callSilent('question:publish', ['--force' => $force]);
 
         $this->info("复制 stubs ...");
-        $this->installStub();
+        copyStubs(__DIR__, $force);
+
         $this->comment('迁移数据库变化...');
         $this->call('migrate');
-        $this->comment('question模块安装完成');
-    }
-
-    protected function resolveStubPath($stub)
-    {
-        return __DIR__ . $stub;
-    }
-
-    protected function installStub()
-    {
-        $stubPath =  $this->stubPath();
-        foreach ($stubPath as $key => $value) {
-            copy($this->resolveStubPath($key), app_path($value));
-        }
-    }
-
-
-    protected function stubPath()
-    {
-        return [
-            '/stubs/Answer.stub' =>  'Answer.php',
-            '/stubs/Question.stub' => 'Question.php',
-            '/stubs/Category.stub' => 'Category.php',
-            '/stubs/CategoryUser.stub' => 'CategoryUser.php',
-            '/stubs/Explanation.stub' => 'Explanation.php',
-            '/stubs/QuestionRecommend.stub' => 'QuestionRecommend.php',
-            '/stubs/Tag.stub' => 'Tag.php',
-            '/stubs/Taggable.stub' => 'Taggable.php',
-            '/stubs/UserAction.stub' => 'UserAction.php',
-            '/stubs/WrongAnswer.stub' => 'WrongAnswer.php',
-            '/stubs/Audit.stub' => 'Audit.php',
-            '/stubs/Curation.stub' => 'Curation.php',
-            '/stubs/Audio.stub' => 'Audio.php',
-            '/stubs/QuestionCommented.stub' => 'Notifications/QuestionCommented.php',
-        ];
+        $this->comment('question 模块 安装完成');
     }
 }
