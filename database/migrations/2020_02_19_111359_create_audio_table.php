@@ -13,6 +13,9 @@ class CreateAudioTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('audio')) {
+            return;
+        }
         Schema::create('audio', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('user_id')->index()->comment('用户ID');
