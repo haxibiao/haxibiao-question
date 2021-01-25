@@ -16,11 +16,10 @@ class CreateAnswerTable extends Migration
         if (Schema::hasTable('answer')) {
             return;
         }
+        //TODO: 这个表应该叫 answers
         Schema::create('answer', function (Blueprint $table) {
-            $table->increments('id');
-            //关联users表
+            $table->bigIncrements('id');
             $table->unsignedInteger('user_id')->index()->comment('用户ID');
-            //关联questions表
             $table->unsignedInteger('question_id')->index()->comment('题库ID');
 
             $table->integer('answered_count')->default(0)->comment('回答次数');
@@ -28,8 +27,6 @@ class CreateAnswerTable extends Migration
             $table->integer('wrong_count')->default(0)->comment('统计：错误回答');
             $table->unsignedInteger('gold_awarded')->default(0)->comment('总获智慧点');
             $table->timestamps();
-
-            $table->index(['created_at']);
         });
     }
 
@@ -40,6 +37,6 @@ class CreateAnswerTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('answer');
+        Schema::dropIfExists('answers');
     }
 }
