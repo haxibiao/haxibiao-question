@@ -3,10 +3,12 @@
     "description": "哈希表答题系统",
     "type": "project",
     "license": "MIT",
-    "authors": [{
-        "name": "zzm",
-        "email": "zhangzhiming@haxifang.com"
-    }],
+    "authors": [
+        {
+            "name": "zzm",
+            "email": "zhangzhiming@haxifang.com"
+        }
+    ],
     "require": {},
     "minimum-stability": "dev",
     "autoload": {
@@ -17,6 +19,8 @@
     },
     "autoload-dev": {
         "classmap": [
+            "database/factories/",
+            "database/seeder/",
             "tests/"
         ]
     },

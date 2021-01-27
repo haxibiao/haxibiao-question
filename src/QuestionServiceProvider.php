@@ -18,6 +18,7 @@ class QuestionServiceProvider extends ServiceProvider
             'Haxibiao\Question\Listeners\RewardUser',
         ],
     ];
+
     /**
      * Register services.
      *
@@ -44,10 +45,6 @@ class QuestionServiceProvider extends ServiceProvider
         // ], 'question-provider');
 
         if ($this->app->runningInConsole()) {
-
-            $this->publishes([
-                __DIR__ . '/../database/factories' => database_path('./factories'),
-            ], 'question-db');
 
             //nova actions
             $this->publishes([
