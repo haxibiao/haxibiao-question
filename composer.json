@@ -15,12 +15,14 @@
         "psr-4": {
             "Haxibiao\\Question\\": "src/",
             "App\\": "src"
-        }
+        },
+        "classmap": [
+            "database/seeders/"
+        ]
     },
     "autoload-dev": {
         "classmap": [
             "database/factories/",
-            "database/seeder/",
             "tests/"
         ]
     },
