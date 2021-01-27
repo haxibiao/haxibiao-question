@@ -2,7 +2,6 @@
 
 namespace Haxibiao\Question;
 
-use Haxibiao\Question\Listeners\RewardUser;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\ServiceProvider;
 
@@ -16,8 +15,8 @@ class QuestionServiceProvider extends ServiceProvider
      */
     protected $listen = [
         'Haxibiao\Question\Events\PublishQuestion' => [
-            'Haxibiao\Question\Listeners\RewardUser'
-        ]
+            'Haxibiao\Question\Listeners\RewardUser',
+        ],
     ];
     /**
      * Register services.
@@ -69,13 +68,12 @@ class QuestionServiceProvider extends ServiceProvider
                 __DIR__ . '/Nova' => app_path('Nova/'),
             ], 'question-nova');
 
-
             $this->publishes([
                 __DIR__ . '/../graphql' => base_path('graphql'),
             ], 'question-graphql');
 
             //注册 migrations paths
-            $this->loadMigrationsFrom($this->app->make('path.haxibiao-task.migrations'));
+            $this->loadMigrationsFrom($this->app->make('path.haxibiao-question.migrations'));
 
             //注册监听器
 
@@ -91,12 +89,12 @@ class QuestionServiceProvider extends ServiceProvider
     protected function bindPathsInContainer()
     {
         foreach ([
-            'path.haxibiao-task'            => $root = dirname(__DIR__),
-            'path.haxibiao-task.config'     => $root . '/config',
-            'path.haxibiao-task.graphql'    => $root . '/graphql',
-            'path.haxibiao-task.database'   => $database = $root . '/database',
-            'path.haxibiao-task.migrations' => $database . '/migrations',
-            'path.haxibiao-task.seeds'      => $database . '/seeds',
+            'path.haxibiao-question'            => $root = dirname(__DIR__),
+            'path.haxibiao-question.config'     => $root . '/config',
+            'path.haxibiao-question.graphql'    => $root . '/graphql',
+            'path.haxibiao-question.database'   => $database = $root . '/database',
+            'path.haxibiao-question.migrations' => $database . '/migrations',
+            'path.haxibiao-question.seeds'      => $database . '/seeds',
         ] as $abstract => $instance) {
             $this->app->instance($abstract, $instance);
         }
@@ -112,7 +110,7 @@ class QuestionServiceProvider extends ServiceProvider
         \Haxibiao\Question\Category::observe(\Haxibiao\Question\Observers\CategoryObserver::class);
     }
 
-    public function  registerEvent()
+    public function registerEvent()
     {
         foreach ($this->listen as $event => $listeners) {
             foreach ($listeners as $listener) {
