@@ -8,6 +8,7 @@ use Haxibiao\Question\CategoryUser;
 use Haxibiao\Question\Question;
 use Haxibiao\Question\QuestionRecommend;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 
 trait QuestionFacade
 {
@@ -136,21 +137,25 @@ trait QuestionFacade
         return $question;
     }
 
+    /**
+     * 用户是否收藏题目
+     */
     public static function loadFavoriteStatus($user, $questions)
     {
-        //预加载喜欢
-        $favoriteQuewstionIds = $user->favorites()
-            ->select('favorable_id')
-            ->whereIn('favorable_id', $questions->pluck('id'))
-            ->where('favorable_type', 'questions')
-            ->get()
-            ->pluck('favorable_id');
+        //以前的 count, get 在检查收藏状态，数据量大之后都有full scan性能风险，exists更好
 
-        //更改liked状态
-        $questions->each(function ($question) use ($favoriteQuewstionIds) {
-            $question->favorite_status = $favoriteQuewstionIds->contains($question->id);
+        //批量更改状态
+        $questions->each(function ($question) {
+            $question->favorite_status = false;
+            if ($user = getUser(false)) {
+                $question->favorite_status = DB::table('favorites')
+                    ->where('user_id', $user->id)
+                    ->where('favorable_id', $question->id)
+                    ->where('favorable_type', 'questions')
+                    ->exists();
+            }
+
         });
-
         return $questions;
     }
 
