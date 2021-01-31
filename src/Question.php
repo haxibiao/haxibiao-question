@@ -13,6 +13,7 @@ use App\Like;
 use App\Model;
 use App\Report;
 use App\User;
+use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Media\Image;
 use Haxibiao\Media\Video;
 use Haxibiao\Question\Traits\AnswerQuestion;
@@ -30,6 +31,7 @@ use Laravel\Nova\Actions\Actionable;
 
 class Question extends Model
 {
+    use HasFactory;
     use Actionable;
     use QuestionRepo;
     use QuestionResolvers;

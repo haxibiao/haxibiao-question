@@ -2,19 +2,15 @@
 
 namespace Haxibiao\Question\Traits;
 
-use App\Exceptions\UserException;
 use App\Report;
 use App\User;
 use App\Video;
 use Exception;
-
-
+use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Helpers\VodUtils;
 use Haxibiao\Question\Question;
 use Illuminate\Support\Carbon;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
-use Zxing\QrReader;
 
 trait CreateQuestion
 {
