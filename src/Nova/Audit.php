@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova;
+namespace Haxibiao\Question\Nova;
 
 use Haxibiao\Question\Audit as QuestionAudit;
 use Haxibiao\Question\Question;

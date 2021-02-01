@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova;
+namespace Haxibiao\Question\Nova;
 
 use Haxibiao\Question\Tag as QuestionTag;
 use Illuminate\Http\Request;

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Nova;
+namespace Haxibiao\Question\Nova;
 
 use Halimtuhu\ArrayImages\ArrayImages;
 use Illuminate\Http\Request;
