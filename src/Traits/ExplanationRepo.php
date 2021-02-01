@@ -2,9 +2,9 @@
 
 namespace Haxibiao\Question\Traits;
 
-use App\Exceptions\UserException;
 use App\Image;
 use App\User;
+use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Question\Explanation;
 
 trait ExplanationRepo
@@ -32,7 +32,6 @@ trait ExplanationRepo
         // }
 
         $explanation = (new Explanation())->fill($inputs);
-
 
         //视频检测
         if (isset($inputs['video_id'])) {
