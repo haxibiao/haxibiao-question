@@ -48,6 +48,9 @@ class CreateQuestionsTable extends Migration
             $table->timestamp('reviewed_at')->nullable();
             $table->timestamp('rejected_at')->nullable();
 
+            $table->integer('reports_count')->default(0)->index()->comment('举报数');
+            $table->integer('reports_weight')->default(0)->index()->comment('举报权重：总人等级数');
+
             $table->string('remark')->nullable()->comment('备注');
             $table->tinyInteger('rank')->index()->comment('题目权重');
             $table->tinyInteger('accepted_count')->default(0)->comment('赞成投票数');
