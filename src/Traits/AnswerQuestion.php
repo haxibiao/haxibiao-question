@@ -56,7 +56,7 @@ trait AnswerQuestion
         $question->$incrementField++;
         $question->timestamps = false;
         $question->save();
-
+        
         //5.超过100次回答 && 题目更新时间超过1周前:更新权重，奖励
         $question_answer_count = $question->correct_count + $question->wrong_count;
         if ($question_answer_count > 100 && $question->updated_at < now()->subDay(7)) {
@@ -66,12 +66,12 @@ trait AnswerQuestion
         //６.分类统计和流量统计
         if ($category = $question->category) {
             $category->increment('answers_count');
-
+            
             $category->incrementCountAnswerByMouth();
             $category->timestamps = false;
             $category->save();
         }
-
+        
         //７.用户精力点扣除
         $user->usedTicket($question->ticket);
         if ($isAnswerCorrect) {
@@ -82,7 +82,7 @@ trait AnswerQuestion
         $user->save();
 
         //更新每日答题数
-        $profile = $user->profile()->select('id')->first();
+        $profile = $user->user_profile()->select('id')->first();
         if ($profile) {
             $profile->increment('answers_count_today');
             $profile->increment('answers_count');
@@ -95,7 +95,8 @@ trait AnswerQuestion
         }
 
         //更新用户每日快照
-        Question::updateUserSnapshot($user, $isAnswerCorrect);
+        //暂无Snapshot
+       // Question::updateUserSnapshot($user, $isAnswerCorrect);
 
         //记录　qid 到　user_data, 实现已答过逻辑
         //TODO:　等user_data导入　NOSQL　再实现

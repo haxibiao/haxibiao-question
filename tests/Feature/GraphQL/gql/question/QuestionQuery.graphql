@@ -63,8 +63,8 @@ query QuestionQuery($id: Int!) {
             id
             name
             avatar
-            followers_count
-            question_count
+            count_followers
+            #question_count
         }
         submit
         audits {

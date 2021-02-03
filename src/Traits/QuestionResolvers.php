@@ -4,7 +4,7 @@ namespace Haxibiao\Question\Traits;
 
 use Illuminate\Support\Arr;
 use Haxibiao\Question\Question;
-use App\Exceptions\GQLException;
+use Haxibiao\Breeze\Exceptions\GQLException;
 
 trait QuestionResolvers
 {

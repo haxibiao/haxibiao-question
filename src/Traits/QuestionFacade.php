@@ -2,7 +2,7 @@
 
 namespace Haxibiao\Question\Traits;
 
-use App\Exceptions\UserException;
+use Haxibiao\Breeze\Exceptions\UserException;
 use App\User;
 use Haxibiao\Question\CategoryUser;
 use Haxibiao\Question\Question;

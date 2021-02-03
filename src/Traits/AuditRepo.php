@@ -5,7 +5,7 @@ namespace Haxibiao\Question\Traits;
 
 use App\Contribute;
 
-use App\Exceptions\UserException;
+use Haxibiao\Breeze\Exceptions\UserException;
 
 use App\User;
 use Haxibiao\Question\Audit;

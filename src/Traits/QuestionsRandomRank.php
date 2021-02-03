@@ -4,7 +4,7 @@ namespace Haxibiao\Question\Traits;
 
 
 
-use App\Exceptions\UserException;
+use Haxibiao\Breeze\Exceptions\UserException;
 
 
 use Haxibiao\Question\Category;
@@ -52,7 +52,7 @@ trait QuestionsRandomRank
         $canReview       = appCanReview(); //APP能审题
         $canReview       = $canReview && $user->can_audit && $user->ticket >= 10; //用户能审题没被关闭,精力足够
         $canReview       = $canReview && $pivot->correct_count >= $mustCorrectCount; //用户当前分类正确数够审题
-
+        
         //如果最后审题时间是昨天，重置用户今日审题数
         if ($canReview) {
             $last_audit_time = $user->audits()->max('created_at');
@@ -69,7 +69,7 @@ trait QuestionsRandomRank
         //当前正在作答的 权重位置
         $topRank     = $pivot->getTopRank(false);
         $currentRank = $topRank; //默认正常题里的最高权重
-
+       
         //如果能审题,50%机会取的是审题
         if (is_prod_env()) {
             if ($canReview) {
@@ -85,7 +85,7 @@ trait QuestionsRandomRank
         }
 
         $tries = 0;
-
+       
         //如果不是审题,
         if (!$isReviewing) {
             //所有非审题区间
@@ -126,7 +126,7 @@ trait QuestionsRandomRank
             if (is_null($currentRank)) {
                 $currentRank = Question::REVIEW_RANK;
             }
-        }
+        } 
 
         //恢复,准备开始取题
         $pivot->in_rank = $currentRank;
@@ -153,7 +153,7 @@ trait QuestionsRandomRank
                 $qb = $qb->whereRank($currentRank)->publish();
             }
         }
-
+        
         //错位排重逻辑，用户答过的区间的review_id不答
         $rank_max_review_id = $qb->max('review_id');
         //当前权重下有新的题目
@@ -167,7 +167,7 @@ trait QuestionsRandomRank
                 $qb = $qb->where('review_id', '<', $pivot->min_review_id);
             }
         }
-
+        
         //排序,有新题时，从小review_id到大
         $qb = $seeNewQuestions ? $qb->orderBy('review_id') : $qb->orderByDesc('review_id');
 

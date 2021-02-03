@@ -62,9 +62,9 @@ query RandomQuestionQuery{
             id
             name
             avatar
-            followers_count
-            question_count
-            roles
+            count_followers
+            #question_count
+            #roles
         }
         submit
         audits {

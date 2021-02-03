@@ -4,131 +4,102 @@ namespace Haxibiao\Question\Tests\Feature\GraphQL;
 
 
 use App\User;
-use Haxibiao\Question\Category;
-use Haxibiao\Question\Question;
+use App\Category;
+use App\Question;
+use Haxibiao\Breeze\GraphQLTestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class QuestionTest extends GraphQLTestCase
 {
-    protected $user;
+    use DatabaseTransactions;
 
+    protected $user;
     protected $question;
+    protected $category;
 
     protected function setUp(): void
     {
         parent::setUp();
 
-        $this->user = factory(User::class)->create();
+        $this->user = User::factory([
+            'api_token' => str_random(60),
+            'account' => rand(10000000000, 99999999999),
+        ])->create();
 
-        $this->question = factory(Question::class)->create([
+        $this->category = Category::factory()->create();
+        $this->question = Question::factory()->create([
+            'category_id'=>$this->category->id,
+            'rank'      => 1
+        ]);
+        
+    }
+
+    
+    /**
+     * 用户出题
+     * @group question
+     * @group testCreateQuestion
+     */
+    protected function testCreateQuestion()
+    {// 无  App\User::checkRules() 逻辑
+        $mutation = file_get_contents(__DIR__ . '/gql/question/CreateQuestionMutation.graphql');
+        //$user->checkRules();
+        $variables = [
+            "data" => [
+                'category_id' => $this->category->id,
+                'description' => "下列的城市是否有湖南省的？",
+                'selections'  => [["Text" => "yes", "Value" => "A"], ["Text" => "no", "Value" => "B"], ["Text" => "fuck", "Value" => "C"]],
+                'answers'     => 'A',
+            ],
+        ];
+
+        $this->runGuestGQL($mutation, $variables, $this->getHeaders($this->user));
+    }
+
+    /**
+     * 删除草稿箱题目
+     *
+     * @group question
+     * @group testDeleteQuestion
+     */
+    public function testDeleteQuestion()
+    {
+        $mutation = file_get_contents(__DIR__ . '/gql/question/DeleteQuestionMutation.graphql');
+
+        $question = Question::factory()->create([
             'user_id' => $this->user->id,
         ]);
-    }
-
-    /* --------------------------------------------------------------------- */
-    /* -------------------------------- Query ------------------------------ */
-    /* --------------------------------------------------------------------- */
-
-    /**
-     * 专题分类
-     *
-     * @group question
-     * @throws \Exception
-     */
-    public function testCategoriesQuery()
-    {
-        $query     = file_get_contents(__DIR__ . '/gql/question/CategoriesQuery.graphql');
         $variables = [
-            //页数 不填默认值为10
-            'count' => 10,
-
-            //页码
-            'page'  => random_int(0, 1),
+            'id' => $question->id,
         ];
-        $this->runGuestGQL($query, $variables, self::getHeaders($this->user));
+        $this->runGuestGQL($mutation, $variables, $this->getHeaders($this->user));
     }
 
     /**
-     * 题目列表
+     * 撤回题目
      *
      * @group question
-     * @throws \Exception
+     * @group testRemoveQuestion
      */
-    public function testQuestionListQuery()
+    public function testRemoveQuestion()
     {
-        $query = file_get_contents(__DIR__ . '/gql/question/QuestionListQuery.gql');
+        $mutation = file_get_contents(__DIR__ . '/gql/question/RemoveQuestionMutation.graphql');
 
-        //获取分类表主键ID
-        $categoriesId = [11, 12, 23]; //FIXME: 先简单随机个旧题库，确保UT基本功能正常
-        $cate_id      = $categoriesId[random_int(0, 2)];
-
+        $question = Question::factory()->create([
+            'user_id' => $this->user->id,
+        ]);
         $variables = [
-            //分类表主键ID
-            'category_id' => $cate_id,
-        ];
-        $this->runGuestGQL($query, $variables, self::getHeaders($this->user));
-    }
-
-    /**
-     * 可出题的题库（支持搜索）
-     *
-     * @group question
-     * @throws \Exception
-     */
-    public function testSearchCategoriesQuery()
-    {
-        $query = file_get_contents(__DIR__ . '/gql/question/CategoriesCanSubmitQuery.graphql');
-
-        $variables = [
-            //页数 不填默认值为10
-            'count'   => 10,
-
-            //页码
-            'page'    => random_int(0, 1),
-
-            //搜索关键词
-            'keyword' => random_str(10),
+            'id' => $question->id,
         ];
 
-        $this->runGuestGQL($query, $variables, self::getHeaders($this->user));
+        $this->runGuestGQL($mutation, $variables, $this->getHeaders($this->user));
     }
-
-    /**
-     * 题目查询
-     *
-     * @group question
-     * @throws \Exception
-     */
-    public function testQuestionQuery()
-    {
-        $query = file_get_contents(__DIR__ . '/gql/question/QuestionQuery.graphql');
-
-        $variables = [
-            //页数 不填默认值为10
-            'id' => random_int(1, 5),
-        ];
-
-        $this->runGuestGQL($query, $variables, self::getHeaders($this->user));
-    }
-
-    /**
-     * 随机答题
-     *
-     * @group question
-     */
-    public function testRandomQuestionQuery()
-    {
-        $query = file_get_contents(__DIR__ . '/gql/question/RandomQuestionQuery.graphql');
-        $this->runGuestGQL($query, [], self::getHeaders($this->user));
-    }
-
-    /* --------------------------------------------------------------------- */
-    /* ------------------------------ Mutation ----------------------------- */
-    /* --------------------------------------------------------------------- */
 
     /**
      * 答题
      *
      * @group question
+     * @group testAnswerMutation
      */
     public function testAnswerMutation()
     {
@@ -141,168 +112,129 @@ class QuestionTest extends GraphQLTestCase
             'answer' => 'A',
         ];
 
-        $this->runGuestGQL($mutation, $variables, self::getHeaders($this->user));
-    }
-
-    /**
-     * 用户出题
-     *
-     * @group question
-     */
-    public function testCreateQuestion()
-    {
-        $mutation = file_get_contents(__DIR__ . '/gql/question/CreateQuestionMutation.graphql');
-
-        $categoryId = Category::query()->pluck('id')->take(1)->first();
-
-        $variables = [
-            "data" => [
-                'category_id' => $categoryId,
-                'description' => "下列的城市是否有湖南省的？",
-                'selections'  => [["Text" => "yes", "Value" => "A"], ["Text" => "no", "Value" => "B"], ["Text" => "fuck", "Value" => "C"]],
-                'answers'     => 'A',
-                'image'       => file_get_contents(__DIR__ . '/gql/question/image'),
-            ],
-        ];
-
-        $this->runGuestGQL($mutation, $variables, self::getHeaders($this->user));
-    }
-
-    /**
-     * 删除草稿箱题目
-     *
-     * @group question
-     */
-    public function testDeleteQuestion()
-    {
-        $mutation = file_get_contents(__DIR__ . '/gql/question/DeleteQuestionMutation.graphql');
-
-        $variables = [
-            'id' => $this->question->id,
-        ];
-
-        $this->runGuestGQL($mutation, $variables, self::getHeaders($this->user));
-    }
-
-    /**
-     * 撤回题目
-     *
-     * @group question
-     */
-    public function testRemoveQuestion()
-    {
-        $mutation = file_get_contents(__DIR__ . '/gql/question/RemoveQuestionMutation.graphql');
-
-        $variables = [
-            'id' => $this->question->id,
-        ];
-
-        $this->runGuestGQL($mutation, $variables, self::getHeaders($this->user));
+        $this->runGuestGQL($mutation, $variables, $this->getHeaders($this->user));
     }
 
     /**
      * 发布题目(精力不足出题后暂存的或者撤回的)
-     *
-     * @group
+     * @group question
+     * @group testPublishQuestion
      */
-    public function testPublishQuestion()
-    {
-        $question = Question::where('submit', Question::CANCELLED_SUBMIT)->first();
+    protected function testPublishQuestion()
+    { // 无  App\User::checkRules() 逻辑
+        $question = Question::factory()->create([
+            'submit'=>Question::CANCELLED_SUBMIT
+        ]);
         $mutation = file_get_contents(__DIR__ . '/gql/question/PublishQuestionMutation.graphql');
-
+       
         $variables = [
             'id' => $question->id,
         ];
 
-        $this->runGuestGQL($mutation, $variables, self::getHeaders($question->user));
+        $this->runGuestGQL($mutation, $variables, $this->getHeaders($question->user));
+    }
+
+    /* --------------------------------------------------------------------- */
+    /* ------------------------------ Query ----------------------------- */
+    /* --------------------------------------------------------------------- */
+
+    /**
+     * 随机答题
+     * @group question
+     * @group testRandomQuestionQuery
+     */
+    public function testRandomQuestionQuery()
+    {
+        $query = file_get_contents(__DIR__ . '/gql/question/RandomQuestionQuery.graphql');
+        $this->runGuestGQL($query, [], $this->getHeaders($this->user));
     }
 
     /**
-     * 标签详情
-     *
+     * 题目列表
      *
      * @group question
-     * @throws \Exception
+     * @group testQuestionListQuery
      */
-    public function testTagQuery()
+    protected function testQuestionListQuery()
+    {// 用到了user 的 last_category_id 字段
+        $query = file_get_contents(__DIR__ . '/gql/question/QuestionListQuery.gql');
+        Question::factory()->create([
+            'category_id'=>$this->category->id,
+            'rank'      => 2
+        ]);
+        $this->category->ranks = [1,2];
+        $this->category->save();
+        $variables = [
+            'category_id' => $this->category->id,
+        ];
+        $this->runGuestGQL($query, $variables, $this->getHeaders($this->user));
+    }
+
+    /**
+     * 题目查询
+     *
+     * @group question
+     * @group testQuestionQuery
+     */
+    public function testQuestionQuery()
     {
-        $query = file_get_contents(__DIR__ . '/gql/question/TagQuery.gql');
+        $query = file_get_contents(__DIR__ . '/gql/question/QuestionQuery.graphql');
 
         $variables = [
-            'id' => 1,
+            //页数 不填默认值为10
+            'id' => random_int(1, 5),
         ];
-        $this->runGuestGQL($query, $variables, self::getHeaders($this->user));
+
+        $this->runGuestGQL($query, $variables, $this->getHeaders($this->user));
     }
 
     /**
-     * 标签列表
-     *
-     *
-     * @group question
-     * @throws \Exception
-     */
-    public function testTagsQuery()
-    {
-        $query = file_get_contents(__DIR__ . '/gql/question/TagsQuery.gql');
-
-        $variables = [];
-        $this->runGuestGQL($query, $variables, self::getHeaders($this->user));
-    }
-
-    /**
-     * 审题
+     * 是否可答题
      *
      * @group question
-     * @throws \Exception
+     * @group testCanAnswer
      */
-    public function testAuditMutation()
-    {
-        $query = file_get_contents(__DIR__ . '/gql/question/auditMutation.gql');
+    // public function testCanAnswer()
+    // {
+    //     $query = file_get_contents(__DIR__ . '/gql/question/canAnswerQuery.gql');
 
-        $user         = User::first();
-        $user->ticket = 600;
-        $user->save();
-        $variables = [
-            'status'      => false,
-            'question_id' => 3,
-        ];
-        $this->runGuestGQL($query, $variables, self::getHeaders($user));
-    }
+    //     \App\Answer::create([
+    //         'user_id' => $this->user->id,
+    //         'question_id' => $this->question->id,
+    //     ]);
+    //     $variables = [];
+
+    //     $this->runGuestGQL($query, $variables, $this->getHeaders($this->user));
+    // }
+
 
     /**
      * 领取考试奖励
      *
      * @group question
-     * @throws \Exception
+     * @group testAnswerRewardMutation
      */
     public function testAnswerRewardMutation()
     {
         $query = file_get_contents(__DIR__ . '/gql/question/TestAnswerRewardMutation.gql');
 
         $variables = [
-
             'answers'     => [
-
                 0 => [
-                    'question_id' => 3,
+                    'question_id' => $this->question->id,
                     'answer'      => 'B',
                 ],
-                1 => [
-                    'question_id' => 4,
-                    'answer'      => 'B',
-                ],
-
             ],
             "isWatchedAd" => false,
         ];
-        $this->runGuestGQL($query, $variables, self::getHeaders($this->user));
+        $this->runGuestGQL($query, $variables, $this->getHeaders($this->user));
     }
 
     /**
      * 提交考试答案
      *
      * @group question
-     * @throws \Exception
+     * @group testAnswersMutation
      */
     public function testAnswersMutation()
     {
@@ -313,37 +245,29 @@ class QuestionTest extends GraphQLTestCase
             'answers' => [
 
                 0 => [
-                    'question_id' => 3,
+                    'question_id' => $this->question->id,
                     'answer'      => 'B',
-                ],
-                1 => [
-                    'question_id' => 4,
-                    'answer'      => 'B',
-                ],
+                ]
 
             ],
         ];
-        $this->runGuestGQL($query, $variables, self::getHeaders($this->user));
+        $this->runGuestGQL($query, $variables, $this->getHeaders($this->user));
     }
 
     /**
-     * 用户请求头基本信息
-     * PS：仅使用传入用户的请求头基本信息，在这里仅使用 UserFactory 创建的临时用户
-     *
-     * @param $user
-     * @return array
+     * @group audit
      */
-    protected static function getHeaders($user)
+
+    // 无 $user->can_audit  $user->audits()
+
+    protected function testAuditMutation()
     {
-        $token = $user->api_token;
-
-        $headers = [
-            'token'         => $token,
-            'Authorization' => 'Bearer ' . $token,
-            'Accept'        => 'application/json',
+        $query = file_get_contents(__DIR__ . '/gql/audit/auditMutation.gql');
+        $variables = [
+            'question_id' => $this->question->id,
+            'status' => \random_int(1, 2) % 2 == 0 ? true : false,
         ];
-
-        return $headers;
+        $this->runGQL($query, $variables, $this->getHeaders($this->user));
     }
 
     protected function tearDown(): void

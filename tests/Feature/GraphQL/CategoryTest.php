@@ -3,13 +3,16 @@
 namespace Haxibiao\Question\Tests\Feature\GraphQL;
 
 use Haxibiao\Question\Category;
+use Haxibiao\Breeze\GraphQLTestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CategoryTest extends GraphQLTestCase
 {
+    use DatabaseTransactions;
     /**
      * @group category
      */
-    public function testCategoriesQuery()
+    protected function testCategoriesQuery()
     {
         $query = file_get_contents(__DIR__ . '/gql/category/CategoriesQuery.gql');
 
@@ -20,8 +23,10 @@ class CategoryTest extends GraphQLTestCase
         ];
         $this->runGQL($query, $variables);
     }
-
-    public function testCategoryQuery()
+    /**
+     * @group category
+     */
+    protected function testCategoryQuery()
     {
         $query = file_get_contents(__DIR__ . '/gql/category/CategoryQuery.gql');
         $this->runGQL($query, [

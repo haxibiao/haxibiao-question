@@ -3,11 +3,13 @@
 namespace Haxibiao\Question\Tests\Feature\GraphQL;
 
 use App\User;
-use Haxibiao\Question\Question;
-use Yansongda\Supports\Str;
+use App\Question;
+use Haxibiao\Breeze\GraphQLTestCase;
+use Illuminate\Foundation\Testing\DatabaseTransactions;
 
 class CurationTest extends GraphQLTestCase
 {
+    use DatabaseTransactions;
     protected $user;
     protected $question;
 
@@ -20,8 +22,12 @@ class CurationTest extends GraphQLTestCase
         ])->create();
         $this->question = Question::factory(['user_id' => $this->user->id])->create();
     }
+
+    /**
+     * @group curation
+     */
     public function testcurationQuery()
-    {
+    {//$user->curations()
         $query     = file_get_contents(__DIR__ . '/gql/curation/curationQuery.gql');
         $variables = [
             'limit'  => 10,
@@ -29,27 +35,31 @@ class CurationTest extends GraphQLTestCase
         ];
         $this->runGQL($query, $variables, $this->getHeaders($this->user));
     }
+
+    /**
+     * @group curation
+     */
     public function testCreateCurationMutation()
     {
         $query     = file_get_contents(__DIR__ . '/gql/curation/createCuration.gql');
         $variables = [
             'question_id' => $this->question->id,
             'type'        => \random_int(1, 4),
-            'content'     => Str::random(5),
+            'content'     => 'test',
         ];
         $this->runGQL($query, $variables, $this->getHeaders($this->user));
     }
 
-    public function getHeaders($user)
+    /**
+     * @group wrongAnswersQuery
+     */
+    public function testWrongAnswersQuery()
     {
-        $token = $user->api_token;
-
-        $headers = [
-            'token'         => $token,
-            'Authorization' => 'Bearer ' . $token,
-            'Accept'        => 'application/json',
+        $query     = file_get_contents(__DIR__ . '/gql/answer/WrongAnswersQuery.gql');
+        $variables = [
+            'limit' => random_int(1, 4),
         ];
-
-        return $headers;
+        $this->runGQL($query, $variables, $this->getHeaders($this->user));
     }
+
 }

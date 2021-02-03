@@ -5,7 +5,6 @@ namespace Haxibiao\Question;
 use App\Answer;
 use App\Audio;
 use App\Audit;
-use App\Category;
 use App\Comment;
 use App\Exceptions\UserException;
 use App\Explanation;
@@ -461,11 +460,11 @@ class Question extends Model
         $this->answers_count = $this->correct_count + $this->wrong_count;
     }
 
-    public function getAnswerAttribute($value)
-    {
-        $answer = str_replace(array("\r\n", "\r", "\n"), "", $value);
-        return $answer;
-    }
+    // public function getAnswerAttribute($value)
+    // {
+    //     $answer = str_replace(array("\r\n", "\r", "\n"), "", $value);
+    //     return $answer;
+    // }
 
     public function save(array $options = [])
     {
