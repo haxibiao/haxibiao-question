@@ -28,12 +28,12 @@ class CurationTest extends GraphQLTestCase
      */
     public function testcurationQuery()
     {//$user->curations()
-        $query     = file_get_contents(__DIR__ . '/gql/curation/curationQuery.gql');
+        $query     = file_get_contents(__DIR__ . '/gql/Curation/curationQuery.graphql');
         $variables = [
             'limit'  => 10,
             'offset' => 0,
         ];
-        $this->runGQL($query, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($query, $variables, $this->getHeaders($this->user));
     }
 
     /**
@@ -41,13 +41,13 @@ class CurationTest extends GraphQLTestCase
      */
     public function testCreateCurationMutation()
     {
-        $query     = file_get_contents(__DIR__ . '/gql/curation/createCuration.gql');
+        $query     = file_get_contents(__DIR__ . '/gql/Curation/createCuration.graphql');
         $variables = [
             'question_id' => $this->question->id,
             'type'        => \random_int(1, 4),
             'content'     => 'test',
         ];
-        $this->runGQL($query, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($query, $variables, $this->getHeaders($this->user));
     }
 
     /**
@@ -55,11 +55,11 @@ class CurationTest extends GraphQLTestCase
      */
     public function testWrongAnswersQuery()
     {
-        $query     = file_get_contents(__DIR__ . '/gql/answer/WrongAnswersQuery.gql');
+        $query     = file_get_contents(__DIR__ . '/gql/Answer/WrongAnswersQuery.graphql');
         $variables = [
             'limit' => random_int(1, 4),
         ];
-        $this->runGQL($query, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($query, $variables, $this->getHeaders($this->user));
     }
 
 }

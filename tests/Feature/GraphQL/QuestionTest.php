@@ -42,7 +42,7 @@ class QuestionTest extends GraphQLTestCase
      */
     protected function testCreateQuestion()
     {// 无  App\User::checkRules() 逻辑
-        $mutation = file_get_contents(__DIR__ . '/gql/question/CreateQuestionMutation.graphql');
+        $mutation = file_get_contents(__DIR__ . '/gql/Question/CreateQuestionMutation.graphql');
         //$user->checkRules();
         $variables = [
             "data" => [
@@ -53,7 +53,7 @@ class QuestionTest extends GraphQLTestCase
             ],
         ];
 
-        $this->runGuestGQL($mutation, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($mutation, $variables, $this->getHeaders($this->user));
     }
 
     /**
@@ -64,7 +64,7 @@ class QuestionTest extends GraphQLTestCase
      */
     public function testDeleteQuestion()
     {
-        $mutation = file_get_contents(__DIR__ . '/gql/question/DeleteQuestionMutation.graphql');
+        $mutation = file_get_contents(__DIR__ . '/gql/Question/DeleteQuestionMutation.graphql');
 
         $question = Question::factory()->create([
             'user_id' => $this->user->id,
@@ -72,7 +72,7 @@ class QuestionTest extends GraphQLTestCase
         $variables = [
             'id' => $question->id,
         ];
-        $this->runGuestGQL($mutation, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($mutation, $variables, $this->getHeaders($this->user));
     }
 
     /**
@@ -83,7 +83,7 @@ class QuestionTest extends GraphQLTestCase
      */
     public function testRemoveQuestion()
     {
-        $mutation = file_get_contents(__DIR__ . '/gql/question/RemoveQuestionMutation.graphql');
+        $mutation = file_get_contents(__DIR__ . '/gql/Question/RemoveQuestionMutation.graphql');
 
         $question = Question::factory()->create([
             'user_id' => $this->user->id,
@@ -92,7 +92,7 @@ class QuestionTest extends GraphQLTestCase
             'id' => $question->id,
         ];
 
-        $this->runGuestGQL($mutation, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($mutation, $variables, $this->getHeaders($this->user));
     }
 
     /**
@@ -103,7 +103,7 @@ class QuestionTest extends GraphQLTestCase
      */
     public function testAnswerMutation()
     {
-        $mutation  = file_get_contents(__DIR__ . '/gql/question/QuestionAnswerMutation.graphql');
+        $mutation  = file_get_contents(__DIR__ . '/gql/Question/QuestionAnswerMutation.graphql');
         $variables = [
             //问题表主键ID
             'id'     => $this->question->id,
@@ -112,7 +112,7 @@ class QuestionTest extends GraphQLTestCase
             'answer' => 'A',
         ];
 
-        $this->runGuestGQL($mutation, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($mutation, $variables, $this->getHeaders($this->user));
     }
 
     /**
@@ -125,13 +125,13 @@ class QuestionTest extends GraphQLTestCase
         $question = Question::factory()->create([
             'submit'=>Question::CANCELLED_SUBMIT
         ]);
-        $mutation = file_get_contents(__DIR__ . '/gql/question/PublishQuestionMutation.graphql');
+        $mutation = file_get_contents(__DIR__ . '/gql/Question/PublishQuestionMutation.graphql');
        
         $variables = [
             'id' => $question->id,
         ];
 
-        $this->runGuestGQL($mutation, $variables, $this->getHeaders($question->user));
+        $this->startGraphQL($mutation, $variables, $this->getHeaders($question->user));
     }
 
     /* --------------------------------------------------------------------- */
@@ -145,8 +145,8 @@ class QuestionTest extends GraphQLTestCase
      */
     public function testRandomQuestionQuery()
     {
-        $query = file_get_contents(__DIR__ . '/gql/question/RandomQuestionQuery.graphql');
-        $this->runGuestGQL($query, [], $this->getHeaders($this->user));
+        $query = file_get_contents(__DIR__ . '/gql/Question/RandomQuestionQuery.graphql');
+        $this->startGraphQL($query, [], $this->getHeaders($this->user));
     }
 
     /**
@@ -157,7 +157,7 @@ class QuestionTest extends GraphQLTestCase
      */
     protected function testQuestionListQuery()
     {// 用到了user 的 last_category_id 字段
-        $query = file_get_contents(__DIR__ . '/gql/question/QuestionListQuery.gql');
+        $query = file_get_contents(__DIR__ . '/gql/Question/QuestionListQuery.graphql');
         Question::factory()->create([
             'category_id'=>$this->category->id,
             'rank'      => 2
@@ -167,7 +167,7 @@ class QuestionTest extends GraphQLTestCase
         $variables = [
             'category_id' => $this->category->id,
         ];
-        $this->runGuestGQL($query, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($query, $variables, $this->getHeaders($this->user));
     }
 
     /**
@@ -185,7 +185,7 @@ class QuestionTest extends GraphQLTestCase
             'id' => random_int(1, 5),
         ];
 
-        $this->runGuestGQL($query, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($query, $variables, $this->getHeaders($this->user));
     }
 
     /**
@@ -216,7 +216,7 @@ class QuestionTest extends GraphQLTestCase
      */
     public function testAnswerRewardMutation()
     {
-        $query = file_get_contents(__DIR__ . '/gql/question/TestAnswerRewardMutation.gql');
+        $query = file_get_contents(__DIR__ . '/gql/Question/TestAnswerRewardMutation.graphql');
 
         $variables = [
             'answers'     => [
@@ -227,7 +227,7 @@ class QuestionTest extends GraphQLTestCase
             ],
             "isWatchedAd" => false,
         ];
-        $this->runGuestGQL($query, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($query, $variables, $this->getHeaders($this->user));
     }
 
     /**
@@ -238,7 +238,7 @@ class QuestionTest extends GraphQLTestCase
      */
     public function testAnswersMutation()
     {
-        $query = file_get_contents(__DIR__ . '/gql/question/TestAnswersMutation.gql');
+        $query = file_get_contents(__DIR__ . '/gql/Question/TestAnswersMutation.graphql');
 
         $variables = [
 
@@ -251,7 +251,7 @@ class QuestionTest extends GraphQLTestCase
 
             ],
         ];
-        $this->runGuestGQL($query, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($query, $variables, $this->getHeaders($this->user));
     }
 
     /**
@@ -262,12 +262,12 @@ class QuestionTest extends GraphQLTestCase
 
     protected function testAuditMutation()
     {
-        $query = file_get_contents(__DIR__ . '/gql/audit/auditMutation.gql');
+        $query = file_get_contents(__DIR__ . '/gql/Audit/auditMutation.graphql');
         $variables = [
             'question_id' => $this->question->id,
             'status' => \random_int(1, 2) % 2 == 0 ? true : false,
         ];
-        $this->runGQL($query, $variables, $this->getHeaders($this->user));
+        $this->startGraphQL($query, $variables, $this->getHeaders($this->user));
     }
 
     protected function tearDown(): void
