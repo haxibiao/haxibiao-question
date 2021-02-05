@@ -18,7 +18,7 @@ class AddFieldsToTaggablesTable extends Migration
                 $table->integer('user_id')->unsigned();
             }
             if(!Schema::hasColumn('taggables','tag_name')){
-                $table->string('tag_name');
+                $table->string('tag_name')->nullable();
             }
         });
     }
