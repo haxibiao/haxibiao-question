@@ -27,10 +27,10 @@ class QuestionTest extends GraphQLTestCase
         ])->create();
 
         $this->category = Category::factory()->create();
-        $this->question = Question::factory()->create([
+        $this->question = Question::factory([
             'category_id'=>$this->category->id,
             'rank'      => 1
-        ]);
+        ])->create();
         
     }
 
@@ -158,10 +158,10 @@ class QuestionTest extends GraphQLTestCase
     protected function testQuestionListQuery()
     {// 用到了user 的 last_category_id 字段
         $query = file_get_contents(__DIR__ . '/gql/Question/QuestionListQuery.graphql');
-        Question::factory()->create([
+        Question::factory([
             'category_id'=>$this->category->id,
             'rank'      => 2
-        ]);
+        ])->create();
         $this->category->ranks = [1,2];
         $this->category->save();
         $variables = [
