@@ -15,72 +15,20 @@ use Laravel\Nova\Resource;
 
 class Curation extends Resource
 {
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var string
-     */
-    public static $model = 'Haxibiao\Question\Curation';
-
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
-    public static $title = 'content';
-
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
+    public static $model  = 'Haxibiao\Question\Curation';
+    public static $title  = 'content';
     public static $search = [
         'id',
     ];
-
-    /**
-     * 指示资源是否是全局可搜索的。
-     *
-     * @var bool
-     */
     public static $globallySearchable = false;
+    public static $with               = ['user', 'question'];
 
-    /**
-     * 预加载关联关系
-     * @var array
-     */
-    public static $with = ['user', 'question'];
-
-    /**
-     * @Author      XXM
-     * @DateTime    2018-11-15
-     * @description [资源显示的标签]
-     * @return      [String]
-     */
     public static function label()
     {
         return '纠题';
     }
+    public static $group = "答题中心";
 
-    /**
-     * @Author      XXM
-     * @DateTime    2018-11-15
-     * @description [资源显示的单标签]
-     * @return      [String]
-     */
-    public static function singularLabel()
-    {
-        return '纠题';
-    }
-
-    public static $category = "题库管理";
-
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function fields(Request $request)
     {
         return [

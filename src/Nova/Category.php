@@ -18,53 +18,22 @@ use Laravel\Nova\Resource;
 
 class Category extends Resource
 {
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var string
-     */
     public static $model = 'Haxibiao\Question\Category';
 
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
     public static $title = 'name';
 
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
     public static $search = [
         'name',
     ];
 
     public static function label()
     {
-        return '分类';
+        return '题库';
     }
 
-    public static function singularLabel()
-    {
-        return '分类';
-    }
+    public static $group = "答题中心";
+    public static $with  = ['parent', 'user'];
 
-    public static $category = "题库管理";
-
-    /**
-     * 预加载关联关系
-     * @var array
-     */
-    public static $with = ['parent', 'user'];
-
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function fields(Request $request)
     {
         $rank = empty($this->rank) ? '0' : $this->rank;

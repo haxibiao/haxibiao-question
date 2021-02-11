@@ -2,7 +2,6 @@
 
 namespace Haxibiao\Question\Nova;
 
-use App\User;
 use Illuminate\Http\Request;
 use Inspheric\Fields\Url;
 use Laravel\Nova\Fields\BelongsTo;
@@ -14,25 +13,10 @@ use Laravel\Nova\Resource;
 
 class Audio extends Resource
 {
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var string
-     */
     public static $model = 'Haxibiao\Question\Audio';
 
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
     public static $title = 'id';
 
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
     public static $search = [
         'id',
     ];
@@ -42,25 +26,10 @@ class Audio extends Resource
         return '音频';
     }
 
-    public static function singularLabel()
-    {
-        return '音频';
-    }
+    public static $group = "答题中心";
 
-    public static $category = "题库管理";
-
-    /**
-     * 预加载关联关系
-     * @var array
-     */
     public static $with = ['user'];
 
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function fields(Request $request)
     {
         return [

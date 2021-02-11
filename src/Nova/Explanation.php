@@ -12,25 +12,8 @@ use Laravel\Nova\Resource;
 
 class Explanation extends Resource
 {
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var string
-     */
-    public static $model = 'Haxibiao\Question\Explanation';
-
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
-    public static $title = 'description';
-
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
+    public static $model  = 'Haxibiao\Question\Explanation';
+    public static $title  = 'description';
     public static $search = [
         'id', 'content',
     ];
@@ -43,15 +26,8 @@ class Explanation extends Resource
     {
         return '解析';
     }
+    public static $group = "答题中心";
 
-    public static $category = '题库管理';
-
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function fields(Request $request)
     {
         return [

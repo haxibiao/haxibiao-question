@@ -12,49 +12,20 @@ use Laravel\Nova\Resource;
 
 class WrongAnswer extends Resource
 {
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var string
-     */
-    public static $model = 'Haxibiao\Question\WrongAnswer';
-
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
-    public static $title = 'id';
-
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
+    public static $model  = 'Haxibiao\Question\WrongAnswer';
+    public static $title  = 'id';
     public static $search = [
         'id',
     ];
 
-    public static $with = ['user'];
-
-    public static $category = "题库管理";
+    public static $with  = ['user'];
+    public static $group = "答题中心";
 
     public static function label()
     {
         return '错题本';
     }
 
-    public static function singluarLable()
-    {
-        return '错题本';
-    }
-
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function fields(Request $request)
     {
         return [

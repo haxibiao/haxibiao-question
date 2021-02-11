@@ -25,14 +25,8 @@ class Answer extends Resource
 
     public static $globallySearchable = false;
 
-    public static $category = "用户行为";
-
+    public static $group = "答题中心";
     public static function label()
-    {
-        return '答题';
-    }
-
-    public static function singularLabel()
     {
         return '答题';
     }

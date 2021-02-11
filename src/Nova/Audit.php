@@ -13,25 +13,9 @@ use Laravel\Nova\Resource;
 
 class Audit extends Resource
 {
-    /**
-     * The model the resource corresponds to.
-     *
-     * @var string
-     */
     public static $model = 'Haxibiao\Question\Audit';
 
-    /**
-     * The single value that should be used to represent the resource when being displayed.
-     *
-     * @var string
-     */
-    public static $title = 'id';
-
-    /**
-     * The columns that should be searched.
-     *
-     * @var array
-     */
+    public static $title  = 'id';
     public static $search = [
         'id',
     ];
@@ -41,21 +25,10 @@ class Audit extends Resource
         return '审题';
     }
 
-    public static function singluarLable()
-    {
-        return '审题';
-    }
-
-    public static $category = "题库管理";
+    public static $group = "答题中心";
 
     public static $with = ['user', 'question'];
 
-    /**
-     * Get the fields displayed by the resource.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array
-     */
     public function fields(Request $request)
     {
         return [

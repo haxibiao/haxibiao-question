@@ -2,8 +2,6 @@
 
 namespace Haxibiao\Question\Nova;
 
-
-use Haxibiao\Question\Audit;
 use Haxibiao\Question\Question as QuestionQuestion;
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\BelongsTo;
@@ -34,14 +32,9 @@ class Question extends Resource
         // return $query->withoutGlobalScope(QuestionFormScope::class);
     }
 
-    public static $category = "题库管理";
+    public static $group = "答题中心";
 
     public static function label()
-    {
-        return '题目';
-    }
-
-    public static function singluarLable()
     {
         return '题目';
     }
