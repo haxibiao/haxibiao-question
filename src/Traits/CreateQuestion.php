@@ -59,7 +59,8 @@ trait CreateQuestion
             throw new UserException('您的题目被多人举报,暂时不能出题,请明天再试试哦！');
         }
 
-        //图片带有二维码 //FIXME: 这个处理广告二维码图片题的操作，可以dispatch job 延迟 尝试下架，不实时拦截，避免误伤
+        //图片带有二维码
+        //FIXME: 这个处理广告二维码图片题的操作，可以dispatch job 延迟 尝试下架，不实时拦截，避免误伤
         // if (isset($inputs['image'])) {
         //     $hasQrcode = false;
         //     try {
@@ -161,7 +162,7 @@ trait CreateQuestion
 
         if ($video->isVodVideo()) {
             $res = VodUtils::getVideoInfo($video->fileid);
-            if ($res == false) {
+            if (false == $res) {
                 return $video;
             }
 
