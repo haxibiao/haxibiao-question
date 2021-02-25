@@ -85,6 +85,11 @@ class Question extends Model
 
     protected $appends = ['base64Code'];
 
+    //短带长
+    const POST_QUESTION_DESCRIPTION = "考考您影片是？"; //视频题出题默认题目描述
+    const POST_QUESTION_TICKET      = 2; //视频题默认奖励精力
+    const POST_QUESTION_GOLD        = 10; //视频题默认奖励金币
+
     //工厂用每天最大答题数
     const MAX_ANSWER = 50;
 
