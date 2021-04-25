@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
+use Intervention\Image\Facades\Image;
 
 class Category extends Model
 {
@@ -47,8 +48,6 @@ class Category extends Model
     const PRIVACY = 0; //隐藏
     const DELETED = -1; //删除
 
-
-
     public function parent()
     {
         return $this->belongsTo(\App\Category::class, 'parent_id');
@@ -63,7 +62,6 @@ class Category extends Model
     {
         return $this->children()->whereStatus(self::PUBLISH);
     }
-
 
     public function tags()
     {
@@ -96,7 +94,6 @@ class Category extends Model
             ->withPivot('submit')
             ->withTimestamps();
     }
-
 
     public function user()
     {
@@ -142,19 +139,19 @@ class Category extends Model
             $imageType = $icon->getClientOriginalExtension();
             $realPath  = $icon->getRealPath(); //临时文件的绝对路径
 
-            $path       = 'categories/category-' . $this->id . ".{$imageType}";
-            $imageMaker = \ImageMaker::make($realPath);
+            $path       = 'categories/' . $this->id . ".{$imageType}";
+            $imageMaker = Image::make($realPath);
             $iconWidth  = 200;
             $iconHeight = 200;
             $imageMaker->resize($iconWidth, $iconHeight);
             $imageMaker->save($realPath);
 
             //上传到Cos
-            $cosPath = 'storage/app/' . $path;
+            $cosPath = 'storage/app' . env('APP_NAME') . '/' . $path;
             Storage::cloud()->put($cosPath, \file_get_contents($realPath));
 
             //更新头像路径
-            $this->icon = Storage::cloud()->url($cosPath);
+            $this->icon = cdnurl($cosPath);
             $this->save();
         }
         return $this;
