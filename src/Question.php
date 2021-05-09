@@ -11,8 +11,8 @@ use App\Explanation;
 use App\Like;
 use App\Model;
 use App\Report;
-use App\User;
 use Haxibiao\Breeze\Traits\HasFactory;
+use Haxibiao\Breeze\User;
 use Haxibiao\Media\Image;
 use Haxibiao\Media\Video;
 use Haxibiao\Question\Traits\AnswerQuestion;
@@ -22,6 +22,7 @@ use Haxibiao\Question\Traits\QuestionFacade;
 use Haxibiao\Question\Traits\QuestionRepo;
 use Haxibiao\Question\Traits\QuestionResolvers;
 use Haxibiao\Question\Traits\QuestionsRandomRank;
+use Haxibiao\Sns\Traits\Likeable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -31,11 +32,12 @@ use Laravel\Nova\Actions\Actionable;
 class Question extends Model
 {
     use HasFactory;
+    use Likeable;
     use Actionable;
     use QuestionRepo;
     use QuestionResolvers;
-    use QuestionsRandomRank;
     use CreateQuestion;
+    use QuestionsRandomRank;
     use AnswerQuestion;
     use QuestionAttrs;
     use QuestionFacade;
@@ -173,7 +175,7 @@ class Question extends Model
 
     public function user(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(\App\User::class, 'user_id');
     }
 
     public function category(): BelongsTo

@@ -2,11 +2,7 @@
 
 namespace Haxibiao\Question\Traits;
 
-
-
 use Haxibiao\Breeze\Exceptions\UserException;
-
-
 use Haxibiao\Question\Category;
 use Haxibiao\Question\CategoryUser;
 use Haxibiao\Question\Question;
@@ -21,7 +17,7 @@ trait QuestionsRandomRank
      * 全新的随机rank的体验
      * @param $limit 决定一次取多少个题目
      */
-    public static function  getQuestions($user, $category_id, $limit = 10, $not_in_ranks = [])
+    public static function getQuestions($user, $category_id, $limit = 10, $not_in_ranks = [])
     {
         //FOR DEBUG ...
         if (empty($category_id)) {
@@ -52,7 +48,7 @@ trait QuestionsRandomRank
         $canReview       = appCanReview(); //APP能审题
         $canReview       = $canReview && $user->can_audit && $user->ticket >= 10; //用户能审题没被关闭,精力足够
         $canReview       = $canReview && $pivot->correct_count >= $mustCorrectCount; //用户当前分类正确数够审题
-        
+
         //如果最后审题时间是昨天，重置用户今日审题数
         if ($canReview) {
             $last_audit_time = $user->audits()->max('created_at');
@@ -69,7 +65,7 @@ trait QuestionsRandomRank
         //当前正在作答的 权重位置
         $topRank     = $pivot->getTopRank(false);
         $currentRank = $topRank; //默认正常题里的最高权重
-       
+
         //如果能审题,50%机会取的是审题
         if (is_prod_env()) {
             if ($canReview) {
@@ -85,7 +81,7 @@ trait QuestionsRandomRank
         }
 
         $tries = 0;
-       
+
         //如果不是审题,
         if (!$isReviewing) {
             //所有非审题区间
@@ -126,8 +122,7 @@ trait QuestionsRandomRank
             if (is_null($currentRank)) {
                 $currentRank = Question::REVIEW_RANK;
             }
-        } 
-
+        }
         //恢复,准备开始取题
         $pivot->in_rank = $currentRank;
         $pivot->restoreRankRange();
@@ -136,7 +131,7 @@ trait QuestionsRandomRank
         $qb = $category->questions()->with(['category', 'user', 'image', 'video']);
 
         //自己出的题目不审核不回答
-        $qb = $qb->where('user_id', '<>', $user->id)->where('type', '!=',  Question::AUDIO_TYPE);
+        $qb = $qb->where('user_id', '<>', $user->id)->where('type', '!=', Question::AUDIO_TYPE);
 
         $seeNewQuestions = false;
         //禁止用户出题的分类：初中英语，小学资格开始，区块链，出现大量脏题
@@ -153,7 +148,7 @@ trait QuestionsRandomRank
                 $qb = $qb->whereRank($currentRank)->publish();
             }
         }
-        
+
         //错位排重逻辑，用户答过的区间的review_id不答
         $rank_max_review_id = $qb->max('review_id');
         //当前权重下有新的题目
@@ -167,7 +162,7 @@ trait QuestionsRandomRank
                 $qb = $qb->where('review_id', '<', $pivot->min_review_id);
             }
         }
-        
+
         //排序,有新题时，从小review_id到大
         $qb = $seeNewQuestions ? $qb->orderBy('review_id') : $qb->orderByDesc('review_id');
 
@@ -187,7 +182,7 @@ trait QuestionsRandomRank
         $user->saveLastCategoryId($category_id); //正常
 
         //预加载前端定义字段关联关系
-        $questions->load(['user', 'user.profile', 'explanation', 'user.role', 'audits' => function ($query) {
+        $questions->load(['user', 'user.profile', 'explanation', 'audits' => function ($query) {
             $query->take(10);
         }, 'audits.user', 'explanation.images', 'video', 'explanation.video', 'image', 'audio']);
 

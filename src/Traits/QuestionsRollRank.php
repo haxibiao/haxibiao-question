@@ -3,7 +3,6 @@
 namespace Haxibiao\Question\Traits;
 
 use App\Exceptions\UserException;
-
 use Haxibiao\Question\Category;
 use Haxibiao\Question\CategoryUser;
 use Haxibiao\Question\Question;
@@ -104,7 +103,6 @@ trait QuestionsRollRank
                 $questions = $questions->merge(Question::getQuestions($category_id, $leftNumber));
             }
         }
-
         return $questions;
     }
 }

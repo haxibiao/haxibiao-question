@@ -2,9 +2,9 @@
 
 namespace Haxibiao\Question\Traits;
 
-use Illuminate\Support\Arr;
-use Haxibiao\Question\Question;
 use Haxibiao\Breeze\Exceptions\GQLException;
+use Haxibiao\Question\Question;
+use Illuminate\Support\Arr;
 
 trait QuestionResolvers
 {

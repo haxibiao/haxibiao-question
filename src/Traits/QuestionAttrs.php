@@ -14,13 +14,4 @@ trait QuestionAttrs
         return $this->wrong_count + $this->correct_count;
     }
 
-    public function getLikedAttribute()
-    {
-        $user  = checkUser();
-        $liked = false;
-        if ($user) {
-            $liked = $user->isLiked('questions', $this->id);
-        }
-        return $liked;
-    }
 }
