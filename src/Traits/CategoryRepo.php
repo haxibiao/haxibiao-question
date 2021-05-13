@@ -2,8 +2,6 @@
 
 namespace Haxibiao\Question\Traits;
 
-
-
 use App\User;
 use Haxibiao\Question\Category;
 use Haxibiao\Question\CategoryUser;
@@ -31,7 +29,7 @@ trait CategoryRepo
             //获取登录用户最近答题的3个题库
             $visitedCates = Category::getLatestVisitCategories($user, 3);
             $categories   = $visitedCates->merge($categories);
-            $categories = $categories->unique(); //排重
+            $categories   = $categories->unique(); //排重
         }
         return $categories;
     }
@@ -75,7 +73,7 @@ trait CategoryRepo
             $qb = $qb->ofKeyword($keyword);
         }
 
-        $user = checkUser();
+        $user = currentUser();
         //用户能答题的分类 按照最近时间排序
         if ($allowSubmit == -1 && !is_null($user)) {
             $latestCategories = collect();
