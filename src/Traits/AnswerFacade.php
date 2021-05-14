@@ -58,7 +58,6 @@ trait AnswerFacade
 
         //答案列表用于批量插入
         $answerList = [];
-        \info("===222=");
 
         $correctQuestions = [];
         $wrongQuestions   = [];
@@ -94,7 +93,6 @@ trait AnswerFacade
             $pivot->saveRankRange($question, $isAnswerCorrect);
         }
 
-        \info("sss");
         dispatch_now(new RecordTestAnswers($answerList));
     }
 

@@ -6,6 +6,7 @@ use App\User;
 use Haxibiao\Question\Category;
 use Haxibiao\Question\Taggable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
 
 class Tag extends Model
@@ -27,11 +28,11 @@ class Tag extends Model
 
     public function tags(): MorphToMany
     {
-        return $this->morphedByMany('App\Tag', 'taggable');
+        return $this->morphedByMany(Tag::class, 'taggable');
     }
     public function categories()
     {
-        return $this->morphedByMany('App\Category', 'taggable')->whereStatus(Category::PUBLISH);
+        return $this->morphedByMany(Category::class, 'taggable')->whereStatus(Category::PUBLISH);
     }
 
     public function user()

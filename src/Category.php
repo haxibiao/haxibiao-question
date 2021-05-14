@@ -2,8 +2,8 @@
 
 namespace Haxibiao\Question;
 
-use App\Tag;
 use App\User;
+use Haxibiao\Content\Tag;
 use Haxibiao\Question\Traits\CategoryAttrs;
 use Haxibiao\Question\Traits\CategoryRepo;
 use Haxibiao\Question\Traits\CategoryResolvers;
