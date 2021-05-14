@@ -2,9 +2,9 @@
 
 namespace Haxibiao\Question;
 
-use App\Category;
-use App\Taggable;
 use App\User;
+use Haxibiao\Question\Category;
+use Haxibiao\Question\Taggable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
@@ -26,16 +26,14 @@ class Tag extends Model
     const ENABLE_STATUS  = 1;
     const DELETED_STATUS = -1;
 
-    public function tags()
+    public function tags(): MorphToMany
     {
-        return $this->morphedByMany(App\Tag::class, 'taggable');
+        return $this->morphedByMany('App\Tag', 'taggable');
     }
-
     public function categories()
     {
-        return $this->morphedByMany(Category::class, 'taggable')->whereStatus(Category::PUBLISH);
+        return $this->morphedByMany('App\Category', 'taggable')->whereStatus(Category::PUBLISH);
     }
-
 
     public function user()
     {
@@ -54,7 +52,7 @@ class Tag extends Model
 
     public function feedbacks()
     {
-        return $this->morphedByMany(Feedback::class, 'taggable');
+        return $this->morphedByMany('App\Feedback', 'taggable');
     }
 
     public static function tagJson()
@@ -147,28 +145,30 @@ class Tag extends Model
         if ($root->name == "热门") {
             $tags = [];
             #猜你喜欢
-            $tag             = new Tag();
-            $tag->id         = 1;
-            $tag->tips       = "猜你喜欢";
-            $tag->name       = "猜你喜欢";
-            $tag->categories = Category::guestUserLike(0, 9);
-            $tags[]          = $tag;
+            $userLikedCategories = Category::guestUserLike(0, 9);
+            $tag                 = new Tag();
+            $tag->id             = 1;
+            $tag->tips           = "猜你喜欢";
+            $tag->name           = "猜你喜欢";
+            $tag->categories     = $userLikedCategories;
+            $tags[]              = $tag;
 
-            #最近上线
-            $tag             = new Tag();
-            $tag->id         = 2;
-            $tag->tips       = "最近上线";
-            $tag->name       = "最近上线";
-            $tag->categories = Category::newestCategories(0, 9);
-            $tags[]          = $tag;
-
+            $recommendCatgeories = Category::recommendCategories(0, 9)->shuffle();
             #为你推荐
             $tag             = new Tag();
             $tag->id         = 3;
             $tag->tips       = "为你推荐";
             $tag->name       = "为你推荐";
-            $tag->categories = Category::recommendCategories(0, 9);
+            $tag->categories = $recommendCatgeories;
             $tags[]          = $tag;
+
+            #最近上线
+            // $tag             = new Tag();
+            // $tag->id         = 2;
+            // $tag->tips       = "最近上线";
+            // $tag->name       = "最近上线";
+            // $tag->categories = Category::newestCategories(0, 9, $userLikedCategories->pluck('id'));
+            // $tags[]          = $tag;
 
             return $tags;
         }
@@ -195,12 +195,12 @@ class Tag extends Model
             $tags[]                     = $tag;
 
             #最近上线
-            $tag                        = new Tag();
-            $tag->id                    = 2;
-            $tag->tips                  = "最近上线";
-            $tag->name                  = "最近上线";
-            $tag->index_page_categories = Category::newestCategories(0, 9);
-            $tags[]                     = $tag;
+            // $tag                        = new Tag();
+            // $tag->id                    = 2;
+            // $tag->tips                  = "最近上线";
+            // $tag->name                  = "最近上线";
+            // $tag->index_page_categories = Category::newestCategories(0, 9);
+            // $tags[]                     = $tag;
 
             #为你推荐
             $tag                        = new Tag();
@@ -212,5 +212,10 @@ class Tag extends Model
 
             return $tags;
         }
+    }
+
+    public static function resolveTagQuery($root, $args, $context = null, $info = null)
+    {
+        return Tag::find($args['id']);
     }
 }

@@ -2,12 +2,9 @@
 
 namespace Haxibiao\Question\Traits;
 
-
 use App\Contribute;
-
-use Haxibiao\Breeze\Exceptions\UserException;
-
 use App\User;
+use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Question\Audit;
 use Haxibiao\Question\CategoryUser;
 use Haxibiao\Question\Events\PublishQuestion;
@@ -24,8 +21,14 @@ trait AuditRepo
 
         $is_accepted = $inputs['status'] ?? false;
 
+        //前端3.1.1以下版本写反了  赞成 = 反对  反对 = 赞成
+        $version = getAppVersion();
+        if (!empty($version) && $version < '3.1.1') {
+            $is_accepted = !$is_accepted;
+        }
+
         $audit = Audit::firstOrNew([
-            'user_id' => $user->id,
+            'user_id'     => $user->id,
             'question_id' => $question->id,
         ]);
         //更新审核状态
@@ -63,41 +66,40 @@ trait AuditRepo
         //错位排重，避免重复审核
         $pivot = CategoryUser::firstOrNew([
             'category_id' => $question->category_id,
-            'user_id' => $user->id,
+            'user_id'     => $user->id,
         ]);
         //用户今日审核数
         $pivot->reviews_today = $user->audits()->where('created_at', '>', today())->count();
         $pivot->saveRankRange($question);
     }
 
-    protected static function getMaxAudits()
+    protected static function getMaxAudits($category_id)
     {
+        $qb = Question::query()->publish()->where('category_id', $category_id);
+
+        $accepted_total = (clone $qb)->sum('accepted_count') ?? 0;
+        $declined_total = (clone $qb)->sum('declined_count') ?? 0;
+        //题库审题人数＞100，10人投票，2票不同意即不通过审题；
+        //当一个题库审题人数≤100，投票人数可减少一半，2票不同意即不通过审题；
+
         $maxAudits = 10;
+        if (($accepted_total + $declined_total) <= 100) {
+            $maxAudits /= 2;
+        }
         return $maxAudits;
     }
 
     protected static function isAuditPassed($question)
     {
-        $agree_audits = $question->audits()->whereStatus(Audit::FAVOR_OF_STATUS)->count();
-        $must_agree_rate = 0; //现在审题就是走个玩的过程而已
-        $maxAudits = self::getMaxAudits();
-
-        /**
-         * issue:DTZQ-711
-         * 对于对于专业性题库，能审核题目的人数少，经常一道题目几天都没人审核，
-         * 对医学知识、数学知识、化学知识、此类题目审核投票人数可以减半。
-         */
-        if (in_array($question->category_id, [45, 19, 64])) {
-            $maxAudits /= 2;
-        }
-
-        return ($agree_audits * 100 / $maxAudits) >= $must_agree_rate;
+        $deny_audits = $question->audits()->whereStatus(Audit::DENY_STATUS)->count();
+        //2票不同意即不通过审题
+        return $deny_audits < 2;
     }
 
     protected static function auditQuestion($user, $question, $is_accepted)
     {
         //获取最大审核数
-        $maxAudits = self::getMaxAudits();
+        $maxAudits = self::getMaxAudits($question->category_id);
         //够数了,开始处理结果
         if ($question->audits()->count() >= $maxAudits) {
             $is_audits_passed = self::isAuditPassed($question);
@@ -105,7 +107,7 @@ trait AuditRepo
             //可能展示给更多的人审核了,先投票的够数以后, 并通过后,不影响已成功审核的结果
             if ($question->submit == Question::REVIEW_SUBMIT) {
                 if ($is_audits_passed) {
-                    $question->submit = Question::SUBMITTED_SUBMIT;
+                    $question->submit      = Question::SUBMITTED_SUBMIT;
                     $question->reviewed_at = now();
                     $question->makeNewReviewId(); //通过审核时,变成当前权重区间的最新题
                     $question->rank = $question->getDefaultRank(); //审核通过,权重默认
@@ -114,7 +116,7 @@ trait AuditRepo
                     $question->is_rewarded = 1;
                 } else {
                     //已拒绝
-                    $question->submit = Question::REFUSED_SUBMIT;
+                    $question->submit      = Question::REFUSED_SUBMIT;
                     $question->rejected_at = now();
                 }
             }
@@ -124,6 +126,7 @@ trait AuditRepo
                 $question->rank = -1;
                 $question->gold = 2; //低质量题,降低智慧点奖励
             }
+
         }
         //更新投票数
         $is_accepted ? $question->accepted_count++ : $question->declined_count++;

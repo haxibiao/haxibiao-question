@@ -2,13 +2,18 @@
 
 namespace Haxibiao\Question\Traits;
 
-use App\Gold;
-use App\Snapshot;
 use App\User;
+use Haxibiao\Breeze\UserProfile;
 use Haxibiao\Question\Answer;
 use Haxibiao\Question\CategoryUser;
+use Haxibiao\Question\Events\CanSubmitCategory;
+use Haxibiao\Question\Helpers\Redis\NewUserAnswerCorrectRateCounter;
 use Haxibiao\Question\Question;
+use Haxibiao\Question\RecommendQuestionAnswer;
+use Haxibiao\Question\Snapshot;
 use Haxibiao\Question\WrongAnswer;
+use Haxibiao\Wallet\Gold;
+use Illuminate\Support\Facades\DB;
 
 trait AnswerQuestion
 {
@@ -35,9 +40,26 @@ trait AnswerQuestion
         Question::updateUserPivot($question, $user, $isAnswerCorrect);
 
         //答题奖励:答对 && 精力点没空
-        $gold_awarded = $question->gold;
+        $goldAwarded = $question->gold;
+        // 这里要取动态的答题奖励
+        $goldAwarded = $question->dynamicGold($user);
         if ($isAnswerCorrect && $user->ticket > 1) {
-            Gold::makeIncome($user, $question->gold, '答题正确<' . $question->id . '>');
+            Gold::makeIncome($user, $goldAwarded, '答题正确<' . $question->id . '>');
+            //达到当前分类出题权限，弹出弹层提示：您已解锁当前分类出题权限
+            $category = $question->category;
+            if ($category) {
+                $categoryUser = CategoryUser::query()
+                    ->where('user_id', $user->id)
+                    ->firstWhere('category_id', $category->id);
+
+                if ($categoryUser) {
+                    //用户第一次解锁改分类出题权限
+                    $unlock = !is_null($categoryUser) && $categoryUser->correct_count == $category->min_answer_correct;
+                    if ($unlock) {
+                        event(new CanSubmitCategory($categoryUser));
+                    }
+                }
+            }
         }
 
         //3.保存答题记录,增加答题次数
@@ -45,7 +67,7 @@ trait AnswerQuestion
             'question_id'     => $question->id,
             'user_id'         => $user->id,
             'answered_count'  => 1,
-            'gold_awarded'    => $gold_awarded,
+            'gold_awarded'    => $goldAwarded,
             'in_rank'         => $question->rank,
             "$incrementField" => 1,
         ];
@@ -69,6 +91,16 @@ trait AnswerQuestion
             $category->incrementCountAnswerByMouth();
             $category->timestamps = false;
             $category->save();
+
+            // 更新每日答题数缓存
+            $category->updateDailyAnswersCountCache();
+        }
+
+        //如果是推荐题目记录下来
+        $questionRecommend = $question->recommend;
+        if (!is_null($questionRecommend)) {
+            //写入推荐小表,进行排重
+            RecommendQuestionAnswer::store($user->id, $question->id);
         }
 
         //７.用户精力点扣除
@@ -80,22 +112,20 @@ trait AnswerQuestion
         $user->timestamps = false;
         $user->save();
 
-        //更新每日答题数
-        $profile = $user->profile()->select('id')->first();
-        if ($profile) {
-            $profile->increment('answers_count_today');
-            $profile->increment('answers_count');
-        }
+        //更新每日答题数,聚合成一条SQL
+        UserProfile::where('user_id', $user->id)->update([
+            'answers_count_today' => DB::raw('answers_count_today + 1'),
+            'answers_count'       => DB::raw('answers_count + 1'),
+        ]);
 
         //答错,记录到错题本
         if (!$isAnswerCorrect) {
             $answer->answer = $originAnswer;
-            WrongAnswer::addAnswer($user, $answer);
+            WrongAnswer::addAnswer($answer);
         }
 
-        //更新用户每日快照
-        //暂无Snapshot
-        // Question::updateUserSnapshot($user, $isAnswerCorrect);
+        // 更新每日新用户答题正确率
+        NewUserAnswerCorrectRateCounter::updateCounter($isAnswerCorrect);
 
         //记录　qid 到　user_data, 实现已答过逻辑
         //TODO:　等user_data导入　NOSQL　再实现
@@ -128,7 +158,6 @@ trait AnswerQuestion
         }
     }
 
-    //FIXME: 每日条答题快照记录，可以用user_data counts 字段 array_set get ..
     public static function updateUserSnapshot($user, $isAnswerCorrect)
     {
         //FIXME: 这里可以用user_data 里的 counts字段

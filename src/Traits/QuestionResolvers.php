@@ -2,12 +2,33 @@
 
 namespace Haxibiao\Question\Traits;
 
-use Illuminate\Support\Arr;
-use Haxibiao\Question\Question;
 use Haxibiao\Breeze\Exceptions\GQLException;
+use Haxibiao\Question\Question;
+use Illuminate\Support\Arr;
 
 trait QuestionResolvers
 {
+    public static function resolveDynamicGold($root, array $args, $context, $info)
+    {
+        $user = getUser(false);
+
+        return $root->dynamicGold($user);
+    }
+
+    public static function resolverNextQuestionCheckpoint($root, array $args, $context, $info)
+    {
+        $user         = getUser();
+        $wrongCount   = Arr::get($args, 'wrongCount', 0);
+        $correctCount = Arr::get($args, 'correctCount', 0);
+        $status       = 0;
+        if ($correctCount >= 3) {
+            Question::nextQuestionCheckpoint($user);
+            $status = 1;
+        }
+
+        return $status;
+    }
+
     public function resolveCanAnswer($root, array $args, $context, $info)
     {
         if ($user = checkUser()) {
@@ -34,7 +55,7 @@ trait QuestionResolvers
 
     public function resolveAnswerQuestion($root, $args, $context, $info)
     {
-        \App\Task::refreshTask(getUser(), "爱上答题"); //工厂用答题任务激励，刷新进度
+        // \App\Task::refreshTask(getUser(), "爱上答题"); //工厂用答题任务激励，刷新进度
 
         $index  = 5; //多选
         $answer = $args['answer'] ?? 'A';
@@ -69,6 +90,13 @@ trait QuestionResolvers
         app_track_event('发布', '创建问题');
         $user = getUser();
         return Question::createQuestion($user, $args);
+    }
+
+    public function resolverCreateVideoQuestion($root, $args, $c, $i)
+    {
+        app_track_event('发布', '创建视频题');
+        $user = getUser();
+        return Question::createVideoQuestion($user, $args);
     }
 
     public function resolverDeleteQuestion($root, $args, $c, $i)

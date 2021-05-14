@@ -12,7 +12,10 @@ use App\Like;
 use App\Model;
 use App\Report;
 use App\User;
+use Hashids\Hashids;
 use Haxibiao\Breeze\Traits\HasFactory;
+use Haxibiao\Breeze\Traits\ModelHelpers;
+use Haxibiao\Helpers\Traits\Searchable;
 use Haxibiao\Media\Image;
 use Haxibiao\Media\Video;
 use Haxibiao\Question\Traits\AnswerQuestion;
@@ -22,10 +25,12 @@ use Haxibiao\Question\Traits\QuestionFacade;
 use Haxibiao\Question\Traits\QuestionRepo;
 use Haxibiao\Question\Traits\QuestionResolvers;
 use Haxibiao\Question\Traits\QuestionsRandomRank;
+use Haxibiao\Sns\Favorite;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 use Laravel\Nova\Actions\Actionable;
 
 class Question extends Model
@@ -39,6 +44,8 @@ class Question extends Model
     use AnswerQuestion;
     use QuestionAttrs;
     use QuestionFacade;
+    use ModelHelpers;
+    use Searchable;
 
     protected $connection = 'mysql';
 
@@ -102,15 +109,22 @@ class Question extends Model
     const REVIEW_RANK = 11; //待审题,最高权重
 
     //出题奖励
-    const CREATE_QUESTION_REWARD = 30;
-    const TEXT_QUESTION_REWARD   = 20;
+    const CREATE_QUESTION_REWARD = 15;
+    const TEXT_QUESTION_REWARD   = 10;
 
     //解析奖励
-    const EXPLANATION_VIDEO_REWARD     = 40;
-    const EXPLANTION_IMAGE_TEXT_REWARD = 35;
+    const EXPLANATION_VIDEO_REWARD     = 20;
+    const EXPLANTION_IMAGE_TEXT_REWARD = 20;
+
+    //精品题
+    const TAG_GOOD_QUESTION  = 1;
+    const TAG_CHECK_QUESTION = 2;
 
     //贡献点奖励
     const CONTRIBUTE_REWARD = 6;
+
+    //每日最大出题数
+    const MAX_LEFT_QUESTION_COUNT = 30;
 
     //提交状态
     const DELETED_SUBMIT   = -4; //已删除
@@ -151,6 +165,11 @@ class Question extends Model
         return $this->hasMany(Audit::class);
     }
 
+    public function auditTips(): HasMany
+    {
+        return $this->hasMany(AuditTip::class);
+    }
+
     public function reports()
     {
         return $this->morphMany(Report::class, 'reportable');
@@ -168,10 +187,10 @@ class Question extends Model
 
     public function video(): BelongsTo
     {
-        return $this->belongsTo(Video::class, 'video_id', 'id');
+        return $this->belongsTo(Video::class, 'video_id');
     }
 
-    public function user(): BelongsTo
+    public function user()
     {
         return $this->belongsTo(User::class, 'user_id');
     }
@@ -191,15 +210,30 @@ class Question extends Model
         return $this->belongsTo(Explanation::class, 'explanation_id');
     }
 
+    public function favorites()
+    {
+        return $this->morphMany(Favorite::class, 'favorable');
+    }
+
     public function audio(): BelongsTo
     {
         return $this->belongsTo(Audio::class, 'audio_id');
+    }
+
+    public function recommend()
+    {
+        return $this->hasOne(QuestionRecommend::class);
     }
 
     public function scopeUserAudit($query)
     {
         //用户审核完的题目 submit = 0 and rank = -1
         return $query->where('submit', self::REVIEW_SUBMIT)->where('rank', -1);
+    }
+
+    public function scopeHasVideo($query)
+    {
+        return $query->whereNotNull('video_id');
     }
 
     //attributes
@@ -220,6 +254,15 @@ class Question extends Model
             self::CANCELLED_SUBMIT => '草稿箱',
             self::DELETED_SUBMIT   => '已删除',
             // self::USER_REVIEWED_QUESTION => '二次审核', //二次审核太费人力，用户审题过后的题已直接按默认权重上线，依靠举报+评论了
+        ];
+    }
+
+    public static function getTags()
+    {
+        return [
+            // self::TAG_CHECK_QUESTION => '抽查题',
+            self::TAG_GOOD_QUESTION => '精品题',
+            null                    => '无标签',
         ];
     }
 
@@ -247,9 +290,25 @@ class Question extends Model
         return $query->where('submit', self::SUBMITTED_SUBMIT);
     }
 
+    public function scopePublishFailed($query)
+    {
+        return $query->where('submit', '<', Question::REVIEW_SUBMIT);
+    }
+
     public function scopeTextType($query)
     {
         return $query->where('type', self::TEXT_TYPE);
+    }
+
+    public function scopeMusicType($query)
+    {
+        //音频题有音乐和英语听力
+        return $query->where('type', self::AUDIO_TYPE)->where('id', '>=', 1016199);
+    }
+
+    public function scopeVideoType($query)
+    {
+        return $query->where('type', self::VIDEO_TYPE);
     }
 
     public function scopeOfficialUser($query)
@@ -351,6 +410,39 @@ class Question extends Model
             $rank = 5;
         }
 
+        //包含以下特征的都很可能是脏题，权重给到最低
+        $description = $this->description;
+        if (Str::contains($description, ['送分题', '好看', '答案'])) {
+            //题干包含这些文字
+            $rank = 0;
+        }
+
+        if (count(explode("\n", $description)) > 1) {
+            //题干存在换行符
+            $rank = 0;
+        }
+
+        if (in_array(mb_substr($description, 0, 1), ["?", "？"])) {
+            //题干第一个字符就是？号
+            $rank = 0;
+        }
+
+        if (str_contains($description, '?') && mb_strlen(str_after($description, '?')) > 0) {
+            $rank = 0;
+        }
+
+        if (str_contains($description, '？') && mb_strlen(str_after($description, '？')) > 0) {
+            $rank = 0;
+        }
+
+        if (is_numeric(mb_substr($description, 0, 1))) {
+            //题干第一个字符是数字，且不是数学题
+            if (!in_array($this->category_id, [134, 45])) {
+                $rank = 0;
+            }
+
+        }
+
         return $rank;
     }
 
@@ -399,7 +491,7 @@ class Question extends Model
             $newRank = 9;
             $newGold = 9;
         }
-        // 正确率20 % ~40 % ， 权重9，智慧点9
+        // 正确率40 % ~70 % ， 保持默认权重，智慧点8
         if ($correctRate >= 40 && $correctRate < 70) {
             $this->gold = 8;
             // 有点赞或有评论，或有解释的 提升到权重10最前位置
@@ -465,11 +557,12 @@ class Question extends Model
         $this->answers_count = $this->correct_count + $this->wrong_count;
     }
 
-    // public function getAnswerAttribute($value)
-    // {
-    //     $answer = str_replace(array("\r\n", "\r", "\n"), "", $value);
-    //     return $answer;
-    // }
+    public function getAnswerAttribute()
+    {
+        $value  = $this->getRawOriginal('answer');
+        $answer = str_replace(array("\r\n", "\r", "\n"), "", $value);
+        return $answer;
+    }
 
     public function save(array $options = [])
     {
@@ -512,5 +605,37 @@ class Question extends Model
     public function isSelf()
     {
         return Auth::check() && Auth::id() == $this->user_id;
+    }
+
+    public function syncAuditsCount()
+    {
+        $value = $this->audits()
+            ->selectRaw('sum(case when status= 1 then 1 else 0 end) as accepted_count,sum(case when status = 0 then 1 else 0 end) as declined_count')
+            ->first();
+
+        if (!is_null($value)) {
+            $this->accepted_count = $value->accepted_count;
+            $this->declined_count = $value->declined_count;
+        }
+    }
+
+    public function toSearchableArray()
+    {
+        return [
+            'description' => null,
+            'selections'  => null,
+            'answer'      => null,
+        ];
+    }
+
+    public function getHashIdAttribute()
+    {
+        return \Hashids::encode($this->attributes['id']);
+    }
+
+    public static function smartFindOrFail($id, $columns = ['*'])
+    {
+        $id = !is_numeric($id) ? \Hashids::decode($id)[0] ?? '' : $id;
+        return !empty($id) ? parent::findOrFail($id, $columns) : null;
     }
 }

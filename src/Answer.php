@@ -5,6 +5,7 @@ namespace Haxibiao\Question;
 use App\Question;
 use App\User;
 use Haxibiao\Breeze\Model;
+use Haxibiao\Breeze\Traits\ModelHelpers;
 use Haxibiao\Question\Traits\AnswerFacade;
 use Haxibiao\Question\Traits\AnswerResolvers;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,6 +14,7 @@ class Answer extends Model
 {
     use AnswerFacade;
     use AnswerResolvers;
+    use ModelHelpers;
     protected $table = 'answer';
 
     protected $fillable = [

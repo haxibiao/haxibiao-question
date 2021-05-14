@@ -3,7 +3,6 @@
 namespace Haxibiao\Question;
 
 use App\User;
-
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -23,9 +22,9 @@ class WrongAnswer extends Model
         return $this->belongsTo(User::class);
     }
 
-    public static function addAnswer(User $user, $answer)
+    public static function addAnswer(Answer $answer)
     {
-        $wrongAnswer = WrongAnswer::select(['id', 'user_id', 'count'])->firstOrCreate(['user_id' => $user->id], ['data' => '[]']);
+        $wrongAnswer = WrongAnswer::select(['id', 'user_id', 'count'])->firstOrCreate(['user_id' => $answer->user_id], ['data' => '[]']);
         if (!is_null($wrongAnswer)) {
             $count  = $wrongAnswer->count;
             $answer = $answer->only(['answer', 'question_id', 'id']);
@@ -44,6 +43,27 @@ class WrongAnswer extends Model
         }
 
         return $wrongAnswer;
+    }
+
+    public static function addAnswers(array $answerObjList)
+    {
+        $answerObjList = array_filter($answerObjList, function ($answer) {
+            return $answer instanceof Answer;
+        });
+        if (count($answerObjList)) {
+            $userId      = last($answerObjList)->user_id;
+            $wrongAnswer = WrongAnswer::firstOrCreate(['user_id' => $userId], ['data' => '[]']);
+
+            $data = $wrongAnswer->attributes['data'];
+            $data = json_decode($data);
+            foreach ($answerObjList as $answer) {
+                array_push($data, json_encode($answer->only(['answer', 'question_id', 'id'])));
+            }
+            $wrongAnswer->data = json_encode($data);
+            $wrongAnswer->save();
+
+            return $wrongAnswer;
+        }
     }
 
     public function getDataAttribute($value)

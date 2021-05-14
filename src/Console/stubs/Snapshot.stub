@@ -1,0 +1,10 @@
+<?php
+
+namespace App;
+
+use  Haxibiao\Question\Snapshot as BaseSnapshot;
+
+class Snapshot extends BaseSnapshot
+{
+
+}

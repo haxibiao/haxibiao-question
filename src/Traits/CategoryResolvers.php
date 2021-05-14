@@ -6,15 +6,31 @@ use Haxibiao\Question\Category;
 
 trait CategoryResolvers
 {
+
+    //根据类型获取category
+    public function resolveCategoriesType($root, array $args, $context, $info)
+    {
+        return Category::published()->where('type', $args['type'])->latest('rank');
+    }
+
     //题库列表
     public function resolveCategories($root, $args, $context, $info)
     {
-        //app_track_event('首页', '题库列表');
+        app_track_event('首页', '题库列表');
         $keyword = data_get($args, 'key_word');
-        $qb      = Category::published()->latest('rank');
+
+        //只搜索显示普通题目分类
+        $qb = Category::published()
+            ->where('type', Category::QUESTION_TYPE_ENUM)
+            ->latest('rank');
+
         if (!empty($keyword)) {
-            $qb->where('name', 'like', "%{$keyword}%")
-                ->OrWhere('description', 'like', "%{$keyword}%");
+            app_track_event('首页', '搜索题库记录', $keyword);
+
+            $qb->where(function ($query) use ($keyword) {
+                $query->where('name', 'like', "%{$keyword}%")
+                    ->OrWhere('description', 'like', "%{$keyword}%");
+            });
         }
         return $qb;
     }
@@ -24,7 +40,8 @@ trait CategoryResolvers
     {
         app_track_event('首页', '可出题题库列表');
         $keyword = $args['keyword'] ?? null;
-        return Category::getCategoriesCanSubmit()->where('categories.name', 'like', "%{$keyword}%");
+        $user    = getUser();
+        return Category::allowUserSubmitQuestions($user->id)->search($keyword);
     }
 
     //获取用户行为数据中最近浏览的五个分类
@@ -67,4 +84,5 @@ trait CategoryResolvers
         $category = self::where("type", $args['type'])->where("status", 1)->orderBy("order", "desc");
         return $category;
     }
+
 }

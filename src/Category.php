@@ -7,6 +7,7 @@ use App\User;
 use Haxibiao\Question\Traits\CategoryAttrs;
 use Haxibiao\Question\Traits\CategoryRepo;
 use Haxibiao\Question\Traits\CategoryResolvers;
+use Haxibiao\Question\Traits\CategoryScopes;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -18,6 +19,7 @@ class Category extends Model
     use CategoryRepo;
     use CategoryAttrs;
     use CategoryResolvers;
+    use CategoryScopes;
 
     protected $fillable = [
         'name',
@@ -33,6 +35,10 @@ class Category extends Model
         'correct_answer_users_count',
         'min_answer_correct',
         'answers_count_by_month',
+        'resource_count',
+        'type',
+        'group',
+        'children_count',
     ];
 
     protected $casts = [
@@ -47,6 +53,22 @@ class Category extends Model
     const PUBLISH = 1; //公开
     const PRIVACY = 0; //隐藏
     const DELETED = -1; //删除
+
+    // 暂时写死,这个学习视频分类的ID
+    const RECOMMEND_VIDEO_QUESTION_CATEGORY = 153;
+
+    // 分类类型
+    const QUESTION_TYPE_ENUM       = 0;
+    const ARTICLE_TYPE_ENUM        = 1;
+    const FORK_QUESTION_TYPE_ENUM  = 2;
+    const SCORE_QUESTION_TYPE_ENUM = 3;
+
+    const GROUPS = [
+        1 => '知识百科',
+        2 => '职业公考',
+        3 => '趣味益智',
+        4 => '学科考试',
+    ];
 
     public function parent()
     {
@@ -97,7 +119,57 @@ class Category extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(\App\User::class, 'user_id');
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(\App\Question::class);
+    }
+
+    public function forkQuestions()
+    {
+        return $this->hasMany(\App\ForkQuestion::class);
+    }
+
+    public function hotQuestions($count = 10)
+    {
+        return $this->questions()->publish()->take($count)->get();
+    }
+
+    public function comments()
+    {
+        return $this->morphMany(Comment::class, 'commentable');
+    }
+
+    public function forkAnswers()
+    {
+        return $this->hasMany(ForkAnswer::class, 'fork_question_id');
+    }
+
+    public function likes()
+    {
+        return $this->morphMany(Like::class, 'likable');
+    }
+
+    public function notLikes()
+    {
+        return $this->morphMany(NotLike::class, 'not_likable');
+    }
+
+    public function articles()
+    {
+        return $this->hasMany(Article::class);
+    }
+
+    public function publishedArticles()
+    {
+        return $this->hasMany(Article::class)->publish();
+    }
+
+    public function publishedQuestions()
+    {
+        return $this->hasMany(Question::class)->publish();
     }
 
     public function users()
@@ -108,11 +180,6 @@ class Category extends Model
     public function containedVideoPosts()
     {
         return $this->hasMany('App\Question')->where('questions.type', 'video');
-    }
-
-    public function questions()
-    {
-        return $this->hasMany(Question::class);
     }
 
     //nova

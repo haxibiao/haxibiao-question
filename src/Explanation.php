@@ -42,9 +42,8 @@ class Explanation extends Model
 
     public function images(): MorphToMany
     {
-        return $this->morphToMany(Image::class, 'imageable')->withPivot('created_at');
+        return $this->morphToMany(Image::class, 'imageable', 'imageable')->withPivot('created_at');
     }
-
 
     public function setDefaultType()
     {

@@ -2,9 +2,7 @@
 
 namespace Haxibiao\Question\Traits;
 
-
 use App\Exceptions\UserException;
-
 use App\User;
 use Haxibiao\Question\Curation;
 use Haxibiao\Question\Question;
@@ -21,7 +19,6 @@ trait CurationRepo
         // if (BadWordUtils::check($content)) {
         //     throw new UserException('纠题反馈中含有包含非法内容,请删除后再试!');
         // }
-        // dd($curator->id);
         //判断题目是否已经存在
         $curation = Curation::where('question_id', $question_id)
             ->where('status', Curation::REVIEW_STATUS)

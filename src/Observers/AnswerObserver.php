@@ -3,6 +3,7 @@
 namespace Haxibiao\Question\Observers;
 
 use Haxibiao\Question\Answer;
+use Haxibiao\Task\Jobs\ReviewTask;
 
 class AnswerObserver
 {
@@ -14,11 +15,10 @@ class AnswerObserver
      */
     public function created(Answer $answer)
     {
-
-        info(1);
-        //FIXME:如果没有任务模块不需要这句代码
-        // $user = $answer->user;
-        // $user->reviewTasksByClass(get_class($answer));
+        if (!is_null($answer->user_id)) {
+            \info("刷新任务");
+            dispatch(new ReviewTask($answer->user_id, get_class($answer)));
+        }
     }
 
     /**

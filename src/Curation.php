@@ -44,9 +44,9 @@ class Curation extends Model
      * 4. 其他错误
      */
     const QUESTION_ERROR = 1;
-    const ANSWER_ERROR = 2;
-    const IMAGE_ERROR = 3;
-    const OTHER_ERROR = 4;
+    const ANSWER_ERROR   = 2;
+    const IMAGE_ERROR    = 3;
+    const OTHER_ERROR    = 4;
 
     /**
      * 纠错奖励 gold
@@ -58,8 +58,8 @@ class Curation extends Model
      * 0: 待审核
      * 1: 审核成功
      */
-    const FAILED_STATUS = -1;
-    const REVIEW_STATUS = 0;
+    const FAILED_STATUS  = -1;
+    const REVIEW_STATUS  = 0;
     const SUCCESS_STATUS = 1;
 
     public function user(): BelongsTo
@@ -77,21 +77,41 @@ class Curation extends Model
         return $this->question->category();
     }
 
+    public function scopeSuccess($query)
+    {
+        return $query->where($this->getTable() . '.status', self::SUCCESS_STATUS);
+    }
+
+    public function scopeUnsuccess($query)
+    {
+        return $query->where($this->getTable() . '.status', '<', self::SUCCESS_STATUS);
+    }
+
+    public function scopeReview($query)
+    {
+        return $query->where($this->getTable() . '.status', self::REVIEW_STATUS);
+    }
+
+    public function scopeFailed($query)
+    {
+        return $query->where($this->getTable() . '.status', self::FAILED_STATUS);
+    }
+
     public static function getTypes()
     {
         return [
             self::QUESTION_ERROR => '题目错误',
-            self::ANSWER_ERROR => '答案错误',
-            self::IMAGE_ERROR => '图片不清晰或损坏',
-            self::OTHER_ERROR => '其他',
+            self::ANSWER_ERROR   => '答案错误',
+            self::IMAGE_ERROR    => '图片不清晰或损坏',
+            self::OTHER_ERROR    => '其他',
         ];
     }
 
     public static function getStatuses()
     {
         return [
-            self::FAILED_STATUS => '纠题失败',
-            self::REVIEW_STATUS => '待审核',
+            self::FAILED_STATUS  => '纠题失败',
+            self::REVIEW_STATUS  => '待审核',
             self::SUCCESS_STATUS => '纠题成功',
         ];
     }
@@ -105,7 +125,7 @@ class Curation extends Model
 
     public function syncUserCurationsCount()
     {
-        $user = $this->user;
+        $user           = $this->user;
         $curationsCount = $user->contributes()->sum('amount') ?? 0;
         UserProfile::where('user_id', $user->id)->update([
             'curations_count' => $curationsCount,

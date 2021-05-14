@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Haxibiao\Question;
 
 use App\User;
@@ -23,9 +22,9 @@ class UserAction extends Model
     //浏览统计上限
     const MAX_VISITED_NUMBER_COUNT = 10;
 
-    public function user(): BelongsTo
+    public function user()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(\App\User::class);
     }
 
     /**
@@ -98,6 +97,7 @@ class UserAction extends Model
         $this->can_submit_categories     = $canSubmitCategories;
 
         return $this;
+
     }
 
     /**
@@ -129,6 +129,7 @@ class UserAction extends Model
                 //mysql order by filed
                 $categories = Category::whereIn('id', $ids)
                     ->where('status', Category::PUBLISH)
+                    ->whereIn('type', [Category::ARTICLE_TYPE_ENUM, Category::QUESTION_TYPE_ENUM])
                     ->get();
 
                 //按照最近浏览排序
@@ -139,6 +140,7 @@ class UserAction extends Model
                     }
                 }
             }
+
         }
 
         return $latestCategories;

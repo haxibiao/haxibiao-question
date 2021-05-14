@@ -2,10 +2,12 @@
 
 namespace Haxibiao\Question\Traits;
 
+use App\Helpers\MorphModelHelper;
 use App\Image;
 use App\User;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Question\Explanation;
+use Illuminate\Support\Facades\Storage;
 
 trait ExplanationRepo
 {
@@ -16,7 +18,7 @@ trait ExplanationRepo
         $images   = data_get($inputs, 'images');
 
         if (empty([$video_id, $images]) || empty($content)) {
-            throw new UserException('参数不完整,请稍后再试');
+            throw new UserException('解析需添加文字描述提交');
         }
 
         $inputs['user_id'] = $user->id;
@@ -31,7 +33,7 @@ trait ExplanationRepo
         //     throw new UserException('含有非法关键词,请重新检查内容!');
         // }
 
-        $explanation = (new Explanation())->fill($inputs);
+        $explanation = (new Explanation)->fill($inputs);
 
         //视频检测
         if (isset($inputs['video_id'])) {
@@ -65,12 +67,23 @@ trait ExplanationRepo
 
         //绑定目标model
         if (isset($inputs['target_type']) && isset($inputs['target_id'])) {
-            $targetModel = get_model($inputs['target_type'])::find($inputs['target_id']);
+            $targetModel = MorphModelHelper::getModel($inputs['target_type'])::find($inputs['target_id']);
             if (!is_null($targetModel) && $targetModel->user_id == $explanation->user_id) {
                 $targetModel->fill(['explanation_id' => $explanation->id])->save();
             }
         }
 
         return $explanation;
+    }
+
+    public function saveDownloadImage($file)
+    {
+        if ($file) {
+            $cover   = '/explanation' . $this->id . '_' . time() . '.png';
+            $cosDisk = Storage::cloud();
+            $cosDisk->put($cover, \file_get_contents($file->path()));
+
+            return Storage::cloud()->url($cover);
+        }
     }
 }

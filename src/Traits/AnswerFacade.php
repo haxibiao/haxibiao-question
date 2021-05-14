@@ -2,12 +2,10 @@
 
 namespace Haxibiao\Question\Traits;
 
-use App\User;
-use App\Gold;
 use App\Contribute;
+use App\Gold;
+use App\User;
 use Haxibiao\Breeze\Exceptions\UserException;
-
-
 use Haxibiao\Question\CategoryUser;
 use Haxibiao\Question\Jobs\RecordTestAnswers;
 use Haxibiao\Question\Question;
@@ -58,18 +56,32 @@ trait AnswerFacade
             ]);
         }
 
+        //答案列表用于批量插入
+        $answerList = [];
+        \info("===222=");
+
         $correctQuestions = [];
         $wrongQuestions   = [];
         foreach ($questions as $key => $question) {
             $answer          = Arr::get($answers->firstWhere('question_id', $question->id), 'answer');
             $isAnswerCorrect = (int) $question->checkAnswer($answer);
-            if ($isAnswerCorrect) {
-                $correctQuestions[] = $question;
-            } else {
-                $wrongQuestions[] = $question;
-            }
-            $pivot->answer_count++;
 
+            $now          = now()->toDateTimeString();
+            $answerList[] = [
+                'question_id'    => $question->id,
+                'user_id'        => $user->id,
+                'answered_count' => 1,
+                'gold_awarded'   => $isAnswerCorrect ? $question->gold : 0,
+                'in_rank'        => $question->rank,
+                "correct_count"  => $isAnswerCorrect,
+                "wrong_count"    => $isAnswerCorrect,
+                'answer'         => $answer,
+                'created_at'     => $now,
+                'updated_at'     => $now,
+            ];
+
+            //更新pivot表
+            $pivot->answer_count++;
             //更新重置 answers_count_today last_answer_at
             $lastAnswerAt = $pivot->last_answer_at;
             if ($lastAnswerAt instanceof Carbon && !$lastAnswerAt->isToday()) {
@@ -77,16 +89,13 @@ trait AnswerFacade
             } else {
                 $pivot->answers_count_today++;
             }
+
             $pivot->last_answer_at = now();
             $pivot->saveRankRange($question, $isAnswerCorrect);
         }
 
-        if (count($correctQuestions)) {
-            dispatch_now(new RecordTestAnswers($correctQuestions, $user->id, 'correct_count'));
-        }
-        if (count($wrongQuestions)) {
-            dispatch_now(new RecordTestAnswers($wrongQuestions, $user->id, 'wrong_count'));
-        }
+        \info("sss");
+        dispatch_now(new RecordTestAnswers($answerList));
     }
 
     public static function answerQuestionReward(User $user, array $answers, $isWatchedAd = false)
@@ -109,13 +118,15 @@ trait AnswerFacade
 
         /**
          * 观看奖励
-         * 贡献点:3
+         * 新用户贡献点:3 老用户贡献点:2
          * 智慧点:10
          */
         $adGoldReward = 0;
         if ($isWatchedAd) {
+            // JIRA:DZ-1630 区分新老用户贡献点
+            $isOldUser             = $user->withdraw_count >= 7;
             $adGoldReward          = 10;
-            $rewards['contribute'] = 3;
+            $rewards['contribute'] = !$isOldUser ? 3 : 2;
             Contribute::rewardVideoPlay($user, $rewards['contribute']);
         }
 

@@ -1,0 +1,10 @@
+<?php
+
+namespace App;
+
+use  Haxibiao\Question\RecommendQuestionAnswer as BaseRecommendQuestionAnswer;
+
+class RecommendQuestionAnswer extends BaseRecommendQuestionAnswer
+{
+
+}
