@@ -47,7 +47,7 @@ trait CategoryResolvers
     //获取用户行为数据中最近浏览的五个分类
     public function resolveLatestCategories($root, $args, $context, $info)
     {
-        if ($user = checkUser()) {
+        if ($user = currentUser()) {
             if ($action = $user->action) {
                 return $action->getLatestCategories($args['top'] ?? 5);
             }

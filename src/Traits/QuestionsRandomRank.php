@@ -141,11 +141,9 @@ trait QuestionsRandomRank
                 $currentRank = Question::REVIEW_RANK;
             }
         }
-
         //恢复,准备开始取题
         $pivot->in_rank = $currentRank;
         $pivot->restoreRankRange();
-
         //避免n+1查询
         $qb = $category->questions()->with(['category', 'user', 'image', 'video']);
 
@@ -153,6 +151,7 @@ trait QuestionsRandomRank
         $qb = $qb->where('user_id', '<>', $user->id)
             ->whereNull('rejected_at')
             ->where('type', '!=', Question::AUDIO_TYPE);
+        $qb = $qb->where('user_id', '<>', $user->id)->where('type', '!=', Question::AUDIO_TYPE);
 
         $seeNewQuestions = false;
         //禁止用户出题的分类：初中英语，小学资格开始，区块链，出现大量脏题
@@ -210,7 +209,7 @@ trait QuestionsRandomRank
         $user->saveLastCategoryId($category_id); //正常
 
         //预加载前端定义字段关联关系
-        $questions->load(['user', 'user.profile', 'explanation', 'user.role', 'audits' => function ($query) {
+        $questions->load(['user', 'user.profile', 'explanation', 'audits' => function ($query) {
             $query->take(10);
         }, 'audits.user', 'explanation.images', 'video', 'explanation.video', 'image', 'audio']);
 

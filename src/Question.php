@@ -26,6 +26,7 @@ use Haxibiao\Question\Traits\QuestionRepo;
 use Haxibiao\Question\Traits\QuestionResolvers;
 use Haxibiao\Question\Traits\QuestionsRandomRank;
 use Haxibiao\Sns\Favorite;
+use Haxibiao\Sns\Traits\Likeable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -36,11 +37,12 @@ use Laravel\Nova\Actions\Actionable;
 class Question extends Model
 {
     use HasFactory;
+    use Likeable;
     use Actionable;
     use QuestionRepo;
     use QuestionResolvers;
-    use QuestionsRandomRank;
     use CreateQuestion;
+    use QuestionsRandomRank;
     use AnswerQuestion;
     use QuestionAttrs;
     use QuestionFacade;
@@ -192,7 +194,7 @@ class Question extends Model
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(\App\User::class, 'user_id');
     }
 
     public function category(): BelongsTo

@@ -89,7 +89,7 @@ trait CategoryRepo
             $qb = $qb->ofKeyword($keyword);
         }
 
-        $user = checkUser();
+        $user = currentUser();
         //用户能答题的分类 按照最近时间排序
         if ($allowSubmit == -1 && !is_null($user)) {
             $latestCategories = collect();

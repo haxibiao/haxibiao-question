@@ -6,7 +6,6 @@ use App\User;
 use Haxibiao\Question\Category;
 use Haxibiao\Question\Taggable;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphToMany;
 use Illuminate\Support\Facades\DB;
 
 class Tag extends Model
@@ -94,7 +93,7 @@ class Tag extends Model
         }
 
         //用户在登录的情况下，最近浏览的五个专题放在前面
-        $user = checkUser();
+        $user = currentUser();
         $qb   = $root->categories()->whereStatus(Category::PUBLISH)
             ->orderByDesc('rank');
 
