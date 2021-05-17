@@ -24,6 +24,15 @@ extend type Mutation {
     """
     publishQuestion(id: Int!): Int
         @field(resolver: "App\\Question@resolverPublishQuestion")
+
+    """
+    题库搜索
+    """
+    questionsSearch(keyword: String!): [Question!]!
+        @paginate(
+            defaultCount: 10
+            builder: "App\\Question@resolveSearchQuestions"
+        )
 }
 
 """

@@ -8,6 +8,13 @@ use Illuminate\Support\Arr;
 
 trait QuestionResolvers
 {
+    public static function resolveSearchQuestions($root, array $args, $context, $info)
+    {
+        $user = getUser();
+
+        return Question::searchQuestions($user, $args['keyword']);
+    }
+
     public static function resolveDynamicGold($root, array $args, $context, $info)
     {
         $user = getUser(false);

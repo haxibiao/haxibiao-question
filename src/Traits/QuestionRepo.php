@@ -1,6 +1,8 @@
 <?php
 namespace Haxibiao\Question\Traits;
 
+use App\SearchLog;
+use Haxibiao\Breeze\Dimension;
 use Haxibiao\Breeze\UserProfile;
 use Haxibiao\Content\Post;
 use Haxibiao\Media\Image;
@@ -14,6 +16,23 @@ use Haxibiao\Task\Contribute;
 
 trait QuestionRepo
 {
+    public static function searchQuestions($user, $keyword)
+    {
+        //默认rank权重排序
+        $qb = Question::latest('answers_count')->publish();
+
+        //搜索
+        if (!empty($keyword)) {
+            $qb = $qb->ofKeyword($keyword);
+        }
+
+        SearchLog::saveSearchLog($keyword, $user->id, "questions");
+        if ($qb->count() > 0) {
+            Dimension::track("答题内容搜索成功数", 1, "搜索");
+        }
+        return $qb;
+    }
+
     public function store($attributes = [])
     {
         $gold = Question::DEFAULT_GOLD;

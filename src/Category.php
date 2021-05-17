@@ -3,6 +3,7 @@
 namespace Haxibiao\Question;
 
 use App\User;
+use Haxibiao\Breeze\Traits\ModelHelpers;
 use Haxibiao\Content\Tag;
 use Haxibiao\Question\Traits\CategoryAttrs;
 use Haxibiao\Question\Traits\CategoryRepo;
@@ -20,6 +21,8 @@ class Category extends Model
     use CategoryAttrs;
     use CategoryResolvers;
     use CategoryScopes;
+
+    use ModelHelpers;
 
     protected $fillable = [
         'name',
@@ -281,25 +284,6 @@ class Category extends Model
     public function isDisallowSubmit()
     {
         return $this->allow_submit == self::DISALLOW_SUBMIT;
-    }
-
-    public function scopeOfKeyword($query, $keyword)
-    {
-        $jieba = app('jieba');
-        //失败时，就默认不切词
-        $words[] = $keyword;
-        try {
-            $words = $jieba->cutForSearch($keyword);
-        } catch (\Exception $ex) {
-            //失败时,不需要处理，没意义
-        }
-
-        //一个词也必须是数组
-        foreach ($words as $word) {
-            $query->where('name', 'like', "%{$word}%")->orWhere('description', 'like', "%{$word}%");
-        }
-
-        return $query;
     }
 
     public function scopePublished($query)
