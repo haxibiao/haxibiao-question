@@ -161,4 +161,10 @@ extend type Query {
   是否可答题
   """
   canAnswer: Int @field(resolver: "App\\Question@resolveCanAnswer")
+
+  """
+  热门搜索
+  """
+  hotSearch:[String!]
+      @field(resolver:"App\\Question@resolveHotSearch")
 }

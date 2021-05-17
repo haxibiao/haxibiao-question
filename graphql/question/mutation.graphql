@@ -33,6 +33,12 @@ extend type Mutation {
             defaultCount: 10
             builder: "App\\Question@resolveSearchQuestions"
         )
+
+    """
+    题目打分
+    """
+    questionScore(question_id:Int! , score:QuestionScoreEnum!):Boolean
+        @field(resolver:"App\\Question@resolveQuestionScore")
 }
 
 """
@@ -66,4 +72,12 @@ enum QuestionForm {
     OPEN @enum(value: 2)
     NON_SELECTION @enum(value: 12)
     ALL @enum(value: 123)
+}
+
+enum QuestionScoreEnum {
+    ONE @enum(value: 1)
+    TWO @enum(value: 2)
+    THREE @enum(value: 3)
+    FOUR @enum(value: 4)
+    FIVE @enum(value: 5)
 }

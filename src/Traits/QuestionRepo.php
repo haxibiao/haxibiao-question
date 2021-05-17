@@ -1,21 +1,55 @@
 <?php
 namespace Haxibiao\Question\Traits;
 
-use App\SearchLog;
 use Haxibiao\Breeze\Dimension;
 use Haxibiao\Breeze\UserProfile;
 use Haxibiao\Content\Post;
 use Haxibiao\Media\Image;
+use Haxibiao\Media\SearchLog;
 use Haxibiao\Question\Category;
 use Haxibiao\Question\Events\PublishQuestion;
 use Haxibiao\Question\Helpers\Redis\QuestionDynamicGold;
 use Haxibiao\Question\Helpers\Redis\RedisHelper;
 use Haxibiao\Question\Question;
+use Haxibiao\Question\QuestionScore;
 use Haxibiao\Sns\Report;
 use Haxibiao\Task\Contribute;
 
 trait QuestionRepo
 {
+    public static function hotSearch()
+    {
+        $result = SearchLog::whereBetween('created_at', [today()->subDays(7), today()])
+            ->orderBy(\DB::raw('max(count)'))
+            ->take(15)
+            ->groupBy('keyword')
+            ->pluck('keyword')
+            ->toArray();
+        if (count($result) > 3) {
+            return array_random($result, 3);
+        }
+        return $result;
+    }
+
+    public static function questionScore($user, $question, $score)
+    {
+        //保存评分记录
+        $questionScore = QuestionScore::firstOrNew([
+            'question_id' => $question->id,
+            'user_id'     => $user->id,
+        ]);
+        $questionScore->score = $score;
+        $questionScore->save();
+
+        //计算question得分
+        $question->count_score += 1;
+        $avg_score       = $question->question_scores()->avg('score');
+        $question->score = $avg_score;
+        $question->saveDataOnly();
+
+        return true;
+    }
+
     public static function searchQuestions($user, $keyword)
     {
         //默认rank权重排序

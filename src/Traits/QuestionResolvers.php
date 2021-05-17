@@ -3,11 +3,28 @@
 namespace Haxibiao\Question\Traits;
 
 use Haxibiao\Breeze\Exceptions\GQLException;
+use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Question\Question;
 use Illuminate\Support\Arr;
 
 trait QuestionResolvers
 {
+    //题目打分
+    public static function resolveQuestionScore($root, array $args, $context, $info)
+    {
+        $user     = getUser();
+        $question = Question::find($args['question_id']);
+        throw_if(empty($question), UserException::class, "没有该题目");
+        return Question::questionScore($user, $question, $args['score']);
+    }
+
+    //热门关键词搜索
+    public static function resolveHotSearch($root, array $args, $context, $info)
+    {
+        return Question::hotSearch();
+    }
+
+    //根据关键词搜索题目
     public static function resolveSearchQuestions($root, array $args, $context, $info)
     {
         $user = getUser();

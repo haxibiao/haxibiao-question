@@ -162,6 +162,11 @@ class Question extends Model
         return $this->hasMany(Answer::class);
     }
 
+    public function question_scores()
+    {
+        return $this->hasMany(QuestionScore::class);
+    }
+
     public function audits(): HasMany
     {
         return $this->hasMany(Audit::class);
