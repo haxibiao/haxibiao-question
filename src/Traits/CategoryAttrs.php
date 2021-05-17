@@ -19,4 +19,12 @@ trait CategoryAttrs
             return $this->userCanSubmit($user);
         }
     }
+
+    public function getAnswerCountAttribute()
+    {
+        if ($user = currentUser()) {
+            return $this->answerCount($user);
+        }
+        return 0;
+    }
 }

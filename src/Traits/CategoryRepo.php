@@ -359,6 +359,16 @@ trait CategoryRepo
         return !is_null($category);
     }
 
+    public function answerCount($user)
+    {
+        $categoryUsers = $user->categoriesPivot;
+        $category      = $categoryUsers->where('category_id', $this->id)->first();
+        if ($category) {
+            return $category->answer_count;
+        }
+        return 0;
+    }
+
     public function reviewMustCorrectCount()
     {
         return $this->questions_count >= 100 ? 10 : 5;
