@@ -60,7 +60,7 @@ trait CategoryResolvers
     {
         $keyword = $args['keyword'];
         app_track_event('首页', '搜索题库');
-        return Category::searchCategories($keyword);
+        return Category::searchCategories(getUser(), $keyword);
     }
 
     public function resolveGuestUserLike($root, $args, $context, $info)

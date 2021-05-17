@@ -23,12 +23,13 @@ trait QuestionRepo
 
         //搜索
         if (!empty($keyword)) {
+            Dimension::track("题目搜索数", 1, "搜索");
             $qb = $qb->ofKeyword($keyword);
         }
 
         SearchLog::saveSearchLog($keyword, $user->id, "questions");
         if ($qb->count() > 0) {
-            Dimension::track("答题内容搜索成功数", 1, "搜索");
+            Dimension::track("题目搜索成功数", 1, "搜索");
         }
         return $qb;
     }

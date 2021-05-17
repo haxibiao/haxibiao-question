@@ -4,6 +4,8 @@ namespace Haxibiao\Question\Traits;
 
 use App\User;
 use Hashids\Hashids;
+use Haxibiao\Breeze\Dimension;
+use Haxibiao\Media\SearchLog;
 use Haxibiao\Question\Category;
 use Haxibiao\Question\CategoryUser;
 use Haxibiao\Question\Question;
@@ -199,7 +201,7 @@ trait CategoryRepo
     }
 
     //搜索题库
-    public static function searchCategories($keyword)
+    public static function searchCategories($user, $keyword)
     {
         //默认rank权重排序
         $qb = Category::latest('rank')
@@ -207,7 +209,14 @@ trait CategoryRepo
 
         //搜索
         if (!empty($keyword)) {
+            Dimension::track("题库搜索数", 1, "搜索");
             $qb = $qb->ofKeyword($keyword);
+        }
+
+        SearchLog::saveSearchLog($keyword, $user->id, "categories");
+
+        if ($qb->count() > 0) {
+            Dimension::track("题库搜索成功数", 1, "搜索");
         }
 
         return $qb;
