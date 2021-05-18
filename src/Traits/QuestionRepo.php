@@ -2,6 +2,7 @@
 namespace Haxibiao\Question\Traits;
 
 use Haxibiao\Breeze\Dimension;
+use Haxibiao\Breeze\Helpers\Redis\RedisHelper;
 use Haxibiao\Breeze\UserProfile;
 use Haxibiao\Content\Post;
 use Haxibiao\Media\Image;
@@ -9,7 +10,6 @@ use Haxibiao\Media\SearchLog;
 use Haxibiao\Question\Category;
 use Haxibiao\Question\Events\PublishQuestion;
 use Haxibiao\Question\Helpers\Redis\QuestionDynamicGold;
-use Haxibiao\Question\Helpers\Redis\RedisHelper;
 use Haxibiao\Question\Question;
 use Haxibiao\Question\QuestionScore;
 use Haxibiao\Sns\Report;
