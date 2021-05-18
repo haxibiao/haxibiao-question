@@ -1,6 +1,8 @@
 <?php
 namespace Haxibiao\Question\Helpers\Redis;
 
+use Haxibiao\Breeze\Helpers\Redis\RedisHelper;
+
 class RedisRewardCounter
 {
     public static function updateRewardCounter($action, $userId, $count = 1)

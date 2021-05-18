@@ -1,7 +1,7 @@
 <?php
 namespace Haxibiao\Question\Helpers\Redis;
 
-use App\Helpers\Redis\RedisHelper;
+use Haxibiao\Breeze\Helpers\Redis\RedisHelper;
 
 class DailyAdRewardCounter
 {

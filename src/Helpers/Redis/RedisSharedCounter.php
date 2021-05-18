@@ -1,6 +1,8 @@
 <?php
 namespace Haxibiao\Question\Helpers\Redis;
 
+use Haxibiao\Breeze\Helpers\Redis\RedisHelper;
+
 class RedisSharedCounter
 {
     public static function updateCounter($userId, $count = 1)
