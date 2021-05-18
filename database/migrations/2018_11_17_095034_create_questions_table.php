@@ -37,6 +37,7 @@ class CreateQuestionsTable extends Migration
             $table->integer('wrong_count')->default(0)->index()->comment('统计：错误回答');
             $table->integer('count_comments')->default(0)->index()->comment('统计：评论数量');
             $table->integer('count_likes')->default(0)->index()->comment('统计：点赞数量');
+            $table->integer('count_favorites')->default(0)->index()->comment('统计：收藏数量');
 
             //关联到users表
             $table->unsignedInteger('user_id')->nullable()->index();
