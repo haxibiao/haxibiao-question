@@ -14,9 +14,13 @@ use Illuminate\Support\Carbon;
 
 trait AnswerFacade
 {
-    public static function getAnswers($user, $result = true, $type = "day")
+    public static function getAnswers($user, $result, $type = "day")
     {
-        return $user->answers()->where('result', $result)
+        return $user->answers()
+            ->whereNotNull('result')
+            ->when(!empty($result), function ($query) use ($result) {
+                $query->where('result', $result);
+            })
             ->when($type == "day", function ($query) {
                 $query->where('created_at', '>=', today());
             });
