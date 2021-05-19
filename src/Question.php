@@ -51,41 +51,8 @@ class Question extends Model
 
     protected $connection = 'mysql';
 
-    protected $fillable = [
-        'description',
-        'selections',
-        'answer',
-        'md5',
-        'gold',
-        'ticket',
-        'image_id',
-        'category_id',
-        'type',
-        'correct_count',
-        'wrong_count',
-        'user_id',
-        'submit',
-        'remark',
-        'video_id',
-        'review_id',
-        'reviewed_at',
-        'rejected_at',
-        'rank',
-        'reports_count',
-        'reports_weight',
-        'count_comments',
-        'count_likes',
-        'accepted_count',
-        'declined_count',
-        'is_rewarded',
-        'explanation_id',
-        'answers_count',
-        'audio_id',
-        'recommend_rank',
-        'recommend_id',
-    ];
-
-    protected $casts = [
+    protected $guarded = [];
+    protected $casts   = [
         'selections'  => 'json',
         'created_at'  => 'datetime',
         'reviewed_at' => 'datetime',
