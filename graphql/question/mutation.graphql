@@ -1,6 +1,8 @@
 extend type Mutation {
-    answerQuestion(id: Int!, answer: String): Int
-        @field(resolver: "App\\Question@resolveAnswerQuestion")
+    """
+    回答题目
+    """
+    answerQuestion(id: Int!, answer: String , time:Int): Int
     """
     创建题目|动态
     """

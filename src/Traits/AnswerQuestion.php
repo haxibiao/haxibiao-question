@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\DB;
 
 trait AnswerQuestion
 {
-    public static function answerQuestion(User $user, Question $question, $answer)
+    public static function answerQuestion(User $user, Question $question, $answer, $time = 0)
     {
         //答题时不再检查下架，影响了用户答题体验
         // if (!$question->isPublish()) {
@@ -67,10 +67,16 @@ trait AnswerQuestion
             'question_id'     => $question->id,
             'user_id'         => $user->id,
             'answered_count'  => 1,
+            'result'          => $isAnswerCorrect ? true : false,
             'gold_awarded'    => $goldAwarded,
             'in_rank'         => $question->rank,
             "$incrementField" => 1,
         ];
+        //保存答题消耗时间S秒
+        if ($time > 0) {
+            $answerData['time'] = $time;
+        }
+
         $answer = Answer::create($answerData);
 
         //4.更新题目统计字段
@@ -115,6 +121,7 @@ trait AnswerQuestion
         //更新每日答题数,聚合成一条SQL
         UserProfile::where('user_id', $user->id)->update([
             'answers_count_today' => DB::raw('answers_count_today + 1'),
+            'answers_time_count'  => DB::raw("answers_time_count + {$time}"),
             'answers_count'       => DB::raw('answers_count + 1'),
         ]);
 

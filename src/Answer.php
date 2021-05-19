@@ -23,6 +23,8 @@ class Answer extends Model
         'answered_count',
         'correct_count',
         'wrong_count',
+        'result',
+        'time',
         'gold_awarded',
         'created_at',
         'updated_at',

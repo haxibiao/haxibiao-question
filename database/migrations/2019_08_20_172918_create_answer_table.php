@@ -22,6 +22,8 @@ class CreateAnswerTable extends Migration
             $table->unsignedInteger('user_id')->index()->comment('用户ID');
             $table->unsignedInteger('question_id')->index()->comment('题库ID');
 
+            $table->integer('time')->nullable()->index()->comment('答题消耗时间（S/秒）');
+            $table->boolean('result')->nullable()->comment('回答正确/错误');
             $table->integer('answered_count')->default(0)->comment('回答次数');
             $table->integer('correct_count')->default(0)->comment('统计：正确回答');
             $table->integer('wrong_count')->default(0)->comment('统计：错误回答');

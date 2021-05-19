@@ -106,7 +106,7 @@ trait QuestionResolvers
             app_track_event('答题', "答案", $index);
             return 0;
         }
-        return Question::answerQuestion(getUser(), $question, $args['answer']);
+        return Question::answerQuestion(getUser(), $question, $args['answer'], $args['time'] ?? 0);
     }
 
     public function resolverCreateQuestion($root, $args, $c, $i)

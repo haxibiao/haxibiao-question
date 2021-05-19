@@ -22,4 +22,22 @@ type Answer {
     总获智慧点
     """
     gold_awarded: Int
+    """
+    答题时长
+    """
+    time: Int
+    created_at: DateTime!
+    updated_at: DateTime!
+}
+extend type Query {
+    """
+    答题记录
+    """
+    answers(result: Boolean = true, type: ShowType): [Answer]
+        @paginate(defaultCount: 10, builder: "App\\Answer@resolveAnswers")
+}
+
+enum ShowType {
+    ALL @enum(value: "all")
+    DDY @enum(value: "day")
 }

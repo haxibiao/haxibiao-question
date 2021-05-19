@@ -32,7 +32,7 @@ class Tag extends Model
     }
     public function categories()
     {
-        return $this->morphedByMany(Category::class, 'taggable')->whereStatus(Category::PUBLISH);
+        return $this->morphedByMany('App\Category', 'taggable')->whereStatus(Category::PUBLISH);
     }
 
     public function user()

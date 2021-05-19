@@ -8,6 +8,11 @@ use Haxibiao\Question\Answer;
 
 trait AnswerResolvers
 {
+    public function resolveAnswers($root, $args, $context, ResolveInfo $info)
+    {
+        return Answer::getAnswers(getUser(), $args['result'] ?? null, $args['type'] ?? null);
+    }
+
     public function resolveGetWrongAnswers($root, $args, $context, ResolveInfo $info)
     {
         return Answer::getWrongAnswers(getUser(), $args['limit']);
