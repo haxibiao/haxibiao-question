@@ -4,6 +4,7 @@ namespace Haxibiao\Question;
 
 use App\Question;
 use App\User;
+use Carbon\Carbon;
 use Haxibiao\Breeze\Model;
 use Haxibiao\Breeze\Traits\ModelHelpers;
 use Haxibiao\Question\Traits\AnswerFacade;
@@ -38,5 +39,10 @@ class Answer extends Model
     public function question(): BelongsTo
     {
         return $this->belongsTo(Question::class);
+    }
+
+    public function getCreatedAtAttribute()
+    {
+        return date_format(Carbon::parse($this->attributes['created_at']), "Y年m月d日");
     }
 }
