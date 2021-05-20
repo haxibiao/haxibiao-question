@@ -28,11 +28,11 @@ class Tag extends Model
 
     public function tags(): MorphToMany
     {
-        return $this->morphedByMany(Tag::class, 'taggable');
+        return $this->morphedByMany('App\Tag', 'taggable');
     }
     public function categories()
     {
-        return $this->morphedByMany('App\Category', 'taggable')->whereStatus(Category::PUBLISH);
+        return $this->morphedByMany('App\Category', 'taggable');
     }
 
     public function user()
@@ -172,7 +172,7 @@ class Tag extends Model
 
             return $tags;
         }
-
+        \info($root);
         return $root->tags()
             ->orderBy('rank', 'desc')
             ->orderBy('id', 'desc')
