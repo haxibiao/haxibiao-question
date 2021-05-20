@@ -3,6 +3,7 @@
 namespace Haxibiao\Question;
 
 use App\ForkAnswer;
+use App\NotLike;
 use App\User;
 use Haxibiao\Breeze\Traits\ModelHelpers;
 use Haxibiao\Content\Tag;
@@ -10,9 +11,9 @@ use Haxibiao\Question\Traits\CategoryAttrs;
 use Haxibiao\Question\Traits\CategoryRepo;
 use Haxibiao\Question\Traits\CategoryResolvers;
 use Haxibiao\Question\Traits\CategoryScopes;
+use Haxibiao\Sns\Like;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Facades\Storage;
 use Intervention\Image\Facades\Image;
 
