@@ -190,10 +190,15 @@ trait QuestionsRandomRank
             $qb = $qb->where('submit', 1); //FIXME:修复3.0 审题报错
         }
 
-        //取题逻辑：优先取pm在nova标记的精品题 再根据原来的算法取题和审题
-        $questions = Question::tagQuestions($category, $user, $limit);
-        if (!$isReviewing && count($questions) < $limit) {
-            //nova后台标记的精品题取完了再正常取题
+        $questions = [];
+        if ($tries > 0) {
+            //取题逻辑：优先取pm在nova标记的精品题 再根据原来的算法取题和审题
+            $questions = Question::tagQuestions($category, $user, $limit);
+            if (!$isReviewing && count($questions) < $limit) {
+                //nova后台标记的精品题取完了再正常取题
+                $questions = $qb->take($limit)->get();
+            }
+        } else {
             $questions = $qb->take($limit)->get();
         }
 
