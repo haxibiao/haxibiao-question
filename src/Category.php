@@ -2,6 +2,7 @@
 
 namespace Haxibiao\Question;
 
+use App\ForkAnswer;
 use App\User;
 use Haxibiao\Breeze\Traits\ModelHelpers;
 use Haxibiao\Content\Tag;
