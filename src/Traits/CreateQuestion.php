@@ -207,7 +207,7 @@ trait CreateQuestion
             $params['answer']     = implode('', $inputs['answers']);
             $params['user_id']    = $user->id;
             $params['type']       = Question::getType($inputs); //文字答题
-            $params['timestamps'] = true;
+            // $params['timestamps'] = true;
 
             //检查分类是否允许出题
             $question->category_id = $inputs['category_id'];
@@ -227,7 +227,9 @@ trait CreateQuestion
                 //精力够出题成功，更新题目分类区间，触发待审
                 $category->updateRanks();
             }
-
+            $question->timestamps = true;
+            //评星分数
+            $question->score = 0;
             //3.保存
             $question->store($params);
 
