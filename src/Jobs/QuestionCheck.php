@@ -19,7 +19,7 @@ class QuestionCheck implements ShouldQueue
      * @return void
      */
     protected $question;
-    public function __construct(Question $question)
+    public function __construct($question)
     {
         $this->question = $question;
     }
