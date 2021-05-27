@@ -206,10 +206,8 @@ trait QuestionsRandomRank
         if (!$questions->count()) {
             //TODO: 可以递归凑够10个题目后，才返回给前端
             $tries++;
-            if ($tries > 10) {
-                //重试次数太多直接返回，不然会崩
-                throw new UserException('暂时没有题目了，试试去出题吧！\n或先去其它分类下答题吧~');
-            }
+            //没有题目就重置max_review_id，让用户答老题
+            $pivot->update(['max_review_id' => null]);
             $user->saveLastCategoryId($tries * 10000 + $category_id); //标记递归的退出条件
             return Question::getQuestions($user, $category_id, 10, array_merge($not_in_ranks, [$currentRank]));
         }
