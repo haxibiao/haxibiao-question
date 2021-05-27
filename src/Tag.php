@@ -32,7 +32,7 @@ class Tag extends Model
     }
     public function categories()
     {
-        return $this->morphedByMany('App\Category', 'taggable');
+        return $this->morphedByMany('App\Category', 'taggable')->orderByDesc('rank');
     }
 
     public function user()
