@@ -3,9 +3,35 @@
 namespace Haxibiao\Question\Traits;
 
 use App\Item;
+use Illuminate\Support\Facades\Storage;
 
 trait CategoryAttrs
 {
+
+    public function getCanAuditAttribute()
+    {
+        //不是官方题库，并且后台标记可以审题
+        return !$this->is_official && $this->attributes['can_audit'];
+    }
+
+    public function getCanReviewCountAttribute()
+    {
+        return $this->users()->where('correct_count', '>', 100)->count();
+    }
+
+    public function getIconUrlAttribute()
+    {
+        if (starts_with($this->icon, "http")) {
+            return $this->icon;
+        }
+
+        if (empty($this->icon)) {
+            return config('app.cos_url') . '/storage/app/avatars/avatar.png';
+        }
+
+        return Storage::disk('public')->url($this->icon);
+    }
+
     public function getShieldingAdAttribute()
     {
         if ($user = currentUser()) {

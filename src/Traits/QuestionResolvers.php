@@ -77,6 +77,13 @@ trait QuestionResolvers
         return Question::getQuestions($user, $args['category_id'], $args['limit']);
     }
 
+    public function resolveAuditQuestions($root, array $args, $context, $info)
+    {
+        app_track_event('审题', '题库ID', $args['category_id']);
+        $user = getUser();
+        return Question::getAuditQuestions($user, $args['category_id'], $args['limit']);
+    }
+
     public function resolveAnswerQuestion($root, $args, $context, $info)
     {
         // \App\Task::refreshTask(getUser(), "爱上答题"); //工厂用答题任务激励，刷新进度

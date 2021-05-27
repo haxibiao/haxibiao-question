@@ -343,7 +343,7 @@ trait CategoryRepo
 
     public function hasReviewQuestions()
     {
-        return max($this->ranks) == \App\Question::REVIEW_RANK;
+        return count($this->ranks) && max($this->ranks) == \App\Question::REVIEW_RANK;
     }
 
     public function isDisallowSubmit()

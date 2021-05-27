@@ -153,6 +153,12 @@ extend type Query {
   questions(category_id: Int!, limit: Int = 10): [Question] @field(resolver: "App\\Question@resolveQuestions")
 
   """
+  按题库,一次取多少个题出来审题
+  """
+  auditQuestions(category_id: Int!, limit: Int = 10): [Question]
+      @field(resolver: "App\\Question@resolveAuditQuestions")
+
+  """
   题目详情
   """
   question(id: Int! @eq): Question @find @cache(maxAge: 36000)

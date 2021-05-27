@@ -227,4 +227,79 @@ trait QuestionsRandomRank
 
         return $questions;
     }
+
+    /**
+     * 审题
+     */
+    public static function getAuditQuestions($user, $category_id, $limit = 10)
+    {
+        if (!$user->can_audit) {
+            throw new UserException('您因违规审题行为，已被取消审题资格');
+        }
+        $category = Category::find($category_id);
+        if (empty($category)) {
+            throw new UserException('该分类不存在');
+        }
+        if ($category->can_audit) {
+            throw new UserException('该分类不允许审题!');
+        }
+        if (!$category->hasReviewQuestions()) {
+            throw new UserException('没有新题需要审了!换一个题库吧～');
+        }
+
+        //记录一下用户行为
+        $pivot = CategoryUser::firstOrCreate([
+            'user_id'     => $user->id,
+            'category_id' => $category_id,
+        ]);
+        $action = UserAction::firstOrCreate(['user_id' => $user->id]);
+        $action->addVisitedCategoryId($category_id)->save();
+
+        //恢复,准备开始取题
+        $pivot->in_rank = Question::REVIEW_RANK;
+        $pivot->restoreRankRange();
+        //避免n+1查询
+        $qb = $category->questions()->with(['category', 'user', 'image', 'video']);
+
+        //自己出的题目不审核
+        $qb = $qb->where('user_id', '<>', $user->id)
+            ->whereNull('rejected_at')
+            ->where('type', '!=', Question::AUDIO_TYPE);
+
+        $qb = $qb->whereRank(Question::REVIEW_RANK)->inReview();
+
+        //错位排重逻辑，用户审过的区间的review_id不取
+        $rank_max_review_id = $qb->max('review_id');
+        //当前权重下有新的带审题
+        $seeNewQuestions = $pivot->max_review_id != null && $rank_max_review_id > $pivot->max_review_id;
+        if ($seeNewQuestions) {
+            //有新题，只取上部分
+            $qb = $qb->where('review_id', '>', $pivot->max_review_id);
+        } else {
+            //没新题目，只取下部分
+            if ($pivot->min_review_id != null) {
+                $qb = $qb->where('review_id', '<', $pivot->min_review_id);
+            }
+        }
+
+        //排序,有新题时，从小review_id到大
+        $qb = $seeNewQuestions ? $qb->orderBy('review_id') : $qb->orderByDesc('review_id');
+
+        $questions = $qb->take($limit)->get();
+
+        //拿到了questions，之后一些收尾工作
+        $user->saveLastCategoryId($category_id); //正常
+
+        //预加载前端定义字段关联关系
+        $questions->load(['user', 'user.profile', 'explanation', 'audits' => function ($query) {
+            $query->take(10);
+        }, 'audits.user', 'explanation.images', 'video', 'explanation.video', 'image', 'audio']);
+
+        //预加喜欢状态
+        $questions = Question::loadFavoriteStatus($user, $questions);
+        //预加载点赞状态
+        $questions = Question::loadLiked($user, $questions);
+
+        return $questions;
+    }
 }

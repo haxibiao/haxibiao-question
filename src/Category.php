@@ -42,6 +42,7 @@ class Category extends Model
         'answers_count_by_month',
         'resource_count',
         'type',
+        'can_audit',
         'group',
         'children_count',
     ];
@@ -196,13 +197,6 @@ class Category extends Model
         ];
     }
 
-    //attributes
-
-    public function getCanReviewCountAttribute()
-    {
-        return $this->users()->where('correct_count', '>', 100)->count();
-    }
-
     //repo
 
     public function saveIcon($icon)
@@ -227,19 +221,6 @@ class Category extends Model
             $this->save();
         }
         return $this;
-    }
-
-    public function getIconUrlAttribute()
-    {
-        if (starts_with($this->icon, "http")) {
-            return $this->icon;
-        }
-
-        if (empty($this->icon)) {
-            return config('app.cos_url') . '/storage/app/avatars/avatar.png';
-        }
-
-        return Storage::disk('public')->url($this->icon);
     }
 
     public static function getTopAnswersCategory($number = 5)
@@ -276,11 +257,6 @@ class Category extends Model
         rsort($ranks);
         $this->ranks = $ranks;
         $this->save();
-    }
-
-    public function hasReviewQuestions()
-    {
-        return max($this->ranks) == \App\Question::REVIEW_RANK;
     }
 
     public function isDisallowSubmit()
