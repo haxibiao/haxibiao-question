@@ -2,10 +2,10 @@
 
 namespace Haxibiao\Question\Traits;
 
-use App\Helpers\MorphModelHelper;
 use App\Image;
 use App\User;
 use Haxibiao\Breeze\Exceptions\UserException;
+use Haxibiao\Breeze\Helpers\MorphModelHelper;
 use Haxibiao\Question\Explanation;
 use Illuminate\Support\Facades\Storage;
 
