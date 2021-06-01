@@ -207,7 +207,7 @@ trait QuestionsRandomRank
             //TODO: 可以递归凑够10个题目后，才返回给前端
             $tries++;
             //没有题目就重置max_review_id，让用户答老题
-            $pivot->update(['max_review_id' => null]);
+            $pivot->update(['max_review_id' => null, 'min_review_id' => null]);
             $user->saveLastCategoryId($tries * 10000 + $category_id); //标记递归的退出条件
             return Question::getQuestions($user, $category_id, 10, array_merge($not_in_ranks, [$currentRank]));
         }
