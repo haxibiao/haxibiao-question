@@ -55,6 +55,8 @@ class QuestionServiceProvider extends ServiceProvider
 
             //注册监听器
             $this->registerEvent();
+
+            $this->bindModelObserve();
         }
     }
 
