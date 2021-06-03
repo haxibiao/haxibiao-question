@@ -43,6 +43,7 @@ class QuestionServiceProvider extends ServiceProvider
         // $this->publishes([
         //     __DIR__ . '/Console/stubs/QuestionServiceProvider.stub' => app_path('Providers/QuestionServiceProvider.php'),
         // ], 'question-provider');
+        $this->bindModelObserve();
 
         if ($this->app->runningInConsole()) {
 
@@ -56,7 +57,6 @@ class QuestionServiceProvider extends ServiceProvider
             //注册监听器
             $this->registerEvent();
 
-            $this->bindModelObserve();
         }
     }
 
