@@ -170,7 +170,9 @@ trait CreateQuestion
 
         $str      = str_replace(['？', '。', '！', '?'], '', $inputs['description']);
         $numCount = preg_match_all("/[0-9]{1}/", $str, );
-        $str      = substr($str, 0, -$numCount);
+        if ($numCount) {
+            $str = substr($str, 0, -$numCount);
+        }
         //就查自己的题目吧，查全部时间有点长，而且基本上就是一部分用户在题目后面加句号排重
         if (Question::where('user_id', $user->id)->where('description', 'like', $str . '%')->exists()) {
             throw new UserException('题目已经被其他人出过了，请重新修改后出题!');
