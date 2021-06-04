@@ -105,9 +105,13 @@ trait QuestionResolvers
         }
 
         $question = Question::find($args['id']);
-        if ($question && $question->category) {
+        if ($question) {
             //matomo统计答题的题库名
-            app_track_event('答题', $question->category->name, "答案" . $answer);
+            $category_name = "未知题库";
+            if ($question->category) {
+                $category_name = $question->category->name;
+            }
+            app_track_event('答题', $category_name, "答案" . $answer);
         } else {
             //记录答案选项看下是否有用户乱选提交答案
             app_track_event('答题', "答案", $index);
