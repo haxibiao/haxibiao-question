@@ -26,7 +26,7 @@ type Question {
   """
   题目下的评论
   """
-  comments: [Comment] @morphMany @cache(maxAge: 10800)
+  comments: [Comment]  @cache(maxAge: 10800)
   """
   题目下的审批记录(人和投票记录)
   """
