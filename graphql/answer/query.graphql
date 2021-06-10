@@ -1,5 +1,5 @@
 type Answer {
-    id: ID
+    id: Int
     time: DateTime
     user: User
     """
