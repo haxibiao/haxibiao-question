@@ -186,30 +186,29 @@ trait CreateQuestion
             throw new UserException('该题目已存在,请勿重复出题!');
         }
 
-        //2.保存图片 || 视频
-        $imageBase64String = $inputs['image'] ?? null;
-        if (!blank($imageBase64String)) {
-            $image = Image::saveImage($imageBase64String);
-            //出题使用重复上传过的图片抛出异常
-            if (!empty($image)) {
-                if ($image->created_at < now()->subSecond(2)) {
-                    throw new UserException('图片已经被其他人用过了，请重新修改后出题!');
-                }
-                $params['image_id'] = $image->id;
-            }
-        }
-        if (!empty($inputs['video_id'])) {
-            $params['video_id'] = Question::saveVideo($inputs['video_id'])->id;
-        }
-
         try {
             //1.组装数据
-            $params               = array_except($inputs, ['options', 'answers', 'selections', 'images', 'image', 'directive']);
+            $params               = array_except($inputs, ['options', 'answers', 'selections', 'images', 'directive']);
             $params['selections'] = json_encode($inputs['selections'], JSON_UNESCAPED_UNICODE);
             $params['answer']     = implode('', $inputs['answers']);
             $params['user_id']    = $user->id;
             $params['type']       = Question::getType($inputs); //文字答题
             // $params['timestamps'] = true;
+            //2.保存图片 || 视频
+            $imageBase64String = $inputs['image'] ?? null;
+            if (!blank($imageBase64String)) {
+                $image = Image::saveImage($imageBase64String);
+                //出题使用重复上传过的图片抛出异常
+                if (!empty($image)) {
+                    if ($image->created_at < now()->subSecond(2)) {
+                        throw new UserException('图片已经被其他人用过了，请重新修改后出题!');
+                    }
+                    $params['image_id'] = $image->id;
+                }
+            }
+            if (!empty($inputs['video_id'])) {
+                $params['video_id'] = Question::saveVideo($inputs['video_id'])->id;
+            }
 
             //检查分类是否允许出题
             $question->category_id = $inputs['category_id'];
@@ -232,6 +231,7 @@ trait CreateQuestion
             $question->timestamps = true;
             //评星分数
             $question->score = 0;
+
             //3.保存
             $question->store($params);
 
