@@ -188,7 +188,7 @@ trait CreateQuestion
 
         try {
             //1.组装数据
-            $params               = array_except($inputs, ['options', 'answers', 'selections', 'images', 'directive']);
+            $params               = array_except($inputs, ['options', 'answers', 'selections', 'images', 'image', 'directive']);
             $params['selections'] = json_encode($inputs['selections'], JSON_UNESCAPED_UNICODE);
             $params['answer']     = implode('', $inputs['answers']);
             $params['user_id']    = $user->id;
