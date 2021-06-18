@@ -3,7 +3,7 @@ extend type Mutation {
     回答题目
     """
     answerQuestion(id: Int!, answer: String, time: Int): Int
-        @middleware(checks: ["App\\Http\\Middleware\\AnswerQuestionMiddleware"])
+        # @middleware(checks: ["App\\Http\\Middleware\\AnswerQuestionMiddleware"])
         @field(resolver: "App\\Question@resolveAnswerQuestion")
     """
     创建题目|动态
