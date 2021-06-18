@@ -1,0 +1,7 @@
+extend type Mutation {
+    """
+    记录测试题结果
+    """
+    recordForkQuestionResult(id: Int!, answer: String): [ForkAnswer]
+        @field(resolver: "App\\ForkQuestion@resolveRecordForkQuestionResult")
+}

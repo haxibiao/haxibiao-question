@@ -2,46 +2,43 @@ extend type Mutation {
     """
     回答题目
     """
-    answerQuestion(id: Int!, answer: String , time:Int): Int
+    answerQuestion(id: Int!, answer: String, time: Int): Int
+        @middleware(checks: ["App\\Http\\Middleware\\AnswerQuestionMiddleware"])
         @field(resolver: "App\\Question@resolveAnswerQuestion")
     """
     创建题目|动态
     """
-    createQuestion(input: CreateQuestion! @spread): Question
-        @field(resolver: "App\\Question@resolverCreateQuestion")
+    createQuestion(input: CreateQuestion! @spread): Question @field(resolver: "App\\Question@resolverCreateQuestion")
+
+    """
+    创建视频题
+    """
+    CreateVideoQuestion(input: CreateVideoQuestion! @spread): Question
+        @field(resolver: "App\\Question@resolverCreateVideoQuestion")
 
     """
     删除草稿箱题目
     """
-    deleteQuestion(id: Int!): Int
-        @field(resolver: "App\\Question@resolverDeleteQuestion")
+    deleteQuestion(id: Int!): Int @field(resolver: "App\\Question@resolverDeleteQuestion")
 
     """
     撤回题目
     """
-    removeQuestion(id: Int!): Int
-        @field(resolver: "App\\Question@resolverRemoveQuestion")
+    removeQuestion(id: Int!): Int @field(resolver: "App\\Question@resolverRemoveQuestion")
 
     """
     发布题目(精力不足出题后暂存的或者撤回的)
     """
-    publishQuestion(id: Int!): Int
-        @field(resolver: "App\\Question@resolverPublishQuestion")
+    publishQuestion(id: Int!): Int @field(resolver: "App\\Question@resolverPublishQuestion")
 
-    """
-    题库搜索
-    """
-    questionsSearch(keyword: String!): [Question!]!
-        @paginate(
-            defaultCount: 10
-            builder: "App\\Question@resolveSearchQuestions"
-        )
+    nextQuestionCheckpoint(correctCount: Int, wrongCount: Int): Int
+        @field(resolver: "App\\Question@resolverNextQuestionCheckpoint")
 
     """
     题目打分
     """
-    questionScore(question_id:Int! , score:QuestionScoreEnum!):Boolean
-        @field(resolver:"App\\Question@resolveQuestionScore")
+    questionScore(question_id: Int!, score: QuestionScoreEnum!): Boolean
+        @field(resolver: "App\\Question@resolveQuestionScore")
 }
 
 """
@@ -57,6 +54,18 @@ input CreateQuestion {
     base64
     """
     image: String
+    explanation_id: Int
+    gold: Int = 0
+}
+
+"""
+视频题属性
+"""
+input CreateVideoQuestion {
+    description: String!
+    selections: [QuestionSelectionInput!]! @spread
+    video_id: Int
+    answers: String!
     explanation_id: Int
     gold: Int = 0
 }

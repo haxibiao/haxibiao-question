@@ -1,5 +1,5 @@
 type Curation {
-    id: Int
+    id: ID
     """
     用户
     """
@@ -36,6 +36,5 @@ extend type Query {
     """
     纠题记录
     """
-    curations: [Curation!]
-        @paginate(builder: "App\\Curation@resolveCurations", defaultCount: 10)
+    curations: [Curation!] @paginate(builder: "App\\Curation@resolveCurations", defaultCount: 10)
 }

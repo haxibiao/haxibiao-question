@@ -1,0 +1,60 @@
+type ForkQuestion {
+    """
+    题号
+    """
+    id: Int! @cacheKey
+    """
+    创建者
+    """
+    user: User @belongsTo
+    """
+    分类
+    """
+    category: Category! @belongsTo
+    """
+    主配图
+    """
+    image: Image @belongsTo
+    """
+    视频信息
+    """
+    video: Video @belongsTo
+    """
+    音频
+    """
+    audio: Audio @belongsTo
+    """
+    描述
+    """
+    description: String
+    """
+    解析
+    """
+    forkExplanations: [ForkExplanation]
+    """
+    创建时间
+    """
+    created_at: String
+    """
+    选项
+    """
+    selections: JsonType
+}
+
+type ForkAnswer {
+    id: Int
+    """
+    创建者
+    """
+    user: User! @belongsTo
+}
+
+extend type Query {
+    forkQuestions(category_id: Int!, limit: Int = 10): [ForkQuestion]
+        @field(resolver: "App\\ForkQuestion@resolveTestQuestions")
+
+    """
+    题目详情
+    """
+    forkQuestion(id: Int! @eq): ForkQuestion @find
+}

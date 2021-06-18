@@ -1,0 +1,6 @@
+type ForkExplanation {
+    id: Int
+    question: Question @belongsTo
+    cover: String
+    answer: String
+}

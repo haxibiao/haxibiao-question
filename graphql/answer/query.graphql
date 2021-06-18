@@ -1,5 +1,5 @@
 type Answer {
-    id: Int
+    id: ID
     time: DateTime
     user: User
     """
@@ -26,14 +26,14 @@ type Answer {
     答题时长
     """
     time: Int
-    created_at: DateTime!
+    created_at: String
     updated_at: DateTime!
 }
 extend type Query {
     """
     答题记录
     """
-    answers(result: Boolean = true, type: ShowType): [Answer]
+    answers(result: Boolean, type: ShowType): [Answer]
         @paginate(defaultCount: 10, builder: "App\\Answer@resolveAnswers")
 }
 

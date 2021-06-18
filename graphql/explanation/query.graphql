@@ -3,5 +3,6 @@ type Explanation {
     user: User @belongsTo
     video: Video @belongsTo
     images: [Image]
+    cover: String
     content: String
 }
