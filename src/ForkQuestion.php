@@ -7,10 +7,10 @@ use App\Category;
 use App\ForkExplanation;
 use App\Image;
 use App\Model;
-use App\Traits\ForkQuestion\ForkQuestionRepo;
-use App\Traits\ForkQuestion\ForkQuestionResolvers;
 use App\User;
 use App\Video;
+use Haxibiao\Question\Traits\ForkQuestionRepo;
+use Haxibiao\Question\Traits\ForkQuestionResolvers;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class ForkQuestion extends Model
