@@ -1,0 +1,10 @@
+<?php
+
+namespace App;
+
+use  Haxibiao\Question\ForkExplanation as BaseForkExplanation;
+
+class ForkExplanation extends BaseForkExplanation
+{
+
+}

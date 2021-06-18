@@ -1,0 +1,10 @@
+<?php
+
+namespace App;
+
+use  Haxibiao\Question\ForkQuestion as BaseForkQuestion;
+
+class ForkQuestion extends BaseForkQuestion
+{
+
+}

@@ -1,0 +1,10 @@
+<?php
+
+namespace App;
+
+use  Haxibiao\Question\ForkAnswer as BaseForkAnswer;
+
+class ForkAnswer extends BaseForkAnswer
+{
+
+}
