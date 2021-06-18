@@ -8,31 +8,31 @@ extend type Mutation {
     """
     创建题目|动态
     """
-    createQuestion(input: CreateQuestion! @spread): Question @field(resolver: "App\\Question@resolverCreateQuestion")
+    createQuestion(input: CreateQuestion! @spread): Question @field(resolver: "App\\Question@resolveCreateQuestion")
 
     """
     创建视频题
     """
     CreateVideoQuestion(input: CreateVideoQuestion! @spread): Question
-        @field(resolver: "App\\Question@resolverCreateVideoQuestion")
+        @field(resolver: "App\\Question@resolveCreateVideoQuestion")
 
     """
     删除草稿箱题目
     """
-    deleteQuestion(id: Int!): Int @field(resolver: "App\\Question@resolverDeleteQuestion")
+    deleteQuestion(id: Int!): Int @field(resolver: "App\\Question@resolveDeleteQuestion")
 
     """
     撤回题目
     """
-    removeQuestion(id: Int!): Int @field(resolver: "App\\Question@resolverRemoveQuestion")
+    removeQuestion(id: Int!): Int @field(resolver: "App\\Question@resolveRemoveQuestion")
 
     """
     发布题目(精力不足出题后暂存的或者撤回的)
     """
-    publishQuestion(id: Int!): Int @field(resolver: "App\\Question@resolverPublishQuestion")
+    publishQuestion(id: Int!): Int @field(resolver: "App\\Question@resolvePublishQuestion")
 
     nextQuestionCheckpoint(correctCount: Int, wrongCount: Int): Int
-        @field(resolver: "App\\Question@resolverNextQuestionCheckpoint")
+        @field(resolver: "App\\Question@resolveNextQuestionCheckpoint")
 
     """
     题目打分
