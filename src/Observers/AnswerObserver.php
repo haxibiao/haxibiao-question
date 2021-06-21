@@ -16,7 +16,6 @@ class AnswerObserver
     public function created(Answer $answer)
     {
         if (!is_null($answer->user_id)) {
-            \info("刷新任务");
             dispatch(new ReviewTask($answer->user_id, get_class($answer)));
         }
     }
