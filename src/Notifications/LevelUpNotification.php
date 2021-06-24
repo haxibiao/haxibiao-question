@@ -5,19 +5,20 @@ namespace Haxibiao\Question\Notifications;
 use Haxibiao\Breeze\Notifications\BreezeNotification;
 use Illuminate\Bus\Queueable;
 
-class CurationRewardNotification extends BreezeNotification
+class LevelUpNotification extends BreezeNotification
 {
     use Queueable;
 
-    protected $curation;
+    private $level;
+
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct($curation)
+    public function __construct($level)
     {
-        $this->curation = $curation;
+        $this->level = $level;
     }
 
     /**
@@ -30,19 +31,19 @@ class CurationRewardNotification extends BreezeNotification
     {
         $data = $this->senderToArray();
 
-        $curation = $this->curation;
+        $level = $this->level;
         //文本描述
-        $message = "您对题目“{$curation->question->description}”纠错
-                  【{$curation->getTypes()[$curation->type]}】已被采纳，
-                    恭喜您获得奖励：{$curation->gold_awarded}智慧点";
+        $message = "恭喜您升至{$level->level}级,精力点上限提高至{$level->ticket_max}点！
+                    升至下一等级需要{$level->exp}点经验值，再接再厉哦！";
 
         $data = array_merge($data, [
-            'type'    => $curation->getMorphClass(),
-            'id'      => $curation->id,
-            'title'   => "题目纠错", //标题
+            'type'    => $level->getMorphClass(),
+            'id'      => $level->id,
+            'title'   => "升级通知", //标题
             'message' => $message, //通知主体内容
         ]);
 
         return $data;
+
     }
 }

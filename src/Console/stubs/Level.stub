@@ -1,0 +1,10 @@
+<?php
+
+namespace App;
+
+use  Haxibiao\Question\Level as BaseLevel;
+
+class Level extends BaseLevel
+{
+
+}
