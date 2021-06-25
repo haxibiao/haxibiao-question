@@ -19,6 +19,7 @@ class ReportSucceedNotification extends BreezeNotification
     public function __construct($report)
     {
         $this->report = $report;
+        $this->sender = $report->user;
     }
 
     /**

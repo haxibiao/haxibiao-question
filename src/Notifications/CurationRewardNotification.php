@@ -18,6 +18,7 @@ class CurationRewardNotification extends BreezeNotification
     public function __construct($curation)
     {
         $this->curation = $curation;
+        $this->sender   = $curation->user;
     }
 
     /**

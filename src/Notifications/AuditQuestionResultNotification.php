@@ -21,6 +21,7 @@ class AuditQuestionResultNotification extends BreezeNotification
     {
         $this->question = $question;
         $this->gold     = $gold;
+        $this->sender   = $question->user;
     }
 
     /**

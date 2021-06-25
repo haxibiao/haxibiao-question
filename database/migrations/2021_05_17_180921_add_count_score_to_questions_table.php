@@ -16,10 +16,10 @@ class AddCountScoreToQuestionsTable extends Migration
         Schema::table('questions', function (Blueprint $table) {
             //
             if (!Schema::hasColumn('questions', 'score')) {
-                $table->integer('score')->comment('评分');
+                $table->integer('score')->default(0)->comment('评分');
             }
             if (!Schema::hasColumn('questions', 'count_score')) {
-                $table->integer('count_score')->default(0)->comment('评分数｜打分数');
+                $table->integer('count_score')->default(0)->comment('评分人数｜打分人数');
             }
         });
     }
