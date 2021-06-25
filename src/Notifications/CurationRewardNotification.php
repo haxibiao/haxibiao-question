@@ -2,10 +2,10 @@
 
 namespace Haxibiao\Question\Notifications;
 
-use Haxibiao\Breeze\Notifications\BreezeNotification;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
 
-class CurationRewardNotification extends BreezeNotification
+class CurationRewardNotification extends Notification
 {
     use Queueable;
 
@@ -18,7 +18,11 @@ class CurationRewardNotification extends BreezeNotification
     public function __construct($curation)
     {
         $this->curation = $curation;
-        $this->sender   = $curation->user;
+    }
+
+    public function via($notifiable)
+    {
+        return ['database'];
     }
 
     /**
@@ -29,7 +33,6 @@ class CurationRewardNotification extends BreezeNotification
      */
     public function toArray($notifiable)
     {
-        $data = $this->senderToArray();
 
         $curation = $this->curation;
         //文本描述
@@ -37,12 +40,12 @@ class CurationRewardNotification extends BreezeNotification
                   【{$curation->getTypes()[$curation->type]}】已被采纳，
                     恭喜您获得奖励：{$curation->gold_awarded}智慧点";
 
-        $data = array_merge($data, [
+        $data = [
             'type'    => $curation->getMorphClass(),
             'id'      => $curation->id,
             'title'   => "题目纠错", //标题
             'message' => $message, //通知主体内容
-        ]);
+        ];
 
         return $data;
     }

@@ -2,10 +2,10 @@
 
 namespace Haxibiao\Question\Notifications;
 
-use Haxibiao\Breeze\Notifications\BreezeNotification;
 use Illuminate\Bus\Queueable;
+use Illuminate\Notifications\Notification;
 
-class LevelUpNotification extends BreezeNotification
+class LevelUpNotification extends Notification
 {
     use Queueable;
 
@@ -19,6 +19,11 @@ class LevelUpNotification extends BreezeNotification
     public function __construct($level)
     {
         $this->level = $level;
+    }
+
+    public function via($notifiable)
+    {
+        return ['database'];
     }
 
     /**

@@ -19,7 +19,11 @@ class ReportSucceedNotification extends BreezeNotification
     public function __construct($report)
     {
         $this->report = $report;
-        $this->sender = $report->user;
+    }
+
+    public function via($notifiable)
+    {
+        return ['database'];
     }
 
     /**
@@ -30,25 +34,18 @@ class ReportSucceedNotification extends BreezeNotification
      */
     public function toArray($notifiable)
     {
-        $report          = $this->report;
-        $data            = $report->toArray();
-        $data['message'] = "举报 $report->reportable_type $report->reportable_id ";
-        return $data;
-
-        $data = $this->senderToArray();
-
         $report = $this->report;
         //文本描述
         $message = "您对题目“{$report->question->description}”的举报
                   【{$report->reason}】经核实已生效，
                     恭喜您获得奖励：2智慧点";
 
-        $data = array_merge($data, [
+        $data = [
             'type'    => $report->getMorphClass(),
             'id'      => $report->id,
             'title'   => "举报结果", //标题
             'message' => $message, //通知主体内容
-        ]);
+        ];
 
         return $data;
     }
