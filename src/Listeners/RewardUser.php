@@ -3,7 +3,6 @@
 namespace Haxibiao\Question\Listeners;
 
 use App\Contribute;
-
 use App\Gold;
 use Haxibiao\Question\Events\PublishQuestion;
 use Haxibiao\Question\Question;
@@ -73,7 +72,7 @@ class RewardUser
 
             Contribute::rewardUserQuestion($question->user, $question);
             //发送通知
-            $user->notify(new \Haxibiao\Question\Notifications\AuditQuestionResultNotification($question, $rewardGold));
+            $user->notify(new \Haxibiao\Breeze\Notifications\AuditQuestionResultNotification($question, $rewardGold));
         }
     }
 }

@@ -2,11 +2,9 @@
 
 namespace Haxibiao\Question\Nova\Actions\Curation;
 
-
-
 use App\Gold;
+use Haxibiao\Breeze\Notifications\CurationRewardNotification;
 use Haxibiao\Question\Curation;
-use Haxibiao\Question\Notifications\CurationRewardNotification;
 use Illuminate\Bus\Queueable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
@@ -92,8 +90,8 @@ class AuditCuration extends Action
                 self::AUDIT_TEMPLATE
             ),
             Textarea::make('审核意见(可选)', 'reason_text')->withMeta(['extraAttributes' => [
-                'placeholder' => '没有合适的模板试试自定义吧~'
-            ],]),
+                'placeholder' => '没有合适的模板试试自定义吧~',
+            ]]),
         ];
     }
 
