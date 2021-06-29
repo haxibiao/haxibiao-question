@@ -1,0 +1,5 @@
+type AuditTip {
+    question:Question
+    title:String
+    body:String
+}

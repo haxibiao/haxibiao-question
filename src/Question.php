@@ -141,7 +141,7 @@ class Question extends Model
 
     public function auditTips(): HasMany
     {
-        return $this->hasMany(AuditTip::class);
+        return $this->hasMany(\App\AuditTip::class);
     }
 
     public function reports()

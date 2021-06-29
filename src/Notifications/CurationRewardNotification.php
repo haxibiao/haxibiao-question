@@ -36,9 +36,7 @@ class CurationRewardNotification extends Notification
 
         $curation = $this->curation;
         //文本描述
-        $message = "您对题目“{$curation->question->description}”纠错
-                  【{$curation->getTypes()[$curation->type]}】已被采纳，
-                    恭喜您获得奖励：{$curation->gold_awarded}智慧点";
+        $message = "您对题目“{$curation->question->description}”纠错【{$curation->getTypes()[$curation->type]}】已被采纳，恭喜您获得奖励：{$curation->gold_awarded}智慧点";
 
         $data = [
             'type'    => $curation->getMorphClass(),

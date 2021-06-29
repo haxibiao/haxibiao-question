@@ -134,6 +134,10 @@ type Question {
     选项
     """
     selection_array: [QuestionSelectionsField]
+    """
+    审题引导
+    """
+    audit_tip: AuditTip
 }
 
 type QuestionSelectionsField {
@@ -142,6 +146,11 @@ type QuestionSelectionsField {
 }
 
 extend type Query {
+    """
+    统考题(审题官权限解锁测试题)
+    """
+    auditTestQuestion(category_id: Int!): [Question] @guard @field(resolver: "App\\Question@resolveAuditTestQuestion")
+
     """
     随机答题
     """
