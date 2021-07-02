@@ -19,7 +19,7 @@ trait QuestionAttrs
     //     return $liked;
     // }
 
-    public function getAuditTippAttribute()
+    public function getAuditTipAttribute()
     {
         return $this->auditTips()->first();
     }
