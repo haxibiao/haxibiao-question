@@ -19,6 +19,11 @@ trait QuestionAttrs
     //     return $liked;
     // }
 
+    public function getAuditTippAttribute()
+    {
+        return $this->auditTips()->first();
+    }
+
     public function setRankAttribute($value)
     {
         //避免rank溢出最大值
