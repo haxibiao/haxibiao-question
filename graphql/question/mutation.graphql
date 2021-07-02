@@ -39,6 +39,10 @@ extend type Mutation {
     """
     questionScore(question_id: Int!, score: QuestionScoreEnum!): Boolean
         @field(resolver: "App\\Question@resolveQuestionScore")
+    """
+    解锁审题权限
+    """
+    auditTestPass(category_id: Int!): Boolean @field(resolver: "App\\Question@resolveAuditTestPass")
 }
 
 """

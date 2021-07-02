@@ -16,6 +16,7 @@ class CategoryUser extends Pivot
         'user_id',
         'category_id',
         'min_review_id',
+        'can_audit',
         'max_review_id',
         'correct_count',
         'answer_count',

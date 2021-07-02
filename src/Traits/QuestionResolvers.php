@@ -5,13 +5,14 @@ namespace Haxibiao\Question\Traits;
 use App\Dimension;
 use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Breeze\Exceptions\UserException;
+use Haxibiao\Question\CategoryUser;
 use Haxibiao\Question\Question;
 use Illuminate\Support\Arr;
 
 trait QuestionResolvers
 {
     //统考题
-    public static function resolveAuditTestQuestion($root, array $args, $context, $info)
+    public function resolveAuditTestQuestion($root, array $args, $context, $info)
     {
         $user = getUser();
         app_track_event("答题", "申请统考题", $user->id);
@@ -29,8 +30,26 @@ trait QuestionResolvers
         return $question->merge($question2);
     }
 
+    //统考考试通过（审题解锁）
+    public function resolveAuditTestPass($root, array $args, $context, $info)
+    {
+        $user = getUser();
+        app_track_event("答题", "解锁审题权限", $user->id);
+        Dimension::track("解锁审题官考试", 1, "审题");
+        $category_id  = $args['category_id'];
+        $categoryUser = CategoryUser::firstOrCreate([
+            'user_id'     => $user->id,
+            'category_id' => $category_id,
+        ]);
+        //标记统考通过
+        $user->profile->update(['audit_tested' => 1]);
+        $categoryUser->can_audit = true;
+        $categoryUser->save();
+        return true;
+    }
+
     //题目打分
-    public static function resolveQuestionScore($root, array $args, $context, $info)
+    public function resolveQuestionScore($root, array $args, $context, $info)
     {
         app_track_event("答题", "给题目打分", getUserId());
 
