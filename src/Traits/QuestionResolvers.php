@@ -20,14 +20,20 @@ trait QuestionResolvers
         $category_id = $args['category_id'];
         $category    = \App\Category::find($category_id);
         throw_if(empty($category), UserException::class, "该题库不存在");
-        $question = [];
+        $officialQuestions = [];
         if (!$user->profile->audit_tested) {
             //官方统考题，取15个
-            $question = Question::where('category_id', 245)->publish()->inRandomOrder()->take(15)->get();
+            $officialQuestions = Question::where('category_id', 245)->publish()->inRandomOrder()->take(15)->get();
+
         }
         //题库统考题，取5个
-        $question2 = Question::has('auditTips')->with('auditTips')->where('category_id', $category_id)->publish()->inRandomOrder()->take(5)->get();
-        return $question->merge($question2);
+        $categoryQuestions = Question::has('auditTips')->with('auditTips')->where('category_id', $category_id)->publish()->inRandomOrder()->take(5)->get();
+
+        return [
+            'questions'              => $officialQuestions->merge($categoryQuestions),
+            'officialQuestionsCount' => count($officialQuestions),
+            'categoryQuestionsCount' => count($categoryQuestions),
+        ];
     }
 
     //统考考试通过（审题解锁）
