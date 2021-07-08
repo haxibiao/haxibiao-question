@@ -257,6 +257,25 @@ trait QuestionsRandomRank
             'user_id'     => $user->id,
             'category_id' => $category_id,
         ]);
+
+        //审题记录
+        $audit_ids = Question::has('audit_tips')
+            ->where('questions.category_id', $category_id)
+            ->join('audits', function ($join) {
+                return $join->on('audit.question_id', 'questions.id');
+            })
+            ->pluck('id');
+
+        //每次随机取1～3个抽查题（钓鱼执法）
+        $takeNum           = random_int(1, 3);
+        $auditTipQuestions = Question::has('audit_tips')
+            ->where('category_id', $category_id)
+            ->where('user_id', '<>', $user->id)
+            ->publish()
+            ->whereNotIn('id', $audit_ids)
+            ->take($takeNum)
+            ->get();
+
         $action = UserAction::firstOrCreate(['user_id' => $user->id]);
         $action->addVisitedCategoryId($category_id)->save();
 
@@ -290,8 +309,9 @@ trait QuestionsRandomRank
         //排序,有新题时，从小review_id到大
         $qb = $seeNewQuestions ? $qb->orderBy('review_id') : $qb->orderByDesc('review_id');
 
-        $questions = $qb->take($limit)->get();
+        $questions = $qb->take($limit - count($auditTipQuestions))->get();
 
+        $questions = $questions->merge($auditTipQuestions);
         //拿到了questions，之后一些收尾工作
         $user->saveLastCategoryId($category_id); //正常
 
