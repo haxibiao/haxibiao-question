@@ -7,6 +7,7 @@ use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Question\CategoryUser;
 use Haxibiao\Question\Question;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 
 trait QuestionResolvers
@@ -20,20 +21,31 @@ trait QuestionResolvers
         $category_id = $args['category_id'];
         $category    = \App\Category::find($category_id);
         throw_if(empty($category), UserException::class, "该题库不存在");
-        $officialQuestions = [];
+        // throw_if(!$category->can_audit, UserException::class, "该题库不允许审题");
+        $officialQuestions = new Collection();
         if (!$user->profile->audit_tested) {
             //官方统考题，取15个
-            $officialQuestions = Question::where('category_id', 245)->publish()->inRandomOrder()->take(15)->get();
-
+            $officialQuestions = Question::where('category_id', 245)
+                ->publish()
+                ->inRandomOrder()
+                ->take(15)
+                ->get();
         }
         //题库统考题，取5个
-        $categoryQuestions = Question::has('auditTips')->with('auditTips')->where('category_id', $category_id)->publish()->inRandomOrder()->take(5)->get();
+        $categoryQuestions = Question::has('auditTips')
+            ->with('auditTips')
+            ->where('category_id', $category_id)
+            ->publish()
+            ->inRandomOrder()
+            ->take(5)
+            ->get();
 
         return [
-            'questions'              => $officialQuestions->merge($categoryQuestions),
-            'officialQuestionsCount' => count($officialQuestions),
-            'categoryQuestionsCount' => count($categoryQuestions),
+            'questions'              => $categoryQuestions->merge($officialQuestions),
+            'officialQuestionsCount' => count($officialQuestions) ?? 0,
+            'categoryQuestionsCount' => count($categoryQuestions) ?? 0,
         ];
+
     }
 
     //统考考试通过（审题解锁）
