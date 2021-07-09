@@ -310,24 +310,16 @@ trait CreateQuestion
         }
 
         if ($video->isVodVideo()) {
-            $video->processVod();
-            //api/video/hook去做这件事
-            // $res = VodUtils::getVideoInfo($video->fileid);
-            // if ($res == false) {
-            //     return $video;
-            // }
-
-            // $data = [
-            //     'json->sourceVideoUrl' => array_get($res, 'basicInfo.sourceVideoUrl'),
-            //     'json->duration'       => array_get($res, 'metaData.duration'),
-            //     'json->height'         => array_get($res, 'metaData.height'),
-            //     'json->width'          => array_get($res, 'metaData.width'),
-            //     'json->rotate'         => array_get($res, 'metaData.rotate'),
-            //     'path'                 => array_get($res, 'basicInfo.sourceVideoUrl'),
-            //     'fileid'               => $video->fileid,
-            //     'filename'             => array_get($res, 'basicInfo.name'),
-            // ];
-            // $video->forceFill($data)->save();
+            $res  = Video::getCloudVideoInfo($video->fileid);
+            $data = [
+                'json'   => array_get($res, 'json'),
+                'path'   => data_get($res, 'url'),
+                'hash'   => data_get($res, 'hash'),
+                'vid'    => data_get($res, 'vid'),
+                'cover'  => data_get($res, 'cover'),
+                'status' => 1,
+            ];
+            $video->forceFill($data)->save();
         }
 
         return $video;
