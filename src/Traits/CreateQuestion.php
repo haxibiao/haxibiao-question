@@ -7,7 +7,6 @@ use App\User;
 use App\Video;
 use Exception;
 use Haxibiao\Breeze\Exceptions\UserException;
-use Haxibiao\Helpers\utils\VodUtils;
 use Haxibiao\Media\Image;
 use Haxibiao\Question\Category;
 use Haxibiao\Question\Jobs\AutoReviewQuestion;
@@ -311,22 +310,24 @@ trait CreateQuestion
         }
 
         if ($video->isVodVideo()) {
-            $res = VodUtils::getVideoInfo($video->fileid);
-            if ($res == false) {
-                return $video;
-            }
+            $video->processVod();
+            //api/video/hook去做这件事
+            // $res = VodUtils::getVideoInfo($video->fileid);
+            // if ($res == false) {
+            //     return $video;
+            // }
 
-            $data = [
-                'json->sourceVideoUrl' => array_get($res, 'basicInfo.sourceVideoUrl'),
-                'json->duration'       => array_get($res, 'metaData.duration'),
-                'json->height'         => array_get($res, 'metaData.height'),
-                'json->width'          => array_get($res, 'metaData.width'),
-                'json->rotate'         => array_get($res, 'metaData.rotate'),
-                'path'                 => array_get($res, 'basicInfo.sourceVideoUrl'),
-                'fileid'               => $video->fileid,
-                'filename'             => array_get($res, 'basicInfo.name'),
-            ];
-            $video->forceFill($data)->save();
+            // $data = [
+            //     'json->sourceVideoUrl' => array_get($res, 'basicInfo.sourceVideoUrl'),
+            //     'json->duration'       => array_get($res, 'metaData.duration'),
+            //     'json->height'         => array_get($res, 'metaData.height'),
+            //     'json->width'          => array_get($res, 'metaData.width'),
+            //     'json->rotate'         => array_get($res, 'metaData.rotate'),
+            //     'path'                 => array_get($res, 'basicInfo.sourceVideoUrl'),
+            //     'fileid'               => $video->fileid,
+            //     'filename'             => array_get($res, 'basicInfo.name'),
+            // ];
+            // $video->forceFill($data)->save();
         }
 
         return $video;
