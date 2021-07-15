@@ -10,6 +10,10 @@ class AuditRank extends Model
 
     protected $guarded = [];
 
+    protected $casts = [
+        'level_score' => 'array',
+    ];
+
     //审题段位
     const BRONZE_DIVISION  = "青铜"; //青铜
     const SILVER_DIVISION  = "白银"; //白银
