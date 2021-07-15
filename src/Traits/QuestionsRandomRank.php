@@ -251,7 +251,6 @@ trait QuestionsRandomRank
         if (!$category->hasReviewQuestions()) {
             throw new UserException('没有新题需要审了!换一个题库吧～');
         }
-
         //记录一下用户行为
         $pivot = CategoryUser::firstOrCreate([
             'user_id'     => $user->id,
@@ -259,16 +258,16 @@ trait QuestionsRandomRank
         ]);
 
         //审题记录
-        $audit_ids = Question::has('audit_tips')
+        $audit_ids = Question::has('auditTips')
             ->where('questions.category_id', $category_id)
-            ->join('audits', function ($join) {
+            ->join('audit', function ($join) {
                 return $join->on('audit.question_id', 'questions.id');
             })
-            ->pluck('id');
+            ->pluck('audit.id');
 
         //每次随机取1～3个抽查题（钓鱼执法）
         $takeNum           = random_int(1, 3);
-        $auditTipQuestions = Question::has('audit_tips')
+        $auditTipQuestions = Question::has('auditTips')
             ->where('category_id', $category_id)
             ->where('user_id', '<>', $user->id)
             ->publish()
@@ -311,7 +310,8 @@ trait QuestionsRandomRank
 
         $questions = $qb->take($limit - count($auditTipQuestions))->get();
 
-        $questions = $questions->merge($auditTipQuestions);
+        $questions = $questions->merge($auditTipQuestions)->shuffle();
+
         //拿到了questions，之后一些收尾工作
         $user->saveLastCategoryId($category_id); //正常
 
