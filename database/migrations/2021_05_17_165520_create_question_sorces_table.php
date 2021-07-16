@@ -13,6 +13,9 @@ class CreateQuestionSorcesTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('question_scores')) {
+            return;
+        }
         Schema::create('question_scores', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('question_id')->index()->comment("题目id");

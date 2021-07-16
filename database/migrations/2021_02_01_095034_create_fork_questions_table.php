@@ -13,6 +13,9 @@ class CreateForkQuestionsTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('fork_questions')) {
+            return;
+        }
         Schema::create('fork_questions', function (Blueprint $table) {
             $table->increments('id');
             $table->string('description', 1000)->comment('题目描述');

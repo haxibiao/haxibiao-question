@@ -13,6 +13,9 @@ class CreateForkExplanationsTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('fork_explanations')) {
+            return;
+        }
         Schema::create('fork_explanations', function (Blueprint $table) {
             $table->increments('id');
             $table->unsignedInteger('fork_question_id')->nullable()->index();
