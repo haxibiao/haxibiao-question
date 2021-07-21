@@ -13,6 +13,9 @@ class CreateAuditRanksTable extends Migration
      */
     public function up()
     {
+        if (Schema::hasTable('audit_ranks')) {
+            return;
+        }
         Schema::create('audit_ranks', function (Blueprint $table) {
             $table->id();
             $table->string('name')->comment('段位:青铜|白银|黄金|铂金');
