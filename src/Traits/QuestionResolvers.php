@@ -16,11 +16,12 @@ trait QuestionResolvers
     {
         $user = getUser();
         app_track_event("答题", "申请统考题", $user->id);
-        Dimension::track("解锁审题官考试", 1, "审题");
+        Dimension::track("参与审题统考", 1, "审题");
         $category_id = $args['category_id'];
         $category    = \App\Category::find($category_id);
         throw_if(empty($category), UserException::class, "该题库不存在");
-        // throw_if(!$category->can_audit, UserException::class, "该题库不允许审题");
+        throw_if(!$category->can_audit, UserException::class, "该题库不允许审题");
+
         //题库统考题，取5个
         $categoryQuestions = Question::has('auditTips')
             ->with('auditTips')
@@ -55,7 +56,7 @@ trait QuestionResolvers
     {
         $user = getUser();
         app_track_event("答题", "解锁审题权限", $user->id);
-        Dimension::track("解锁审题官角色", 1, "审题");
+        Dimension::track("审题统考通过", 1, "审题");
 
         //标记统考通过
         $user->profile->update(['audit_tested' => 1]);
