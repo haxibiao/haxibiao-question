@@ -20,6 +20,8 @@ trait AuditRepo
         self::checkQuestionAndUser($user, $question);
 
         $is_accepted = $inputs['status'] ?? false;
+        $reason      = $inputs['reason'] ?? null; //拒绝理由
+        $score       = $inputs['score'] ?? null; //赞同打分
 
         //前端3.1.1以下版本写反了  赞成 = 反对  反对 = 赞成
         $version = getAppVersion();
@@ -31,8 +33,9 @@ trait AuditRepo
             'user_id'     => $user->id,
             'question_id' => $question->id,
         ]);
-        //更新审核状态
-        $audit->fill(['status' => $is_accepted])->save();
+
+        //更新审核状态信息
+        $audit->fill(['status' => $is_accepted, 'reason' => $reason, 'score' => $score])->save();
 
         //更新用户区间
         self::updateRankAndReviewsCount($user, $question);
