@@ -5,7 +5,6 @@ namespace Haxibiao\Question\Traits;
 use App\Dimension;
 use Haxibiao\Breeze\Exceptions\GQLException;
 use Haxibiao\Breeze\Exceptions\UserException;
-use Haxibiao\Question\CategoryUser;
 use Haxibiao\Question\Question;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
@@ -30,10 +29,11 @@ trait QuestionResolvers
             ->inRandomOrder()
             ->take(5)
             ->get();
-        $questions         = $categoryQuestions;
+        $questions = $categoryQuestions;
+
+        //官方统考题，取15个
         $officialQuestions = new Collection();
         if (!$user->profile->audit_tested) {
-            //官方统考题，取15个
             $officialQuestions = Question::where('category_id', 245)
                 ->publish()
                 ->inRandomOrder()
@@ -55,16 +55,10 @@ trait QuestionResolvers
     {
         $user = getUser();
         app_track_event("答题", "解锁审题权限", $user->id);
-        Dimension::track("解锁审题官考试", 1, "审题");
-        $category_id  = $args['category_id'];
-        $categoryUser = CategoryUser::firstOrCreate([
-            'user_id'     => $user->id,
-            'category_id' => $category_id,
-        ]);
+        Dimension::track("解锁审题官角色", 1, "审题");
+
         //标记统考通过
         $user->profile->update(['audit_tested' => 1]);
-        $categoryUser->can_audit = true;
-        $categoryUser->save();
         return true;
     }
 
