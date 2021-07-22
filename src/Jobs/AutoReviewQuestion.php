@@ -32,8 +32,8 @@ class AutoReviewQuestion implements ShouldQueue
      */
     public function handle()
     {
-        //没有人审核过就自动通过
-        if ($this->question->isReviewing() && $this->question->audits()->count() == 0) {
+        //48小时内审核没完成过就自动通过
+        if ($this->question->isReviewing()) {
             $this->question->publishReviewQuestion();
             $this->question->rank = 2; //自动通过的题目权重最低
             $this->question->saveDataOnly();
