@@ -93,7 +93,7 @@ class Question extends Model
     const CONTRIBUTE_REWARD = 6;
 
     //每日最大出题数
-    const MAX_LEFT_QUESTION_COUNT = 30;
+    const MAX_LEFT_QUESTION_COUNT = 10;
 
     //提交状态
     const DELETED_SUBMIT   = -4; //已删除

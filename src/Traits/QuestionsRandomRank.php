@@ -245,7 +245,7 @@ trait QuestionsRandomRank
         if (empty($category)) {
             throw new UserException('该分类不存在');
         }
-        if ($category->can_audit) {
+        if (!$category->can_audit) {
             throw new UserException('该分类不允许审题!');
         }
         if (!$category->hasReviewQuestions()) {
