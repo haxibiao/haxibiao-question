@@ -268,6 +268,7 @@ trait QuestionsRandomRank
         //每次随机取1～3个抽查题（钓鱼执法）
         $takeNum           = random_int(1, 3);
         $auditTipQuestions = Question::has('auditTips')
+            ->has('user')
             ->where('category_id', $category_id)
             ->where('user_id', '<>', $user->id)
             ->publish()
@@ -282,7 +283,9 @@ trait QuestionsRandomRank
         $pivot->in_rank = Question::REVIEW_RANK;
         $pivot->restoreRankRange();
         //避免n+1查询
-        $qb = $category->questions()->with(['category', 'user', 'image', 'video']);
+        $qb = $category->questions()
+            ->has('user')
+            ->with(['category', 'user', 'image', 'video']);
 
         //自己出的题目不审核
         $qb = $qb->where('user_id', '<>', $user->id)
