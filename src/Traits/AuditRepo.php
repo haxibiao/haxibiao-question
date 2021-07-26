@@ -61,6 +61,16 @@ trait AuditRepo
             throw new UserException('您的精力点不足了，休息下明天再玩吧!');
         }
 
+        //第一次审题数大于32的时候做一次检查
+        if ($user->audits()->count() >= 32) {
+            if ($user->audits()->groupBy('status')->get('status')->count() == 1) {
+                if ($user->can_audit) {
+                    $user->update(['can_audit' => false]);
+                }
+                throw new UserException('您因违规审题行为，已被取消审题资格!');
+            }
+        }
+
         if (!$user->can_audit) {
             throw new UserException('审题失败,详情请联系官方人员!');
         }
