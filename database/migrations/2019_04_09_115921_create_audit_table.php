@@ -24,7 +24,6 @@ class CreateAuditTable extends Migration
             $table->timestamps();
 
             $table->unique(['user_id', 'question_id']);
-            $table->index('created_at');
             $table->index('question_id');
             $table->index('user_id');
             $table->index('created_at');
