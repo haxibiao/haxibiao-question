@@ -42,9 +42,9 @@ trait QuestionRepo
         $questionScore->save();
 
         //计算question得分
-        $question->count_score += 1;
-        $avg_score       = $question->question_scores()->avg('score');
-        $question->score = round($avg_score) == 0 ? 1 : round($avg_score);
+        $question->count_score = $question->question_scores()->count();
+        $avg_score             = $question->question_scores()->avg('score');
+        $question->score       = round($avg_score) == 0 ? 1 : round($avg_score);
         $question->saveDataOnly();
 
         return true;
