@@ -27,7 +27,7 @@ class WrongAnswer extends Model
         $wrongAnswer = WrongAnswer::select(['id', 'user_id', 'count'])->firstOrCreate(['user_id' => $answer->user_id], ['data' => '[]']);
         if (!is_null($wrongAnswer)) {
             $count  = $wrongAnswer->count;
-            $answer = $answer->only(['answer', 'question_id', 'id', 'time']);
+            $answer = $answer->only(['answer', 'question_id', 'id', 'time', 'created_at']);
             $json   = json_encode($answer);
 
             //超出默认最大错题数后,就剔除第一个.
@@ -56,7 +56,7 @@ class WrongAnswer extends Model
             $data = $wrongAnswer->attributes['data'];
             $data = json_decode($data);
             foreach ($answerObjList as $answer) {
-                array_push($data, json_encode($answer->only(['answer', 'question_id', 'id', 'time'])));
+                array_push($data, json_encode($answer->only(['answer', 'question_id', 'id', 'time', 'created_at'])));
             }
             $wrongAnswer->data = json_encode($data);
             $wrongAnswer->save();
