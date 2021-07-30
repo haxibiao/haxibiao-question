@@ -43,6 +43,9 @@ trait QuestionResolvers
             $questions = $officialQuestions->merge($questions);
         }
 
+        //标记统考中
+        $user->profile->update(['audit_tested' => 0]);
+
         return [
             'questions'              => $questions,
             'officialQuestionsCount' => count($officialQuestions) ?? 0,
