@@ -258,12 +258,12 @@ trait QuestionsRandomRank
         ]);
 
         //审题记录
-        $audit_ids = Question::has('auditTips')
+        $question_ids = Question::has('auditTips')
             ->where('questions.category_id', $category_id)
             ->join('audit', function ($join) {
                 return $join->on('audit.question_id', 'questions.id');
             })
-            ->pluck('audit.id');
+            ->pluck('questions.id');
 
         //每次随机取1～3个抽查题（钓鱼执法）
         $takeNum           = random_int(1, 3);
@@ -272,7 +272,7 @@ trait QuestionsRandomRank
             ->where('category_id', $category_id)
             ->where('user_id', '<>', $user->id)
             ->publish()
-            ->whereNotIn('id', $audit_ids)
+            ->whereNotIn('id', $question_ids)
             ->take($takeNum)
             ->get();
 
@@ -312,6 +312,7 @@ trait QuestionsRandomRank
         $qb = $seeNewQuestions ? $qb->orderBy('review_id') : $qb->orderByDesc('review_id');
 
         $questions = $qb->take($limit - count($auditTipQuestions))->get();
+        throw_if(count($questions) < 1, UserException::class, "该题库没有题目要审啦，换个题库吧~");
 
         $questions = $questions->merge($auditTipQuestions)->shuffle();
 
