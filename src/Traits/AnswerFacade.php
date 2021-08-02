@@ -23,7 +23,7 @@ trait AnswerFacade
                 return $query->where('result', $result);
             })
             ->when($type == "day", function ($query) {
-                return $query->where('created_at', '>=', today());
+                return $query->where('updated_at', '>=', today());
             });
 
     }
