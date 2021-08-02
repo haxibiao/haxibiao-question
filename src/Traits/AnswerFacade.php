@@ -19,10 +19,10 @@ trait AnswerFacade
         return $user->answers()
             ->whereNotNull('result')
             ->when(!empty($result), function ($query) use ($result) {
-                $query->where('result', $result);
+                return $query->where('result', $result);
             })
             ->when($type == "day", function ($query) {
-                $query->where('created_at', '>=', today());
+                return $query->where('created_at', '>=', today());
             });
 
     }
