@@ -5,6 +5,7 @@ namespace Haxibiao\Question\Traits;
 use App\Contribute;
 use App\Gold;
 use App\User;
+use App\WrongAnswer;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Question\CategoryUser;
 use Haxibiao\Question\Jobs\RecordTestAnswers;
@@ -44,6 +45,10 @@ trait AnswerFacade
             $questions = Question::whereIn('id', $questionIds)->get();
             foreach ($data as $item) {
                 $item->question = $questions->firstWhere('id', $item->question_id);
+                if ($item->created_at ?? null) {
+                    $item->created_at = date_format(Carbon::parse($item->created_at), "Y年m月d日");
+                }
+
             }
         }
 
