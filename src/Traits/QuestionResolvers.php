@@ -26,7 +26,6 @@ trait QuestionResolvers
         $categoryQuestions = Question::has('auditTips')
             ->with('auditTips')
             ->where('category_id', $category_id)
-            ->publish()
             ->inRandomOrder()
             ->take(5)
             ->get();
@@ -36,7 +35,6 @@ trait QuestionResolvers
         $officialQuestions = new Collection();
         if (!$user->profile->audit_tested) {
             $officialQuestions = Question::where('category_id', 245)
-                ->publish()
                 ->inRandomOrder()
                 ->take(15)
                 ->get();
