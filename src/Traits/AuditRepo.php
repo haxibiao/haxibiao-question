@@ -37,7 +37,10 @@ trait AuditRepo
         ]);
 
         //更新审核状态信息
-        $audit->fill(['status' => $is_accepted, 'reason' => $reason, 'score' => $score])->save();
+        $audit->status = $is_accepted;
+        $audit->reason = $reason;
+        $audit->score  = $score;
+        $audit->save();
 
         //更新用户区间
         self::updateRankAndReviewsCount($user, $question);
