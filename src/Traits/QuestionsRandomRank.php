@@ -271,7 +271,6 @@ trait QuestionsRandomRank
             ->has('user')
             ->where('category_id', $category_id)
             ->where('user_id', '<>', $user->id)
-            ->publish()
             ->whereNotIn('id', $question_ids)
             ->take($takeNum)
             ->get();
