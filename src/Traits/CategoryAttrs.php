@@ -11,7 +11,7 @@ trait CategoryAttrs
     public function getCanAuditAttribute()
     {
         //不是官方题库，并且后台标记可以审题
-        return !$this->is_official && $this->attributes['can_audit'];
+        return $this->attributes['can_audit'];
     }
 
     public function getCanReviewCountAttribute()
