@@ -17,9 +17,11 @@ trait QuestionResolvers
         $user = getUser();
         app_track_event("答题", "申请统考题", $user->id);
         Dimension::track("参与审题统考", 1, "审题");
+
         $category_id = $args['category_id'];
         $category    = \App\Category::find($category_id);
         throw_if(empty($category), UserException::class, "该题库不存在");
+        throw_if(!$user->can_audit, UserException::class, "您因违规审题行为，已被取消审题资格");
         throw_if(!$category->can_audit, UserException::class, "该题库不允许审题");
 
         //题库统考题，取5个

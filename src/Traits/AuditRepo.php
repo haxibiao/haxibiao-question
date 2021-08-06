@@ -65,7 +65,7 @@ trait AuditRepo
         }
 
         //第一次审题数大于32的时候做一次检查
-        if ($user->audits()->count() >= 32) {
+        if ($user->audits()->count() == 32) {
             if ($user->audits()->groupBy('status')->get('status')->count() == 1) {
                 if ($user->can_audit) {
                     $user->update(['can_audit' => false]);
