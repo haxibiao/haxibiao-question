@@ -299,20 +299,23 @@ trait QuestionRepo
     //用于题库推荐算法，优先取标签题
     public static function tagQuestions($category, $user, $limit)
     {
+        // 直接left join 排掉小表,性能更优 0.01s即可完成取题
         //因为精品题不多，用answer表排重
-        $tag_question_ids = Question::where('tag', Question::TAG_GOOD_QUESTION)
-            ->where('category_id', $category->id)
-            ->join("answer", function ($join) use ($user) {
-                $join->on("questions.id", "answer.question_id")
-                    ->where('answer.user_id', $user->id);
-            })->take(300)->pluck("questions.id")->toArray();
+        // $tag_question_ids = Question::where('tag', Question::TAG_GOOD_QUESTION)
+        //     ->where('category_id', $category->id)
+        //     ->join("answer", function ($join) use ($user) {
+        //         $join->on("questions.id", "answer.question_id")
+        //             ->where('answer.user_id', $user->id);
+        //     })->take(300)->pluck("questions.id")->toArray();
 
         //没答过的精品题取出来直接返回
         $qb        = $category->questions()->with(['category', 'user', 'image', 'video']);
-        $questions = $qb->where('tag', Question::TAG_GOOD_QUESTION)
-            ->when(!empty($tag_question_ids), function ($qb) use ($tag_question_ids) {
-                $qb->whereNotIn('id', $tag_question_ids);
+        $questions = $qb->select('questions.*')->where('tag', Question::TAG_GOOD_QUESTION)
+            ->leftJoin('answer', function ($join) use ($user) {
+                $join->on('questions.id', 'answer.question_id')
+                    ->where('answer.user_id', $user->id);
             })
+            ->whereNull('answer.id')
             ->publish()
             ->take($limit)
             ->get();

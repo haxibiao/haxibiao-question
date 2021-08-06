@@ -166,7 +166,11 @@ class Question extends Model
 
     public function user()
     {
-        return $this->belongsTo(\App\User::class, 'user_id');
+        return $this->belongsTo(\App\User::class, 'user_id')->withDefault(function ($query) {
+            return $user = Cache::remember('user:1', 24 * 60 * 60, function () {
+                return User::find(1);
+            });
+        });
     }
 
     public function category(): BelongsTo
