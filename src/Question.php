@@ -625,9 +625,9 @@ class Question extends Model
         }
 
         //一个词也必须是数组
-        foreach ($words as $word) {
-            $query->where('description', 'like', "%{$word}%");
-        }
+        // foreach ($words as $word) {
+        //     $query->where('description', 'like', "%{$word}%");
+        // }
 
         return $query;
     }
