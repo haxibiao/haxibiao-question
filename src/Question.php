@@ -15,7 +15,6 @@ use Hashids\Hashids;
 use Haxibiao\Breeze\Model;
 use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Breeze\Traits\ModelHelpers;
-use Haxibiao\Helpers\Traits\Searchable;
 use Haxibiao\Media\Image;
 use Haxibiao\Media\Video;
 use Haxibiao\Question\Traits\AnswerQuestion;
@@ -30,10 +29,12 @@ use Haxibiao\Sns\Traits\Likeable;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use Laravel\Nova\Actions\Actionable;
+use Laravel\Scout\Searchable;
 
 class Question extends Model
 {
@@ -600,11 +601,14 @@ class Question extends Model
 
     public function toSearchableArray()
     {
-        return [
-            'description' => null,
-            'selections'  => null,
-            'answer'      => null,
-        ];
+        $allData = $this->toArray();
+
+        return Arr::only($allData, ['id', 'description', 'selections', 'submit']);
+    }
+
+    public function searchableAs()
+    {
+        return config('app.name') . '_questions_index';
     }
 
     public function getHashIdAttribute()
