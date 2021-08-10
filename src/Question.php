@@ -601,9 +601,16 @@ class Question extends Model
 
     public function toSearchableArray()
     {
-        $allData = $this->toArray();
+        $allData     = $this->toArray();
+        $scoutDriver = config('scout.driver');
+        if ($scoutDriver != 'mysql') {
+            $exportField = ['id', 'description', 'selections', 'submit'];
+        } else {
+            // MYSQL模式下,只需指定全文索引
+            $exportField = ['description', 'answer'];
+        }
 
-        return Arr::only($allData, ['id', 'description', 'selections', 'submit']);
+        return Arr::only($allData, $exportField);
     }
 
     public function searchableAs()
