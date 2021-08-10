@@ -290,7 +290,6 @@ trait QuestionRepo
         $this->rank = $this->getDefaultRank(); //审核通过,权重默认
         //发布成功
         event(new PublishQuestion($this));
-        $this->is_rewarded = 1;
         $this->save();
         //最后更新分类的权重区间数
         $this->category->updateRanks();

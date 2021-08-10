@@ -2,7 +2,6 @@
 
 namespace Haxibiao\Question\Nova\Actions\Question;
 
-
 use App\Exceptions\UserException;
 use Haxibiao\Question\Events\PublishQuestion;
 use Haxibiao\Question\Question;
@@ -73,8 +72,7 @@ class AuditQuestionSubmitStatus extends Action
                     if ($isFirstApprove) {
                         //出题成功奖励
                         event(new PublishQuestion($model));
-                        $model->is_rewarded = 1;
-                        $result             = '已通过,奖励通知已执行';
+                        $result = '已通过,奖励通知已执行';
                     }
                     $model->save();
                 } else {

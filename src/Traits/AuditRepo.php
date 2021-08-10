@@ -131,7 +131,6 @@ trait AuditRepo
                     $question->rank = $question->getDefaultRank(); //审核通过,权重默认
                     //发布成功
                     event(new PublishQuestion($question));
-                    $question->is_rewarded = 1;
                 } else {
                     //已拒绝
                     $question->submit      = Question::REFUSED_SUBMIT;

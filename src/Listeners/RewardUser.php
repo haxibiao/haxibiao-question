@@ -69,8 +69,9 @@ class RewardUser
             }
 
             Gold::makeIncome($question->user, $rewardGold, $remark . $question->id);
-
             Contribute::rewardUserQuestion($question->user, $question);
+            $question->is_rewarded = 1;
+            $question->save();
             //发送通知
             $user->notify(new \Haxibiao\Breeze\Notifications\AuditQuestionResultNotification($question, $rewardGold));
         }
