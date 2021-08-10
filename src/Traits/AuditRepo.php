@@ -136,7 +136,8 @@ trait AuditRepo
                     $question->submit      = Question::REFUSED_SUBMIT;
                     $question->rejected_at = now();
                 }
-                dispatch(new AuditReward($question));
+                //审题结果出来后，后置发放：即投票结果与审题结果一致，则为审对
+                dispatch(new AuditReward($question))->delay(30);
             }
 
             //多余的票,结果通过率没通过,只降权重(更新), 因为奖励通知已发出，所以只降低权重，智慧点
@@ -178,6 +179,6 @@ trait AuditRepo
         Gold::makeIncome($user, 4, '审题奖励');
 
         //注意:审题目前默认都加1贡献,安抚下用户审题的不满,后面慢慢调整
-        Contribute::rewardUserAudit($user, $audit);
+        // Contribute::rewardUserAudit($user, $audit);
     }
 }
