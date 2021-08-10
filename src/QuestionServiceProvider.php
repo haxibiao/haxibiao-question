@@ -14,9 +14,7 @@ class QuestionServiceProvider extends ServiceProvider
      * @var array
      */
     protected $listen = [
-        'Haxibiao\Question\Events\PublishQuestion' => [
-            'Haxibiao\Question\Listeners\RewardUser',
-        ],
+
     ];
 
     /**
@@ -40,6 +38,8 @@ class QuestionServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        $this->bindListeners();
+
         // $this->publishes([
         //     __DIR__ . '/Console/stubs/QuestionServiceProvider.stub' => app_path('Providers/QuestionServiceProvider.php'),
         // ], 'question-provider');
@@ -77,6 +77,14 @@ class QuestionServiceProvider extends ServiceProvider
         ] as $abstract => $instance) {
             $this->app->instance($abstract, $instance);
         }
+    }
+
+    public function bindListeners()
+    {
+        \Illuminate\Support\Facades\Event::listen(
+            'Haxibiao\Question\Events\PublishQuestion',
+            'Haxibiao\Question\Listeners\RewardUser'
+        );
     }
 
     public function bindModelObserve()

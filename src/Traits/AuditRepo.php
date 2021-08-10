@@ -160,7 +160,7 @@ trait AuditRepo
             $audits = $question->audits()->whereStatus($status)->get();
             foreach ($audits as $audit) {
                 if ($user = $audit->user) {
-                    Gold::makeIncome($user, 2, '审题正确奖励');
+                    Contribute::makeIncome($user, $question, Audit::AUDIT_CORRECT_REWARD);
                 }
             }
         }

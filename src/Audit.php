@@ -23,7 +23,9 @@ class Audit extends Pivot
     ];
 
     const FAVOR_OF_STATUS = 1;
-    const DENY_STATUS = 0;
+    const DENY_STATUS     = 0;
+
+    const AUDIT_CORRECT_REWARD = 2; //审题正确奖励贡献值
 
     public function user(): BelongsTo
     {
@@ -39,7 +41,7 @@ class Audit extends Pivot
     {
         return [
             self::FAVOR_OF_STATUS => '赞成',
-            self::DENY_STATUS => '否认',
+            self::DENY_STATUS     => '否认',
         ];
     }
 
