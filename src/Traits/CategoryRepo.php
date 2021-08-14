@@ -3,7 +3,6 @@
 namespace Haxibiao\Question\Traits;
 
 use App\User;
-use Hashids\Hashids;
 use Haxibiao\Breeze\Dimension;
 use Haxibiao\Media\SearchLog;
 use Haxibiao\Question\Category;
@@ -430,8 +429,7 @@ trait CategoryRepo
     public function recordBrowserHistory()
     {
         //记录浏览历史
-        if (checkUser()) {
-            $user = getUser();
+        if ($user = currentUser()) {;
             //如果重复浏览只更新纪录的时间戳
             $visited = \App\Visit::firstOrNew([
                 'user_id'      => $user->id,
@@ -439,7 +437,7 @@ trait CategoryRepo
                 'visited_id'   => $this->id,
             ]);
             $visited->updated_at = now();
-            $visited->save();
+            $visited->saveQuietly();
         }
     }
 
