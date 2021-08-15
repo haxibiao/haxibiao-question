@@ -58,11 +58,14 @@ trait QuestionRepo
         //搜索
         if (!empty($keyword)) {
             Dimension::track("题目搜索数", 1, "搜索");
-            $qb = $qb->ofKeyword($keyword);
+            $qb = Question::search($keyword)->query(function ($query) {
+                $query->latest('answers_count')->publish();
+            });
         }
+        $resultTotal = optional(clone $qb->paginate(1))->total() ?? 0;
 
         SearchLog::saveSearchLog($keyword, $user->id, "questions");
-        if ($qb->count() > 0) {
+        if ($resultTotal > 0) {
             Dimension::track("题目搜索成功数", 1, "搜索");
         }
         return $qb;

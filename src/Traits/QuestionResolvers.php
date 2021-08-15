@@ -88,8 +88,7 @@ trait QuestionResolvers
     {
         $user = getUser();
 
-        // return Question::searchQuestions($user, $args['keyword']);
-        return [];
+        return Question::searchQuestions($user, $args['keyword']);
     }
 
     public static function resolveDynamicGold($root, array $args, $context, $info)
