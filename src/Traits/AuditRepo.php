@@ -41,6 +41,11 @@ trait AuditRepo
         $audit->score  = $score;
         $audit->save();
 
+        //计算保存题目分数
+        if ($score) {
+            Question::questionScore($user, $question, $score);
+        }
+
         //更新用户区间
         self::updateRankAndReviewsCount($user, $question);
 
