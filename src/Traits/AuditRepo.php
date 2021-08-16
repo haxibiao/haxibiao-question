@@ -118,34 +118,34 @@ trait AuditRepo
         //获取最大审核数
         $maxAudits = self::getMaxAudits($question->category_id);
         //够数了,开始处理结果
-        if ($question->audits()->count() >= $maxAudits) {
-            $is_audits_passed = self::isAuditPassed($question);
+        $is_audits_passed = self::isAuditPassed($question);
 
-            //可能展示给更多的人审核了,先投票的够数以后, 并通过后,不影响已成功审核的结果
-            if ($question->submit == Question::REVIEW_SUBMIT) {
-                if ($is_audits_passed) {
+        //可能展示给更多的人审核了,先投票的够数以后, 并通过后,不影响已成功审核的结果
+        if ($question->submit == Question::REVIEW_SUBMIT) {
+            if ($is_audits_passed) {
+                if ($question->audits()->count() >= $maxAudits) {
                     $question->submit      = Question::SUBMITTED_SUBMIT;
                     $question->reviewed_at = now();
                     $question->makeNewReviewId(); //通过审核时,变成当前权重区间的最新题
                     $question->rank = $question->getDefaultRank(); //审核通过,权重默认
                     //发布成功
                     event(new PublishQuestion($question));
-                } else {
-                    //已拒绝
-                    $question->submit      = Question::REFUSED_SUBMIT;
-                    $question->rejected_at = now();
                 }
-                //审题结果出来后，后置发放：即投票结果与审题结果一致，则为审对
-                // dispatch(new AuditReward($question))->delay(30);
+            } else {
+                //已拒绝
+                $question->submit      = Question::REFUSED_SUBMIT;
+                $question->rejected_at = now();
             }
-
-            //多余的票,结果通过率没通过,只降权重(更新), 因为奖励通知已发出，所以只降低权重，智慧点
-            if (!$is_audits_passed) {
-                $question->rank = -1;
-                $question->gold = 2; //低质量题,降低智慧点奖励
-            }
-
+            //审题结果出来后，后置发放：即投票结果与审题结果一致，则为审对
+            // dispatch(new AuditReward($question))->delay(30);
         }
+
+        //多余的票,结果通过率没通过,只降权重(更新), 因为奖励通知已发出，所以只降低权重，智慧点
+        if (!$is_audits_passed) {
+            $question->rank = -1;
+            $question->gold = 2; //低质量题,降低智慧点奖励
+        }
+
         //更新投票数
         $is_accepted ? $question->accepted_count++ : $question->declined_count++;
         $question->save();
