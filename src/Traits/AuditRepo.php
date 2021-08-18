@@ -7,7 +7,6 @@ use App\User;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Question\Audit;
 use Haxibiao\Question\CategoryUser;
-use Haxibiao\Question\Events\PublishQuestion;
 use Haxibiao\Question\Question;
 use Haxibiao\Wallet\Gold;
 
@@ -114,29 +113,31 @@ trait AuditRepo
     protected static function isAuditPassed($question)
     {
         $deny_audits = $question->audits()->whereStatus(Audit::DENY_STATUS)->count();
-        //2票不同意即不通过审题
-        return $deny_audits < 2;
+        //1票不同意即不通过审题
+        return $deny_audits < 1;
     }
 
     protected static function auditQuestion($user, $question, $is_accepted)
     {
         //获取最大审核数
-        $maxAudits = self::getMaxAudits($question->category_id);
+        // $maxAudits = self::getMaxAudits($question->category_id);
         //够数了,开始处理结果
         $is_audits_passed = self::isAuditPassed($question);
 
         //可能展示给更多的人审核了,先投票的够数以后, 并通过后,不影响已成功审核的结果
         if ($question->submit == Question::REVIEW_SUBMIT) {
-            if ($is_audits_passed) {
-                if ($question->audits()->count() >= $maxAudits) {
-                    $question->submit      = Question::SUBMITTED_SUBMIT;
-                    $question->reviewed_at = now();
-                    $question->makeNewReviewId(); //通过审核时,变成当前权重区间的最新题
-                    $question->rank = $question->getDefaultRank(); //审核通过,权重默认
-                    //发布成功
-                    event(new PublishQuestion($question));
-                }
-            } else {
+            if (!$is_audits_passed) {
+                //这段逻辑在job AutoReviewQuestion 里处理
+                //根据赞同票数分权重
+                // if ($question->audits()->count() >= $maxAudits) {
+                //     $question->submit      = Question::SUBMITTED_SUBMIT;
+                //     $question->reviewed_at = now();
+                //     $question->makeNewReviewId(); //通过审核时,变成当前权重区间的最新题
+                //     $question->rank = $question->getDefaultRank(); //审核通过,权重默认
+                //     //发布成功
+                //     event(new PublishQuestion($question));
+                // }
+                // } else {
                 //已拒绝
                 $question->submit      = Question::REFUSED_SUBMIT;
                 $question->rejected_at = now();
