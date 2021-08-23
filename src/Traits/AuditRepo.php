@@ -140,6 +140,7 @@ trait AuditRepo
                 // } else {
                 //已拒绝
                 $question->submit      = Question::REFUSED_SUBMIT;
+                $question->remark      = '审题被拒绝';
                 $question->rejected_at = now();
             }
             //审题结果出来后，后置发放：即投票结果与审题结果一致，则为审对
