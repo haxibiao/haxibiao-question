@@ -1,6 +1,6 @@
 <?php
 
-namespace haxibiao\Question;
+namespace Haxibiao\Question;
 
 use Haxibiao\Question\Traits\ForkExplanationRepo;
 use Illuminate\Database\Eloquent\Model;
