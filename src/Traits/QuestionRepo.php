@@ -1,6 +1,7 @@
 <?php
 namespace Haxibiao\Question\Traits;
 
+use Carbon\Carbon;
 use Haxibiao\Breeze\Dimension;
 use Haxibiao\Breeze\Helpers\Redis\RedisHelper;
 use Haxibiao\Breeze\UserProfile;
@@ -10,6 +11,8 @@ use Haxibiao\Media\SearchLog;
 use Haxibiao\Question\Category;
 use Haxibiao\Question\Events\PublishQuestion;
 use Haxibiao\Question\Helpers\Redis\QuestionDynamicGold;
+use Haxibiao\Question\Jobs\AutoReviewQuestion;
+use Haxibiao\Question\Jobs\QuestionCheck;
 use Haxibiao\Question\Question;
 use Haxibiao\Question\QuestionScore;
 use Haxibiao\Sns\Report;
@@ -92,7 +95,7 @@ trait QuestionRepo
 
         $this->fill(array_merge($attributes, [
             'submit'    => Question::REVIEW_SUBMIT, //待审核状态
-            'ticket'    => Question::DEFAULT_TICKET,
+            'ticket' => Question::DEFAULT_TICKET,
             'gold'      => $gold,
             'rank'      => Question::REVIEW_RANK,
             'review_id' => Question::max('review_id') + 1, //新出题的审核id都最新, TODO: 这里还需要 避免脏读
@@ -107,6 +110,14 @@ trait QuestionRepo
         $this->timestamps = true;
         $this->remark     = "从暂存(撤回)区发布";
         $this->save();
+
+        if ($this->isReviewing()) {
+            //一些需要异步处理的题目检查操作
+            dispatch(new QuestionCheck($this));
+            //题目48小时后无人审核自动通过
+            dispatch(new AutoReviewQuestion($this))->delay(Carbon::now()->addDay(2));
+        }
+
     }
 
     public function delete()

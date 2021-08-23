@@ -236,10 +236,13 @@ trait CreateQuestion
             //3.保存
             $question->store($params);
 
-            //一些需要异步处理的题目检查操作
-            dispatch(new QuestionCheck($question));
-            //题目48小时后无人审核自动通过
-            dispatch(new AutoReviewQuestion($question))->delay(Carbon::now()->addDay(2));
+            $question->refresh();
+            if ($question->isReviewing()) {
+                //一些需要异步处理的题目检查操作
+                dispatch(new QuestionCheck($question));
+                //题目48小时后无人审核自动通过
+                dispatch(new AutoReviewQuestion($question))->delay(Carbon::now()->addDay(2));
+            }
 
             //统计用户出题量
             $user->questions_count = $user->questions()->count();
