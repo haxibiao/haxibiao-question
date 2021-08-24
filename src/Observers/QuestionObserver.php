@@ -26,7 +26,6 @@ class QuestionObserver
         }
 
         $question->sysncAnswersCount();
-
         $question->syncType();
     }
 }

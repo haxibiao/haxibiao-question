@@ -13,6 +13,7 @@ use App\Report;
 use App\User;
 use Hashids\Hashids;
 use Haxibiao\Breeze\Model;
+use Haxibiao\Breeze\Traits\AttributeCounter;
 use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Breeze\Traits\ModelHelpers;
 use Haxibiao\Media\Image;
@@ -50,6 +51,7 @@ class Question extends Model
     use QuestionFacade;
     use ModelHelpers;
     use Searchable;
+    use AttributeCounter;
 
     protected $connection = 'mysql';
 
@@ -62,6 +64,11 @@ class Question extends Model
     ];
 
     protected $appends = ['base64Code'];
+
+    protected $attributeCounters = [
+        'count_likes'    => 'likes',
+        'count_comments' => 'comments',
+    ];
 
     //短带长
     const POST_QUESTION_DESCRIPTION = "考考您影片是？"; //视频题出题默认题目描述
