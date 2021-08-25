@@ -4,6 +4,7 @@ namespace Haxibiao\Question\Traits;
 
 use App\Contribute;
 use App\User;
+use Haxibiao\Breeze\Dimension;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Question\Audit;
 use Haxibiao\Question\CategoryUser;
@@ -151,6 +152,13 @@ trait AuditRepo
         if (!$is_audits_passed) {
             $question->rank = -1;
             $question->gold = 2; //低质量题,降低智慧点奖励
+        }
+
+        //dimension track
+        if ($is_accepted) {
+            Dimension::track('审题赞成数', 1, '审题');
+        } else {
+            Dimension::track('审题反对数', 1, '审题');
         }
 
         //更新投票数
