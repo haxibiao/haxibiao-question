@@ -35,15 +35,21 @@ class AutoReviewQuestion implements ShouldQueue
         //48小时内审核没完成过就自动通过
         if ($this->question->isReviewing()) {
             $this->question->publishReviewQuestion();
-            //赞同数
-            $accepted_count = $this->question->accepted_count;
-
-            if ($accepted_count == 0) {
-                $this->question->rank = 1;
-            } else if ($accepted_count < 5) {
-                $this->question->rank = 2;
-            } else if ($accepted_count < 10) {
-                $this->question->rank = 3;
+            //有一票否决就拒绝
+            if ($this->question->declined_count) {
+                $this->question->submit      = Question::REFUSED_SUBMIT;
+                $this->question->remark      = '审题被拒绝';
+                $this->question->rejected_at = now();
+            } else {
+                //赞同数
+                $accepted_count = $this->question->accepted_count;
+                if ($accepted_count == 0) {
+                    $this->question->rank = 1;
+                } else if ($accepted_count < 5) {
+                    $this->question->rank = 2;
+                } else if ($accepted_count < 10) {
+                    $this->question->rank = 3;
+                }
             }
             $this->question->saveDataOnly();
         }

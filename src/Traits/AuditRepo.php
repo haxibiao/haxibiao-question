@@ -8,6 +8,7 @@ use Haxibiao\Breeze\Dimension;
 use Haxibiao\Breeze\Exceptions\UserException;
 use Haxibiao\Question\Audit;
 use Haxibiao\Question\CategoryUser;
+use Haxibiao\Question\Events\PublishQuestion;
 use Haxibiao\Question\Question;
 use Haxibiao\Wallet\Gold;
 
@@ -68,9 +69,10 @@ trait AuditRepo
             throw new UserException('您的精力点不足了，休息下明天再玩吧!');
         }
 
-        //第一次审题数大于32的时候做一次检查
-        if ($user->audits()->count() == 32) {
-            if ($user->audits()->groupBy('status')->get('status')->count() == 1) {
+        //最近审题数连续32条选择都一样取消资格
+        $audit_status = $user->audits()->latest()->take(32)->pluck('status')->toArray();
+        if (count($audit_status) >= 32) {
+            if (count(array_unique($audit_status)) == 1) {
                 if ($user->can_audit) {
                     $user->update(['can_audit' => false]);
                 }
@@ -114,31 +116,31 @@ trait AuditRepo
     protected static function isAuditPassed($question)
     {
         $deny_audits = $question->audits()->whereStatus(Audit::DENY_STATUS)->count();
-        //1票不同意即不通过审题
-        return $deny_audits < 1;
+        //2票不同意即不通过审题
+        return $deny_audits < 2;
     }
 
     protected static function auditQuestion($user, $question, $is_accepted)
     {
         //获取最大审核数
-        // $maxAudits = self::getMaxAudits($question->category_id);
         //够数了,开始处理结果
         $is_audits_passed = self::isAuditPassed($question);
 
         //可能展示给更多的人审核了,先投票的够数以后, 并通过后,不影响已成功审核的结果
         if ($question->submit == Question::REVIEW_SUBMIT) {
-            if (!$is_audits_passed) {
+            if ($is_audits_passed) {
                 //这段逻辑在job AutoReviewQuestion 里处理
                 //根据赞同票数分权重
-                // if ($question->audits()->count() >= $maxAudits) {
-                //     $question->submit      = Question::SUBMITTED_SUBMIT;
-                //     $question->reviewed_at = now();
-                //     $question->makeNewReviewId(); //通过审核时,变成当前权重区间的最新题
-                //     $question->rank = $question->getDefaultRank(); //审核通过,权重默认
-                //     //发布成功
-                //     event(new PublishQuestion($question));
-                // }
-                // } else {
+                $maxAudits = self::getMaxAudits($question->category_id);
+                if ($question->audits()->count() >= $maxAudits) {
+                    $question->submit      = Question::SUBMITTED_SUBMIT;
+                    $question->reviewed_at = now();
+                    $question->makeNewReviewId(); //通过审核时,变成当前权重区间的最新题
+                    $question->rank = $question->getDefaultRank(); //审核通过,权重默认
+                    //发布成功
+                    event(new PublishQuestion($question));
+                }
+            } else {
                 //已拒绝
                 $question->submit      = Question::REFUSED_SUBMIT;
                 $question->remark      = '审题被拒绝';
