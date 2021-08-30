@@ -35,8 +35,8 @@ class AutoReviewQuestion implements ShouldQueue
         //48小时内审核没完成过就自动通过
         if ($this->question->isReviewing()) {
             $this->question->publishReviewQuestion();
-            //有一票否决就拒绝
-            if ($this->question->declined_count) {
+            //有2票否决就拒绝
+            if ($this->question->declined_count >= 2) {
                 $this->question->submit      = Question::REFUSED_SUBMIT;
                 $this->question->remark      = '审题被拒绝';
                 $this->question->rejected_at = now();
