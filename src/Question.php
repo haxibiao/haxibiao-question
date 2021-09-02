@@ -11,7 +11,6 @@ use App\Explanation;
 use App\Like;
 use App\Report;
 use App\User;
-use Hashids\Hashids;
 use Haxibiao\Breeze\Model;
 use Haxibiao\Breeze\Traits\AttributeCounter;
 use Haxibiao\Breeze\Traits\HasFactory;
@@ -354,7 +353,7 @@ class Question extends Model
                 $selection['Text'] = $this->trimText($selection['Text']);
                 $selections[$i]    = $selection;
             }
-        } catch (\Exception $ex) {
+        } catch (\Exception$ex) {
             //题目异常直接下架
             $this->update(['submit' => self::REMOVED_SUBMIT]);
             return [];
@@ -555,7 +554,7 @@ class Question extends Model
     {
         try {
             parent::save($options);
-        } catch (\Exception $ex) {
+        } catch (\Exception$ex) {
             $exMsg = $ex->getMessage();
             if (str_contains($exMsg, 'questions_review_id_unique')) {
                 $this->review_id = Question::max('review_id') + 1;
@@ -622,6 +621,9 @@ class Question extends Model
 
     public function searchableAs()
     {
+        if ($search_index = env('MEILISEARCH_KEY')) {
+            return $search_index;
+        }
         return config('app.name') . '_questions_index';
     }
 
