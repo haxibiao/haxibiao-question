@@ -14,7 +14,7 @@ class ForkExplanation extends Model
 
     public function question(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(\App\User::class);
     }
 
 }
