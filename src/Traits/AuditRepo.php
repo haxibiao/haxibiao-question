@@ -51,7 +51,7 @@ trait AuditRepo
         self::updateRankAndReviewsCount($user, $question);
 
         //审题
-        self::auditQuestion($user, $question, $is_accepted);
+        self::auditQuestion($user, $question, $is_accepted, $reason);
 
         //更新和奖励审核用户
         self::updateAndRewardAuditUser($user, $audit);
@@ -120,7 +120,7 @@ trait AuditRepo
         return $deny_audits < 2;
     }
 
-    protected static function auditQuestion($user, $question, $is_accepted)
+    protected static function auditQuestion($user, $question, $is_accepted, String $reason = '审题被拒绝')
     {
         //获取最大审核数
         //够数了,开始处理结果
@@ -143,7 +143,7 @@ trait AuditRepo
             } else {
                 //已拒绝
                 $question->submit      = Question::REFUSED_SUBMIT;
-                $question->remark      = '审题被拒绝';
+                $question->remark      = $reason;
                 $question->rejected_at = now();
             }
             //审题结果出来后，后置发放：即投票结果与审题结果一致，则为审对

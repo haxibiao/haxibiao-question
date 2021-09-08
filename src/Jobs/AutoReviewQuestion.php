@@ -37,8 +37,13 @@ class AutoReviewQuestion implements ShouldQueue
             $this->question->publishReviewQuestion();
             //有2票否决就拒绝
             if ($this->question->declined_count >= 2) {
-                $this->question->submit      = Question::REFUSED_SUBMIT;
-                $this->question->remark      = '审题被拒绝';
+                $this->question->submit = Question::REFUSED_SUBMIT;
+                $audit                  = $this->question->audits()->deny()->latest()->first();
+                $remark                 = '审题被拒绝';
+                if ($audit) {
+                    $remark = $audit->reason;
+                }
+                $this->question->remark      = $remark;
                 $this->question->rejected_at = now();
             } else {
                 //赞同数
