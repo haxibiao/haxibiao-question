@@ -120,7 +120,7 @@ trait AuditRepo
         return $deny_audits < 2;
     }
 
-    protected static function auditQuestion($user, $question, $is_accepted, String $reason = '审题被拒绝')
+    protected static function auditQuestion($user, $question, $is_accepted, $reason = '审题被拒绝')
     {
         //获取最大审核数
         //够数了,开始处理结果
