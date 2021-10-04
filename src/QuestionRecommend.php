@@ -14,11 +14,17 @@ class QuestionRecommend extends Model
     protected $fillable = [
         'question_id',
         'rank',
+        'submit',
     ];
 
     public function question(): BelongsTo
     {
         return $this->belongsTo(Question::class);
+    }
+
+    public function scopeSubmited($query)
+    {
+        return $query->where('submit', Question::SUBMITTED_SUBMIT);
     }
 
     public static function randomRecommendQuestion($count)

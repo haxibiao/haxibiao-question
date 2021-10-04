@@ -22,10 +22,10 @@ trait QuestionFacade
     {
         $data = [];
 
-        // 大表排小表(big table left join small table where small table id is null)
+        // 小表驱动大表
         $t1                   = (new QuestionRecommend)->getTable();
         $t2                   = (new RecommendQuestionAnswer)->getTable();
-        $qb                   = QuestionRecommend::select(["{$t1}.question_id"])->latest('rank')->latest('id');
+        $qb                   = QuestionRecommend::submited()->select(["{$t1}.question_id"])->latest('rank')->latest('id');
         $recommendQuestionIds = $qb->leftJoin($t2, function ($join) use ($t1, $t2, $user) {
             $join->on("${t1}.question_id", "${t2}.question_id")
                 ->on("${t2}.user_id", DB::raw($user->id));
