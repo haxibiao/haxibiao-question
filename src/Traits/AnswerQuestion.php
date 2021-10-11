@@ -123,6 +123,7 @@ trait AnswerQuestion
             'answers_count_today' => DB::raw('answers_count_today + 1'),
             'answers_time_count'  => DB::raw("answers_time_count + {$time}"),
             'answers_count'       => DB::raw('answers_count + 1'),
+            'correct_count'       => $isAnswerCorrect ? DB::raw('correct_count + 1') : DB::raw('correct_count'),
         ]);
 
         //答错,记录到错题本
