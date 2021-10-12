@@ -204,6 +204,7 @@ trait QuestionsRandomRank
 
         //本权重区间可能答完了, 多尝试几次其他区间,减少用户被提示题库答完的概率,直到真的都答完了
         if (!$questions->count()) {
+            return $questions;
             //TODO: 可以递归凑够10个题目后，才返回给前端
             $tries++;
             //没有题目就重置rank_ranges，让用户答老题
