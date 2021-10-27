@@ -8,6 +8,8 @@ type WrongAnswer {
     答案
     """
     answer: String
+    time: Int
+    created_at: String
 }
 
 extend type Query {
