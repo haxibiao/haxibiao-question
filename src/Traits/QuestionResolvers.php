@@ -182,6 +182,7 @@ trait QuestionResolvers
     public function resolveCreateQuestion($root, $args, $c, $i)
     {
         app_track_event('发布', '创建问题');
+        throw_if(true, GQLException::class, "暂不支持出题哦!");
         $user = getUser();
         return Question::createQuestion($user, $args);
     }
@@ -189,6 +190,8 @@ trait QuestionResolvers
     public function resolveCreateVideoQuestion($root, $args, $c, $i)
     {
         app_track_event('发布', '创建视频题');
+        throw_if(true, GQLException::class, "暂不支持出题哦！");
+
         $user = getUser();
         return Question::createVideoQuestion($user, $args);
     }
