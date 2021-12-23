@@ -15,6 +15,7 @@ use Haxibiao\Breeze\Model;
 use Haxibiao\Breeze\Traits\AttributeCounter;
 use Haxibiao\Breeze\Traits\HasFactory;
 use Haxibiao\Breeze\Traits\ModelHelpers;
+use Haxibiao\Content\Traits\ContentType;
 use Haxibiao\Media\Image;
 use Haxibiao\Media\Video;
 use Haxibiao\Question\Traits\AnswerQuestion;
@@ -51,6 +52,7 @@ class Question extends Model
     use ModelHelpers;
     use Searchable;
     use AttributeCounter;
+    use ContentType;
 
     protected $connection = 'mysql';
 
@@ -636,25 +638,5 @@ class Question extends Model
     {
         $id = !is_numeric($id) ? \Hashids::decode($id)[0] ?? '' : $id;
         return !empty($id) ? parent::findOrFail($id, $columns) : null;
-    }
-
-    /**
-     * @Desc     资源类型
-     * @DateTime 2018-07-24
-     * @return   [type]     [description]
-     */
-    public function resoureTypeCN()
-    {
-        $type = get_class($this);
-        if (str_contains($type, 'Post')) {
-            return "动态";
-        }
-        if (str_contains($type, 'Issue')) {
-            return "提问";
-        }
-        if (str_contains($type, 'Question')) {
-            return "题目";
-        }
-        return '文章';
     }
 }
