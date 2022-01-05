@@ -1,6 +1,5 @@
 <?php
 
-use App\Question;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +14,7 @@ class AddSubmitToQuestionRecommendsTable extends Migration
     public function up()
     {
         Schema::table('question_recommends', function (Blueprint $table) {
-            $table->unsignedTinyInteger('submit')->default(Question::SUBMITTED_SUBMIT);
+            $table->unsignedTinyInteger('submit')->default(1);
         });
     }
 
